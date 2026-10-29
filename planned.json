@@ -1,0 +1,62 @@
+[
+  {
+    "name": "ОС-Д3",
+    "subtitle": "Сироп · 150 мл",
+    "image": "assets/planned/os-d3.jpg"
+  },
+  {
+    "name": "Паразол Ноль",
+    "subtitle": "Сироп · 150 мл",
+    "image": "assets/planned/parazol-nol.jpg"
+  },
+  {
+    "name": "Тинодол",
+    "subtitle": "Сироп · 150 мл",
+    "image": "assets/planned/tinodol.jpg"
+  },
+  {
+    "name": "Лакторич",
+    "subtitle": "Сироп · 150 мл",
+    "image": "assets/planned/laktorich.jpg"
+  },
+  {
+    "name": "Виродол",
+    "subtitle": "Сироп · 100 мл",
+    "image": "assets/planned/virodol.jpg"
+  },
+  {
+    "name": "Инулин Форте",
+    "subtitle": "30 капсула · 500 мг",
+    "image": "assets/planned/inulin-forte.jpg"
+  },
+  {
+    "name": "Остевикс",
+    "subtitle": "30 капсула · 500 мг",
+    "image": "assets/planned/ostevix.jpg"
+  },
+  {
+    "name": "Витанова",
+    "subtitle": "30 капсула · 500 мг",
+    "image": "assets/planned/vitanova.jpg"
+  },
+  {
+    "name": "А-Септ SP",
+    "subtitle": "Спрей · 50 мл",
+    "image": "assets/planned/a-sept-sp.webp"
+  },
+  {
+    "name": "Алфера",
+    "subtitle": "Таблетка · 24 дона",
+    "image": "assets/planned/alfera.webp"
+  },
+  {
+    "name": "РВ-капс",
+    "subtitle": "Таблетка · 24 дона",
+    "image": "assets/planned/rv-kaps.webp"
+  },
+  {
+    "name": "Пасифол",
+    "subtitle": "Таблетка · 24 дона",
+    "image": "assets/planned/pasifol.webp"
+  }
+]

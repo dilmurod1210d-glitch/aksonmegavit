@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Админка — Akson Megavit</title>
+<link rel="icon" type="image/png" href="../favicon-48.png">
+<style>
+:root{--bg:#f4f5fb;--card:#fff;--ink:#1c2846;--muted:#6b7590;--line:#e3e6f0;--accent:#6952ee;--accent-ink:#fff;--accent-soft:#efedff;--ok:#1f8a5b;--ok-soft:#e5f6ee;--warn:#b26a00;--warn-soft:#fff3df;--bad:#c62d4a;--bad-soft:#fde9ed;--radius:14px}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--accent)}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 14px;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.btn:hover{border-color:#c9cde0}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.btn.primary:disabled{opacity:.45;cursor:not-allowed}
+.btn.danger{color:var(--bad)}
+.btn.small{padding:6px 10px;font-size:13px}
+.btn.icon{padding:6px 9px;min-width:34px;justify-content:center}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+input[type=text],input[type=password],input[type=search],select{width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;outline:none}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+label.f{display:block;font-weight:600;margin:14px 0 6px}
+.hint{color:var(--muted);font-size:13px}
+.err{background:var(--bad-soft);color:var(--bad);border-radius:10px;padding:10px 12px;margin:12px 0}
+.okmsg{background:var(--ok-soft);color:var(--ok);border-radius:10px;padding:10px 12px;margin:12px 0}
+
+/* Вход */
+.login{max-width:440px;margin:8vh auto;background:var(--card);border-radius:var(--radius);padding:28px;box-shadow:0 10px 40px #1c28460f}
+.login h1{font-size:22px;margin:0 0 4px}
+.login .logos{display:flex;gap:10px;align-items:center;margin-bottom:18px}
+.login .logos img{height:34px;width:auto}
+.login details{margin-top:16px;background:var(--bg);border-radius:10px;padding:10px 14px}
+.login summary{cursor:pointer;font-weight:600}
+.login ol{padding-left:20px;margin:10px 0 0}
+.login li{margin:6px 0}
+.check{display:flex;gap:8px;align-items:center;margin-top:12px}
+
+/* Шапка */
+header.top{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header.top .wrap{display:flex;align-items:center;gap:12px;min-height:64px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}
+header.top h1{font-size:17px;margin:0;flex:1;min-width:150px}
+header.top h1 small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.pending{background:var(--warn-soft);color:var(--warn);border-radius:999px;padding:4px 10px;font-size:13px;font-weight:600}
+.tabs{display:flex;gap:6px;margin:18px 0 12px;flex-wrap:wrap}
+.tabs button{border:0;background:transparent;padding:9px 14px;border-radius:10px;font-weight:600;color:var(--muted)}
+.tabs button[aria-selected=true]{background:var(--card);color:var(--ink);box-shadow:0 1px 3px #1c284614}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.toolbar input{flex:1 1 220px;width:auto}
+.toolbar select{flex:0 1 240px;width:auto}
+
+/* Список */
+.list{background:var(--card);border-radius:var(--radius);overflow:hidden;border:1px solid var(--line)}
+.row{display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row.is-new{background:#f6fff9}
+.row.is-changed{background:#fffbf2}
+.thumb{width:60px;height:60px;border-radius:10px;background:#f1f2f7;object-fit:contain;display:block}
+.thumb.empty{display:grid;place-items:center;color:var(--muted);font-size:11px;text-align:center}
+.row .name{font-weight:600}
+.row .meta{color:var(--muted);font-size:13px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tag{font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px}
+.tag.new{background:var(--ok-soft);color:var(--ok)}
+.tag.changed{background:var(--warn-soft);color:var(--warn)}
+.actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.empty-list{padding:30px;text-align:center;color:var(--muted)}
+.removed{margin-top:12px;color:var(--muted);font-size:13px}
+
+/* Редактор */
+dialog{border:0;border-radius:18px;padding:0;width:min(760px,calc(100vw - 24px));max-height:calc(100vh - 24px);box-shadow:0 20px 60px #0004}
+dialog::backdrop{background:#1c284666}
+.ed-head{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:2}
+.ed-head h2{margin:0;font-size:18px}
+.ed-body{padding:4px 20px 20px}
+.ed-foot{display:flex;justify-content:flex-end;gap:10px;padding:14px 20px;border-top:1px solid var(--line);position:sticky;bottom:0;background:#fff}
+.photo-box{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.photo-box img,.photo-box .ph{width:140px;height:140px;object-fit:contain;background:#f1f2f7;border-radius:12px}
+.photo-box .ph{display:grid;place-items:center;color:var(--muted);font-size:13px;text-align:center;padding:10px}
+.pages{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:6px}
+.page{background:#f1f2f7;border-radius:12px;padding:6px;display:flex;flex-direction:column;gap:6px}
+.page img{width:100%;height:150px;object-fit:contain;background:#fff;border-radius:8px}
+.page .pa{display:flex;justify-content:space-between;align-items:center;gap:4px;font-size:12px;color:var(--muted)}
+.page .pa .btn{padding:3px 7px}
+.upload-btn{position:relative;overflow:hidden}
+.upload-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.newcat{margin-top:8px}
+
+/* Загрузка */
+.busy{position:fixed;inset:0;background:#1c2846aa;display:grid;place-items:center;z-index:50;padding:16px}
+.busy[hidden]{display:none}
+.busy .box{background:#fff;border-radius:16px;padding:24px;max-width:420px;width:100%;text-align:center}
+.spinner{width:34px;height:34px;border:4px solid var(--accent-soft);border-top-color:var(--accent);border-radius:50%;animation:sp 0.9s linear infinite;margin:0 auto 12px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;z-index:60;max-width:calc(100vw - 32px);box-shadow:0 10px 30px #0003}
+.status{margin:14px 0 0}
+
+@media (max-width:640px){
+  .row{grid-template-columns:52px 1fr}
+  .thumb{width:52px;height:52px}
+  .actions{grid-column:1/-1;justify-content:flex-start}
+  header.top .wrap{gap:8px}
+  .ed-body{padding:4px 14px 16px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<dialog id="editor"></dialog>
+
+<div class="busy" id="busy" hidden><div class="box"><div class="spinner"></div><div id="busy-text">Подождите…</div></div></div>
+
+<script src="config.js"></script>
+<script>
+(() => {
+'use strict';
+
+const CFG = Object.assign({ owner: '', repo: '', branch: 'main', api: 'https://api.github.com', site: '../' }, window.ADMIN_CONFIG || {});
+const KINDS = {
+  products: { file: 'products.json', title: 'Товары каталога', one: 'товар', add: '+ Добавить товар' },
+  planned: { file: 'planned.json', title: 'Планируемые продукты', one: 'продукт', add: '+ Добавить продукт' }
+};
+const ASSET_DIRS = /^assets\/(products|leaflets|booklets|planned|uploads)\//;
+
+const S = {
+  token: null, owner: CFG.owner, repo: CFG.repo, branch: CFG.branch,
+  d: {},                 // products / planned: { orig, cur, sha }
+  pending: new Map(),    // путь -> Blob (новые картинки, ещё не опубликованы)
+  previews: new Map(),   // путь -> objectURL
+  tab: 'products', q: '', cat: '', status: null
+};
+let uid = 0;
+
+/* ---------- мелкие помощники ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const clone = x => JSON.parse(JSON.stringify(x));
+const strip = list => list.map(x => { const o = Object.assign({}, x); delete o._id; return o; });
+const same = (a, b) => JSON.stringify(strip([a])) === JSON.stringify(strip([b]));
+const store = {
+  get(k) { try { return localStorage.getItem(k) || sessionStorage.getItem(k); } catch (e) { return null; } },
+  set(k, v, remember) { try { (remember ? localStorage : sessionStorage).setItem(k, v); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); sessionStorage.removeItem(k); } catch (e) {} }
+};
+function toast(msg, ms) {
+  const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
+  document.body.append(t); setTimeout(() => t.remove(), ms || 3500);
+}
+function busy(text) {
+  const b = $('#busy');
+  if (text === false) { b.hidden = true; return; }
+  $('#busy-text').textContent = text; b.hidden = false;
+}
+function src(path) {
+  if (!path) return '';
+  return S.previews.get(path) || (CFG.site + path.split('/').map(encodeURIComponent).join('/'));
+}
+const TR = { а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'yo',ж:'j',з:'z',и:'i',й:'y',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'x',ц:'ts',ч:'ch',ш:'sh',щ:'sh',ъ:'',ы:'i',ь:'',э:'e',ю:'yu',я:'ya',ў:'o',қ:'q',ғ:'g',ҳ:'h' };
+function slug(s) {
+  const out = String(s || '').toLowerCase().split('').map(c => TR[c] != null ? TR[c] : c).join('')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40);
+  return out || 'item';
+}
+
+/* ---------- GitHub API ---------- */
+async function api(path, opts) {
+  opts = opts || {};
+  let res;
+  try {
+    res = await fetch(CFG.api + path, {
+      method: opts.method || 'GET',
+      headers: Object.assign({
+        'Accept': 'application/vnd.github+json',
+        'Authorization': 'Bearer ' + S.token,
+        'X-GitHub-Api-Version': '2022-11-28'
+      }, opts.body ? { 'Content-Type': 'application/json' } : {}),
+      body: opts.body ? JSON.stringify(opts.body) : undefined,
+      cache: 'no-store'
+    });
+  } catch (e) {
+    throw new Error('Нет связи с GitHub. Проверьте интернет и попробуйте ещё раз.');
+  }
+  if (!res.ok) {
+    let msg = '';
+    try { msg = (await res.json()).message || ''; } catch (e) {}
+    const err = new Error(
+      res.status === 401 ? 'Ключ недействителен или срок его действия истёк. Создайте новый ключ.' :
+      res.status === 404 ? 'Репозиторий или файл не найден, либо у ключа нет к нему доступа.' :
+      res.status === 403 ? 'У ключа нет нужных прав (нужно «Contents: Read and write»). ' + msg :
+      res.status === 409 || res.status === 422 ? 'GitHub отклонил изменение: ' + msg :
+      'Ошибка GitHub (' + res.status + '): ' + msg);
+    err.status = res.status;
+    throw err;
+  }
+  return res.status === 204 ? null : res.json();
+}
+const repoPath = () => '/repos/' + encodeURIComponent(S.owner) + '/' + encodeURIComponent(S.repo);
+
+function b64ToText(b64) {
+  const bin = atob(b64.replace(/\s/g, ''));
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(bytes);
+}
+function blobToB64(blob) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(String(r.result).split(',')[1]);
+    r.onerror = () => rej(new Error('Не удалось прочитать файл'));
+    r.readAsDataURL(blob);
+  });
+}
+
+async function loadData() {
+  for (const kind of Object.keys(KINDS)) {
+    let list = [], sha = null;
+    try {
+      const f = await api(repoPath() + '/contents/' + KINDS[kind].file + '?ref=' + encodeURIComponent(S.branch));
+      list = JSON.parse(b64ToText(f.content)); sha = f.sha;
+    } catch (e) {
+      if (!(e.status === 404 && kind === 'planned')) throw e;
+    }
+    list.forEach(x => { x._id = ++uid; if (kind === 'products' && !Array.isArray(x.leaflets)) x.leaflets = []; });
+    S.d[kind] = { orig: list, cur: clone(list), sha };
+  }
+}
+
+/* ---------- изменения ---------- */
+function diff(kind) {
+  const { orig, cur } = S.d[kind];
+  const om = new Map(orig.map(x => [x._id, x])), cm = new Map(cur.map(x => [x._id, x]));
+  const added = cur.filter(x => !om.has(x._id));
+  const removed = orig.filter(x => !cm.has(x._id));
+  const changed = cur.filter(x => om.has(x._id) && !same(x, om.get(x._id)));
+  const reordered = orig.filter(x => cm.has(x._id)).map(x => x._id).join() !== cur.filter(x => om.has(x._id)).map(x => x._id).join();
+  return { added, removed, changed, reordered, count: added.length + removed.length + changed.length + (reordered ? 1 : 0) };
+}
+const totalChanges = () => Object.keys(KINDS).reduce((n, k) => n + (S.d[k] ? diff(k).count : 0), 0);
+window.addEventListener('beforeunload', e => { if (S.token && totalChanges()) { e.preventDefault(); e.returnValue = ''; } });
+
+/* ---------- обработка картинок ---------- */
+async function processImage(file, maxDim) {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res, rej) => {
+      const i = new Image();
+      i.onload = () => res(i);
+      i.onerror = () => rej(new Error('Файл «' + file.name + '» не похож на картинку. Подойдут JPG, PNG или WEBP.'));
+      i.src = url;
+    });
+    const k = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+    const w = Math.max(1, Math.round(img.naturalWidth * k)), h = Math.max(1, Math.round(img.naturalHeight * k));
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    c.getContext('2d').drawImage(img, 0, 0, w, h);
+    let blob = await new Promise(r => c.toBlob(r, 'image/webp', 0.86));
+    if (!blob || blob.type !== 'image/webp') blob = await new Promise(r => c.toBlob(r, file.type === 'image/png' ? 'image/png' : 'image/jpeg', 0.88));
+    if (!blob) throw new Error('Не удалось обработать «' + file.name + '».');
+    const ext = blob.type === 'image/webp' ? 'webp' : blob.type === 'image/png' ? 'png' : 'jpg';
+    return { blob, ext };
+  } finally { URL.revokeObjectURL(url); }
+}
+async function addImage(file, dir, base, maxDim) {
+  const { blob, ext } = await processImage(file, maxDim);
+  const path = 'assets/' + dir + '/' + slug(base) + '-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5) + '.' + ext;
+  S.pending.set(path, blob);
+  S.previews.set(path, URL.createObjectURL(blob));
+  return path;
+}
+
+/* ---------- экран входа ---------- */
+function renderLogin(error) {
+  const needRepo = !CFG.owner || !CFG.repo;
+  $('#app').innerHTML = `
+  <div class="wrap"><form class="login" id="login">
+    <div class="logos"><img src="../assets/brands/akson.png" alt=""><img src="../assets/brands/megavit.jpg" alt=""></div>
+    <h1>Вход в админку</h1>
+    <div class="hint">Изменения на сайте может вносить только владелец ключа доступа.</div>
+    ${error ? `<div class="err">${esc(error)}</div>` : ''}
+    ${needRepo ? `
+      <label class="f" for="owner">Логин GitHub</label>
+      <input type="text" id="owner" autocomplete="username" value="${esc(store.get('akson-admin-owner') || '')}" required>
+      <label class="f" for="repo">Название репозитория сайта</label>
+      <input type="text" id="repo" value="${esc(store.get('akson-admin-repo') || '')}" required>` : ''}
+    <label class="f" for="token">Ключ доступа (токен GitHub)</label>
+    <input type="password" id="token" autocomplete="current-password" placeholder="github_pat_…" required>
+    <label class="check"><input type="checkbox" id="remember" checked> Запомнить на этом устройстве</label>
+    <div style="margin-top:18px"><button class="btn primary" type="submit" style="width:100%;justify-content:center">Войти</button></div>
+    <details><summary>Где взять ключ?</summary><ol>
+      <li>Войдите на <a href="https://github.com" target="_blank" rel="noopener">github.com</a> под своим аккаунтом.</li>
+      <li>Откройте <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">создание нового ключа</a>.</li>
+      <li>Название — любое, например «Админка сайта». Срок — 1 год.</li>
+      <li>Repository access → <b>Only select repositories</b> → выберите репозиторий сайта.</li>
+      <li>Permissions → Repository permissions → <b>Contents: Read and write</b>, <b>Pages: Read-only</b>.</li>
+      <li>Нажмите <b>Generate token</b>, скопируйте ключ и вставьте сюда.</li>
+    </ol><p class="hint">Никому не передавайте ключ: с ним можно менять сайт.</p></details>
+  </form></div>`;
+  $('#login').onsubmit = async e => {
+    e.preventDefault();
+    const remember = $('#remember').checked;
+    if (needRepo) {
+      S.owner = $('#owner').value.trim(); S.repo = $('#repo').value.trim();
+      store.set('akson-admin-owner', S.owner, true); store.set('akson-admin-repo', S.repo, true);
+    }
+    S.token = $('#token').value.trim();
+    await start(remember);
+  };
+}
+
+async function start(remember) {
+  busy('Проверяю ключ…');
+  try {
+    const r = await api(repoPath());
+    if (!r.permissions || !r.permissions.push) throw new Error('Этот ключ может только читать репозиторий. Нужны права «Contents: Read and write».');
+    if (!CFG.branch && r.default_branch) S.branch = r.default_branch;
+    busy('Загружаю каталог…');
+    await loadData();
+    if (remember !== undefined) store.set('akson-admin-token', S.token, remember);
+    busy(false);
+    renderMain();
+  } catch (e) {
+    busy(false);
+    S.token = null;
+    if (e.status === 401) store.del('akson-admin-token');
+    renderLogin(e.message);
+  }
+}
+
+/* ---------- главный экран ---------- */
+function categories() {
+  const list = [];
+  (S.d.products ? S.d.products.cur : []).forEach(p => { if (p.category && !list.includes(p.category)) list.push(p.category); });
+  return list;
+}
+
+function renderMain() {
+  const n = totalChanges();
+  const k = S.tab;
+  const data = S.d[k];
+  const df = diff(k);
+  const addedIds = new Set(df.added.map(x => x._id)), changedIds = new Set(df.changed.map(x => x._id));
+  const q = S.q.trim().toLowerCase();
+  const visible = data.cur.filter(x => (!q || String(x.name).toLowerCase().includes(q)) && (k !== 'products' || !S.cat || x.category === S.cat));
+  const cats = categories();
+  const scroll = window.scrollY;
+
+  $('#app').innerHTML = `
+  <header class="top"><div class="wrap">
+    <h1>Админка Akson Megavit<small>${esc(S.owner)}/${esc(S.repo)}</small></h1>
+    ${n ? `<span class="pending">Не опубликовано: ${n}</span><button class="btn small" id="discard">Отменить всё</button>` : ''}
+    <button class="btn primary" id="publish" ${n ? '' : 'disabled'}>Опубликовать на сайте</button>
+    <a class="btn small" href="${esc(CFG.site)}" target="_blank" rel="noopener">Сайт ↗</a>
+    <button class="btn small" id="logout">Выйти</button>
+  </div></header>
+  <main class="wrap">
+    ${S.status ? `<div class="${S.status.ok ? 'okmsg' : 'err'} status">${esc(S.status.text)}</div>` : ''}
+    <div class="tabs" role="tablist">
+      ${Object.keys(KINDS).map(t => `<button role="tab" data-tab="${t}" aria-selected="${t === k}">${KINDS[t].title} (${S.d[t].cur.length})</button>`).join('')}
+    </div>
+    <div class="toolbar">
+      <input type="search" id="q" placeholder="Поиск по названию…" value="${esc(S.q)}">
+      ${k === 'products' ? `<select id="cat"><option value="">Все категории</option>${cats.map(c => `<option ${c === S.cat ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select>` : ''}
+      <button class="btn primary" id="add">${KINDS[k].add}</button>
+    </div>
+    <div class="list">
+      ${visible.length ? visible.map((x, i) => `
+        <div class="row ${addedIds.has(x._id) ? 'is-new' : changedIds.has(x._id) ? 'is-changed' : ''}">
+          ${x.image ? `<img class="thumb" loading="lazy" src="${esc(src(x.image))}" alt="">` : `<div class="thumb empty">нет фото</div>`}
+          <div>
+            <div class="name">${esc(x.name)}</div>
+            <div class="meta">
+              ${k === 'products' ? `<span>${esc(x.category)}</span><span>· буклет: ${x.leaflets.length ? x.leaflets.length + ' стр.' : 'нет'}</span>` : `<span>${esc(x.subtitle || '')}</span>`}
+              ${addedIds.has(x._id) ? '<span class="tag new">новый</span>' : changedIds.has(x._id) ? '<span class="tag changed">изменён</span>' : ''}
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn small" data-act="edit" data-id="${x._id}">Изменить</button>
+            <button class="btn small icon" data-act="up" data-id="${x._id}" title="Выше" ${i === 0 ? 'disabled' : ''}>↑</button>
+            <button class="btn small icon" data-act="down" data-id="${x._id}" title="Ниже" ${i === visible.length - 1 ? 'disabled' : ''}>↓</button>
+            <button class="btn small danger" data-act="del" data-id="${x._id}">Удалить</button>
+          </div>
+        </div>`).join('') : `<div class="empty-list">${data.cur.length ? 'Ничего не найдено' : 'Пока пусто'}</div>`}
+    </div>
+    ${df.removed.length ? `<div class="removed">Будут удалены после публикации: ${df.removed.map(x => esc(x.name)).join(', ')}</div>` : ''}
+    <p class="hint" style="margin:18px 0 40px">Порядок в списке — это порядок на сайте. Изменения сначала копятся здесь, а на сайт попадают после кнопки «Опубликовать на сайте».</p>
+  </main>`;
+  window.scrollTo(0, scroll);
+
+  $('#logout').onclick = () => {
+    if (totalChanges() && !confirm('Есть неопубликованные изменения. Выйти и потерять их?')) return;
+    store.del('akson-admin-token'); S.token = null; S.d = {}; location.reload();
+  };
+  $('#publish').onclick = publish;
+  if ($('#discard')) $('#discard').onclick = () => {
+    if (!confirm('Отменить все неопубликованные изменения?')) return;
+    Object.keys(KINDS).forEach(t => { S.d[t].cur = clone(S.d[t].orig); });
+    S.status = null; renderMain();
+  };
+  document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { S.tab = b.dataset.tab; S.q = ''; S.cat = ''; renderMain(); });
+  const qi = $('#q');
+  qi.oninput = () => { S.q = qi.value; renderMain(); const el = $('#q'); el.focus(); el.setSelectionRange(el.value.length, el.value.length); };
+  if ($('#cat')) $('#cat').onchange = e => { S.cat = e.target.value; renderMain(); };
+  $('#add').onclick = () => openEditor(k, null);
+  document.querySelectorAll('[data-act]').forEach(b => b.onclick = () => {
+    const id = Number(b.dataset.id), list = S.d[k].cur, idx = list.findIndex(x => x._id === id);
+    if (idx < 0) return;
+    const act = b.dataset.act;
+    if (act === 'edit') return openEditor(k, id);
+    if (act === 'del') {
+      if (!confirm('Удалить «' + list[idx].name + '»? На сайте он исчезнет после публикации.')) return;
+      list.splice(idx, 1);
+    }
+    if (act === 'up' || act === 'down') {
+      const vi = visible.findIndex(x => x._id === id);
+      const other = visible[act === 'up' ? vi - 1 : vi + 1];
+      if (!other) return;
+      const j = list.findIndex(x => x._id === other._id);
+      [list[idx], list[j]] = [list[j], list[idx]];
+    }
+    renderMain();
+  });
+}
+
+/* ---------- редактор ---------- */
+function openEditor(kind, id) {
+  const list = S.d[kind].cur;
+  const existing = id != null ? list.find(x => x._id === id) : null;
+  const E = {
+    kind, id,
+    draft: existing ? clone(existing) : (kind === 'products'
+      ? { name: '', category: S.cat || categories()[0] || '', image: '', leaflets: [] }
+      : { name: '', subtitle: '', image: '' })
+  };
+  const dlg = $('#editor');
+  const cats = categories();
+  let newCat = !!(E.draft.category && !cats.includes(E.draft.category));
+
+  function draw(msg) {
+    const d = E.draft;
+    dlg.innerHTML = `
+      <form method="dialog" id="ed">
+        <div class="ed-head"><h2>${existing ? 'Изменить ' + KINDS[kind].one : 'Новый ' + KINDS[kind].one}</h2><button type="button" class="btn icon" id="ed-x" aria-label="Закрыть">✕</button></div>
+        <div class="ed-body">
+          ${msg ? `<div class="err">${esc(msg)}</div>` : ''}
+          <label class="f" for="ed-name">Название</label>
+          <input type="text" id="ed-name" value="${esc(d.name)}" placeholder="например: Гемовит" required>
+          ${kind === 'products' ? `
+            <label class="f" for="ed-cat">Категория</label>
+            <select id="ed-cat">
+              ${cats.map(c => `<option ${!newCat && c === d.category ? 'selected' : ''}>${esc(c)}</option>`).join('')}
+              <option value="__new" ${newCat ? 'selected' : ''}>＋ Новая категория…</option>
+            </select>
+            ${newCat ? `<input type="text" class="newcat" id="ed-newcat" value="${esc(cats.includes(d.category) ? '' : d.category)}" placeholder="Название новой категории (как на сайте, кириллицей)">` : ''}
+          ` : `
+            <label class="f" for="ed-sub">Форма и объём</label>
+            <input type="text" id="ed-sub" value="${esc(d.subtitle)}" placeholder="например: Сироп · 150 мл">
+          `}
+          <label class="f">${kind === 'products' ? 'Фото товара' : 'Макет упаковки'}</label>
+          <div class="photo-box">
+            ${d.image ? `<img src="${esc(src(d.image))}" alt="">` : `<div class="ph">Фото ещё не загружено</div>`}
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span class="btn upload-btn">${d.image ? 'Заменить фото' : 'Загрузить фото'}<input type="file" id="ed-photo" accept="image/*"></span>
+              ${d.image ? `<button type="button" class="btn small danger" id="ed-photo-del">Убрать фото</button>` : ''}
+              <span class="hint">JPG, PNG или WEBP. ${kind === 'products' ? 'Лучше на прозрачном или белом фоне.' : ''}</span>
+            </div>
+          </div>
+          ${kind === 'products' ? `
+            <label class="f">Буклет / инструкция (страницы по порядку)</label>
+            <div class="pages">
+              ${d.leaflets.map((p, i) => `
+                <div class="page">
+                  <a href="${esc(src(p))}" target="_blank" rel="noopener"><img src="${esc(src(p))}" alt="Страница ${i + 1}"></a>
+                  <div class="pa">
+                    <button type="button" class="btn small" data-pg="left" data-i="${i}" ${i === 0 ? 'disabled' : ''} title="Раньше">←</button>
+                    <span>стр. ${i + 1}</span>
+                    <button type="button" class="btn small" data-pg="right" data-i="${i}" ${i === d.leaflets.length - 1 ? 'disabled' : ''} title="Позже">→</button>
+                    <button type="button" class="btn small danger" data-pg="del" data-i="${i}" title="Убрать">✕</button>
+                  </div>
+                </div>`).join('')}
+            </div>
+            <div style="margin-top:10px"><span class="btn upload-btn">+ Добавить страницы<input type="file" id="ed-pages" accept="image/*" multiple></span>
+            <span class="hint">&nbsp;Можно выбрать сразу несколько фото.</span></div>
+          ` : ''}
+        </div>
+        <div class="ed-foot">
+          <button type="button" class="btn" id="ed-cancel">Отмена</button>
+          <button type="submit" class="btn primary">Сохранить</button>
+        </div>
+      </form>`;
+
+    const keep = () => {
+      d.name = $('#ed-name').value;
+      if (kind === 'products') {
+        const sel = $('#ed-cat').value;
+        if (sel === '__new') d.category = $('#ed-newcat') ? $('#ed-newcat').value : d.category;
+        else d.category = sel;
+      } else d.subtitle = $('#ed-sub').value;
+    };
+    const close = () => { if (dlg.open) dlg.close(); };
+    $('#ed-x').onclick = close;
+    $('#ed-cancel').onclick = close;
+    if (kind === 'products') $('#ed-cat').onchange = e => { keep(); newCat = e.target.value === '__new'; if (newCat) d.category = ''; draw(); if (newCat) $('#ed-newcat').focus(); };
+    $('#ed-photo').onchange = async e => {
+      const f = e.target.files[0]; if (!f) return;
+      keep(); busy('Обрабатываю фото…');
+      try { d.image = await addImage(f, kind === 'products' ? 'products' : 'planned', d.name || f.name, kind === 'products' ? 1400 : 1600); busy(false); draw(); }
+      catch (err) { busy(false); draw(err.message); }
+    };
+    if ($('#ed-photo-del')) $('#ed-photo-del').onclick = () => { keep(); d.image = ''; draw(); };
+    if (kind === 'products') {
+      $('#ed-pages').onchange = async e => {
+        const files = [...e.target.files]; if (!files.length) return;
+        keep();
+        try {
+          for (let i = 0; i < files.length; i++) {
+            busy('Обрабатываю страницу ' + (i + 1) + ' из ' + files.length + '…');
+            d.leaflets.push(await addImage(files[i], 'leaflets', d.name || 'buklet', 2400));
+          }
+          busy(false); draw();
+        } catch (err) { busy(false); draw(err.message); }
+      };
+      dlg.querySelectorAll('[data-pg]').forEach(b => b.onclick = () => {
+        keep();
+        const i = Number(b.dataset.i), L = d.leaflets;
+        if (b.dataset.pg === 'del') L.splice(i, 1);
+        if (b.dataset.pg === 'left' && i > 0) [L[i - 1], L[i]] = [L[i], L[i - 1]];
+        if (b.dataset.pg === 'right' && i < L.length - 1) [L[i + 1], L[i]] = [L[i], L[i + 1]];
+        draw();
+      });
+    }
+    $('#ed').onsubmit = e => {
+      e.preventDefault(); keep();
+      d.name = d.name.trim();
+      if (!d.name) return draw('Укажите название.');
+      if (kind === 'products') {
+        d.category = (d.category || '').trim();
+        if (!d.category) return draw('Укажите категорию.');
+      } else d.subtitle = (d.subtitle || '').trim();
+      const dup = list.find(x => x._id !== E.id && x.name.trim().toLowerCase() === d.name.toLowerCase());
+      if (dup && !confirm('«' + d.name + '» уже есть в списке. Всё равно сохранить?')) return;
+      if (existing) {
+        const idx = list.findIndex(x => x._id === E.id);
+        list[idx] = Object.assign(d, { _id: E.id });
+      } else {
+        d._id = ++uid;
+        list.push(d);
+      }
+      S.status = null;
+      close(); renderMain();
+      toast(existing ? 'Сохранено. Не забудьте нажать «Опубликовать на сайте».' : 'Добавлено в конец списка. Не забудьте опубликовать.');
+    };
+  }
+  draw();
+  dlg.showModal();
+  dlg.scrollTop = 0;
+}
+
+/* ---------- публикация ---------- */
+function summary() {
+  const parts = [];
+  Object.keys(KINDS).forEach(k => {
+    const df = diff(k), w = k === 'products' ? 'товар' : 'планируемый';
+    df.added.forEach(x => parts.push('добавлен ' + w + ' «' + x.name + '»'));
+    df.changed.forEach(x => parts.push('изменён ' + w + ' «' + x.name + '»'));
+    df.removed.forEach(x => parts.push('удалён ' + w + ' «' + x.name + '»'));
+    if (df.reordered) parts.push('изменён порядок (' + KINDS[k].title.toLowerCase() + ')');
+  });
+  return parts;
+}
+function usedPaths(list) {
+  const set = new Set();
+  list.forEach(x => { if (x.image) set.add(x.image); (x.leaflets || []).forEach(p => set.add(p)); });
+  return set;
+}
+
+async function publish() {
+  const parts = summary();
+  if (!parts.length) return;
+  S.status = null;
+  try {
+    busy('Подготовка…');
+    const base = repoPath();
+    const ref = await api(base + '/git/ref/heads/' + encodeURIComponent(S.branch));
+    const parentSha = ref.object.sha;
+    const parent = await api(base + '/git/commits/' + parentSha);
+    const tree = await api(base + '/git/trees/' + parent.tree.sha + '?recursive=1');
+    const inRepo = new Map(tree.tree.filter(t => t.type === 'blob').map(t => [t.path, t.sha]));
+
+    const kinds = Object.keys(KINDS).filter(k => diff(k).count);
+    for (const k of kinds) {
+      const nowSha = inRepo.get(KINDS[k].file) || null;
+      if (nowSha !== S.d[k].sha) throw new Error('Данные на сайте изменились с другого устройства после того, как вы открыли админку. Обновите страницу и повторите правки.');
+    }
+
+    const before = new Set(), after = new Set();
+    Object.keys(KINDS).forEach(k => {
+      usedPaths(S.d[k].orig).forEach(p => before.add(p));
+      usedPaths(S.d[k].cur).forEach(p => after.add(p));
+    });
+    const uploads = [...after].filter(p => S.pending.has(p));
+    const entries = [];
+    for (let i = 0; i < uploads.length; i++) {
+      busy('Загружаю картинки: ' + (i + 1) + ' из ' + uploads.length + '…');
+      const blob = await api(base + '/git/blobs', { method: 'POST', body: { content: await blobToB64(S.pending.get(uploads[i])), encoding: 'base64' } });
+      entries.push({ path: uploads[i], mode: '100644', type: 'blob', sha: blob.sha });
+    }
+    [...before].filter(p => !after.has(p) && ASSET_DIRS.test(p) && inRepo.has(p))
+      .forEach(p => entries.push({ path: p, mode: '100644', type: 'blob', sha: null }));
+    kinds.forEach(k => entries.push({ path: KINDS[k].file, mode: '100644', type: 'blob', content: JSON.stringify(strip(S.d[k].cur), null, 2) + '\n' }));
+
+    busy('Сохраняю изменения…');
+    const newTree = await api(base + '/git/trees', { method: 'POST', body: { base_tree: parent.tree.sha, tree: entries } });
+    const msg = 'Админка: ' + (parts.length > 3 ? parts.slice(0, 3).join('; ') + ' и ещё ' + (parts.length - 3) : parts.join('; '));
+    const commit = await api(base + '/git/commits', { method: 'POST', body: { message: msg, tree: newTree.sha, parents: [parentSha] } });
+    await api(base + '/git/refs/heads/' + encodeURIComponent(S.branch), { method: 'PATCH', body: { sha: commit.sha } });
+
+    uploads.forEach(p => S.pending.delete(p));
+    for (const k of Object.keys(KINDS)) {
+      if (kinds.includes(k)) {
+        const f = await api(base + '/contents/' + KINDS[k].file + '?ref=' + encodeURIComponent(S.branch)).catch(() => null);
+        S.d[k].sha = f ? f.sha : S.d[k].sha;
+      }
+      S.d[k].orig = clone(S.d[k].cur);
+    }
+    busy(false);
+    S.status = { ok: true, text: 'Опубликовано: ' + parts.join('; ') + '. Сайт обновится примерно через 1–2 минуты.' };
+    renderMain();
+    watchBuild(commit.sha);
+  } catch (e) {
+    busy(false);
+    S.status = { ok: false, text: 'Не удалось опубликовать. ' + e.message };
+    renderMain();
+  }
+}
+
+async function watchBuild(sha) {
+  const started = Date.now();
+  while (Date.now() - started < 6 * 60 * 1000) {
+    await new Promise(r => setTimeout(r, 8000));
+    if (!S.status || !S.status.ok) return;
+    let b;
+    try { b = await api(repoPath() + '/pages/builds/latest'); } catch (e) { return; }
+    if (!b || b.commit !== sha) continue;
+    if (b.status === 'built') { S.status = { ok: true, text: 'Готово — изменения уже на сайте. Если видите старую версию, обновите страницу сайта.' }; renderMain(); return; }
+    if (b.status === 'errored') { S.status = { ok: false, text: 'Изменения сохранены, но сайт не обновился из-за ошибки на GitHub Pages. Попробуйте опубликовать ещё раз позже.' }; renderMain(); return; }
+  }
+}
+
+/* ---------- запуск ---------- */
+const saved = store.get('akson-admin-token');
+if (!CFG.owner || !CFG.repo) { S.owner = store.get('akson-admin-owner') || ''; S.repo = store.get('akson-admin-repo') || ''; }
+if (saved && S.owner && S.repo) { S.token = saved; start(); }
+else renderLogin();
+})();
+</script>
+</body>
+</html>
