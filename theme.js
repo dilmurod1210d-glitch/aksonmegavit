@@ -1,0 +1,2 @@
+(()=>{const buttons=document.querySelectorAll('[data-theme-choice]');function apply(theme){document.documentElement.dataset.theme=theme;buttons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.themeChoice===theme)));try{localStorage.setItem('akson-theme',theme)}catch(e){}}buttons.forEach(b=>b.addEventListener('click',()=>apply(b.dataset.themeChoice)));apply(document.documentElement.dataset.theme==='dark'?'dark':'light')})();
+const footerYear=document.getElementById("year");if(footerYear)footerYear.textContent=new Date().getFullYear();
