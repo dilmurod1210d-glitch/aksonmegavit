@@ -9,21 +9,21 @@
     ]
   },
   {
-    "name": "Уранефрит",
-    "category": "Сироплар",
-    "image": "assets/products/product-5584.png",
-    "leaflets": [
-      "assets/leaflets/leaflet-14.jpg",
-      "assets/leaflets/leaflet-15.jpg"
-    ]
-  },
-  {
     "name": "Серебрал",
     "category": "Сироплар",
     "image": "assets/products/product-5586.png",
     "leaflets": [
       "assets/leaflets/leaflet-5.jpg",
       "assets/leaflets/leaflet-6.jpg"
+    ]
+  },
+  {
+    "name": "Уранефрит",
+    "category": "Сироплар",
+    "image": "assets/products/product-5584.png",
+    "leaflets": [
+      "assets/leaflets/leaflet-14.jpg",
+      "assets/leaflets/leaflet-15.jpg"
     ]
   },
   {
