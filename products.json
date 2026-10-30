@@ -2,567 +2,567 @@
   {
     "name": "Гемовит",
     "category": "Сироплар",
-    "image": "assets/products/product-5588.png",
+    "image": "assets/products/product-5588.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-7.jpg",
-      "assets/leaflets/leaflet-8.jpg"
+      "assets/leaflets/leaflet-7.webp",
+      "assets/leaflets/leaflet-8.webp"
     ]
   },
   {
     "name": "Уранефрит",
     "category": "Сироплар",
-    "image": "assets/products/product-5584.png",
+    "image": "assets/products/product-5584.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-14.jpg",
-      "assets/leaflets/leaflet-15.jpg"
+      "assets/leaflets/leaflet-14.webp",
+      "assets/leaflets/leaflet-15.webp"
     ]
   },
   {
     "name": "Серебрал",
     "category": "Сироплар",
-    "image": "assets/products/product-5586.png",
+    "image": "assets/products/product-5586.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-5.jpg",
-      "assets/leaflets/leaflet-6.jpg"
+      "assets/leaflets/leaflet-5.webp",
+      "assets/leaflets/leaflet-6.webp"
     ]
   },
   {
     "name": "Гептрахол",
     "category": "Сироплар",
-    "image": "assets/products/product-5585.png",
+    "image": "assets/products/product-5585.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-10.jpg",
-      "assets/leaflets/leaflet-11.jpg"
+      "assets/leaflets/leaflet-10.webp",
+      "assets/leaflets/leaflet-11.webp"
     ]
   },
   {
     "name": "Бронхопол",
     "category": "Сироплар",
-    "image": "assets/products/product-5587.png",
+    "image": "assets/products/product-5587.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-3.jpg",
-      "assets/leaflets/leaflet-4.jpg"
+      "assets/leaflets/leaflet-3.webp",
+      "assets/leaflets/leaflet-4.webp"
     ]
   },
   {
     "name": "Верта-Ф",
     "category": "Сироплар",
-    "image": "assets/products/verta-f.png",
+    "image": "assets/products/verta-f.webp",
     "leaflets": [
-      "assets/booklets/booklet-3.jpg",
-      "assets/booklets/booklet-20.jpg"
+      "assets/booklets/booklet-3.webp",
+      "assets/booklets/booklet-20.webp"
     ]
   },
   {
     "name": "Лафия-П",
     "category": "Сироплар",
-    "image": "assets/products/product-5630.png",
+    "image": "assets/products/product-5630.webp",
     "leaflets": [
-      "assets/booklets/booklet-50.jpg",
-      "assets/booklets/booklet-51.jpg"
+      "assets/booklets/booklet-50.webp",
+      "assets/booklets/booklet-51.webp"
     ]
   },
   {
     "name": "Седадокс",
     "category": "Сироплар",
-    "image": "assets/products/product-5629.png",
+    "image": "assets/products/product-5629.webp",
     "leaflets": [
-      "assets/booklets/booklet-10.jpg",
-      "assets/booklets/booklet-11.jpg"
+      "assets/booklets/booklet-10.webp",
+      "assets/booklets/booklet-11.webp"
     ]
   },
   {
     "name": "Ливер-ЭС",
     "category": "Сироплар",
-    "image": "assets/products/product-5631.png",
+    "image": "assets/products/product-5631.webp",
     "leaflets": [
-      "assets/booklets/booklet-52.jpg",
-      "assets/booklets/booklet-53.jpg"
+      "assets/booklets/booklet-52.webp",
+      "assets/booklets/booklet-53.webp"
     ]
   },
   {
     "name": "ПК-Форте",
     "category": "Сироплар",
-    "image": "assets/products/product-5632.png",
+    "image": "assets/products/product-5632.webp",
     "leaflets": [
-      "assets/booklets/booklet-8.jpg",
-      "assets/booklets/booklet-9.jpg"
+      "assets/booklets/booklet-8.webp",
+      "assets/booklets/booklet-9.webp"
     ]
   },
   {
     "name": "Дероно",
     "category": "Сироплар",
-    "image": "assets/products/product-5592.png",
+    "image": "assets/products/product-5592.webp",
     "leaflets": [
-      "assets/booklets/booklet-36.jpg",
-      "assets/booklets/booklet-47.jpg"
+      "assets/booklets/booklet-36.webp",
+      "assets/booklets/booklet-47.webp"
     ]
   },
   {
     "name": "МедикоВит",
     "category": "Сироплар",
-    "image": "assets/products/product-5602.png",
+    "image": "assets/products/product-5602.webp",
     "leaflets": [
-      "assets/booklets/booklet-5.jpg",
-      "assets/booklets/booklet-22.jpg"
+      "assets/booklets/booklet-5.webp",
+      "assets/booklets/booklet-22.webp"
     ]
   },
   {
     "name": "Бондекс",
     "category": "Сироплар",
-    "image": "assets/products/product-5606.png",
+    "image": "assets/products/product-5606.webp",
     "leaflets": [
-      "assets/booklets/booklet-42.jpg",
-      "assets/booklets/booklet-43.jpg"
+      "assets/booklets/booklet-42.webp",
+      "assets/booklets/booklet-43.webp"
     ]
   },
   {
     "name": "Орвинол",
     "category": "Сироплар",
-    "image": "assets/products/product-5644.png",
+    "image": "assets/products/product-5644.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-42.jpg",
-      "assets/leaflets/leaflet-43.jpg"
+      "assets/leaflets/leaflet-42.webp",
+      "assets/leaflets/leaflet-43.webp"
     ]
   },
   {
     "name": "Тотем сироп",
     "category": "Сироплар",
-    "image": "assets/products/product-5647.png",
+    "image": "assets/products/product-5647.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-50.jpg",
-      "assets/leaflets/leaflet-51.jpg"
+      "assets/leaflets/leaflet-50.webp",
+      "assets/leaflets/leaflet-51.webp"
     ]
   },
   {
     "name": "Бенок сироп",
     "category": "Сироплар",
-    "image": "assets/products/product-5635.png",
+    "image": "assets/products/product-5635.webp",
     "leaflets": [
-      "assets/booklets/booklet-38.jpg",
-      "assets/booklets/booklet-49.jpg"
+      "assets/booklets/booklet-38.webp",
+      "assets/booklets/booklet-49.webp"
     ]
   },
   {
     "name": "Галора сироп",
     "category": "Сироплар",
-    "image": "assets/products/product-5643.png",
+    "image": "assets/products/product-5643.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-24.jpg",
-      "assets/leaflets/leaflet-25.jpg"
+      "assets/leaflets/leaflet-24.webp",
+      "assets/leaflets/leaflet-25.webp"
     ]
   },
   {
     "name": "Кардил сироп",
     "category": "Сироплар",
-    "image": "assets/products/product-5645.png",
+    "image": "assets/products/product-5645.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-31.jpg",
-      "assets/leaflets/leaflet-32.jpg"
+      "assets/leaflets/leaflet-31.webp",
+      "assets/leaflets/leaflet-32.webp"
     ]
   },
   {
     "name": "Аксокарнил",
     "category": "Сироплар",
-    "image": "assets/products/product-5583.png",
+    "image": "assets/products/product-5583.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-17.jpg",
-      "assets/leaflets/leaflet-18.jpg"
+      "assets/leaflets/leaflet-17.webp",
+      "assets/leaflets/leaflet-18.webp"
     ]
   },
   {
     "name": "Эларгин",
     "category": "Сироплар",
-    "image": "assets/products/product-5598.png",
+    "image": "assets/products/product-5598.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-57.jpg",
-      "assets/leaflets/leaflet-58.jpg"
+      "assets/leaflets/leaflet-57.webp",
+      "assets/leaflets/leaflet-58.webp"
     ]
   },
   {
     "name": "Оптизрения",
     "category": "Сироплар",
-    "image": "assets/products/product-5589.png",
+    "image": "assets/products/product-5589.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-40.jpg",
-      "assets/leaflets/leaflet-41.jpg"
+      "assets/leaflets/leaflet-40.webp",
+      "assets/leaflets/leaflet-41.webp"
     ]
   },
   {
     "name": "Полиферрум",
     "category": "Сироплар",
-    "image": "assets/products/product-5604.png",
+    "image": "assets/products/product-5604.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-46.jpg",
-      "assets/leaflets/leaflet-47.jpg"
+      "assets/leaflets/leaflet-46.webp",
+      "assets/leaflets/leaflet-47.webp"
     ]
   },
   {
     "name": "Герас Форте",
     "category": "Сироплар",
-    "image": "assets/products/product-5590.png",
+    "image": "assets/products/product-5590.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-23.jpg"
+      "assets/leaflets/leaflet-23.webp"
     ]
   },
   {
     "name": "Орвос Форте",
     "category": "Сироплар",
-    "image": "assets/products/product-5600.png",
+    "image": "assets/products/product-5600.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-39.jpg"
+      "assets/leaflets/leaflet-39.webp"
     ]
   },
   {
     "name": "Пента - Г",
     "category": "Сироплар",
-    "image": "assets/products/product-5648.png",
+    "image": "assets/products/product-5648.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-44.jpg",
-      "assets/leaflets/leaflet-45.jpg"
+      "assets/leaflets/leaflet-44.webp",
+      "assets/leaflets/leaflet-45.webp"
     ]
   },
   {
     "name": "ЦитроГен",
     "category": "Сироплар",
-    "image": "assets/products/product-5633.png",
+    "image": "assets/products/product-5633.webp",
     "leaflets": [
-      "assets/booklets/booklet-40.jpg",
-      "assets/booklets/booklet-41.jpg"
+      "assets/booklets/booklet-40.webp",
+      "assets/booklets/booklet-41.webp"
     ]
   },
   {
     "name": "Витатен",
     "category": "Сироплар",
-    "image": "assets/products/product-5608.png",
+    "image": "assets/products/product-5608.webp",
     "leaflets": [
-      "assets/booklets/booklet-34.jpg",
-      "assets/booklets/booklet-39.jpg"
+      "assets/booklets/booklet-34.webp",
+      "assets/booklets/booklet-39.webp"
     ]
   },
   {
     "name": "Эквамин",
     "category": "Сироплар",
-    "image": "assets/products/product-5614.png",
+    "image": "assets/products/product-5614.webp",
     "leaflets": [
-      "assets/booklets/booklet-30.jpg",
-      "assets/booklets/booklet-31.jpg"
+      "assets/booklets/booklet-30.webp",
+      "assets/booklets/booklet-31.webp"
     ]
   },
   {
     "name": "Нейролекс",
     "category": "Сироплар",
-    "image": "assets/products/product-5624.png",
+    "image": "assets/products/product-5624.webp",
     "leaflets": [
-      "assets/booklets/booklet-14.jpg",
-      "assets/booklets/booklet-15.jpg"
+      "assets/booklets/booklet-14.webp",
+      "assets/booklets/booklet-15.webp"
     ]
   },
   {
     "name": "Левистим",
     "category": "Сироплар",
-    "image": "assets/products/product-5623.png",
+    "image": "assets/products/product-5623.webp",
     "leaflets": [
-      "assets/booklets/booklet-12.jpg",
-      "assets/booklets/booklet-13.jpg"
+      "assets/booklets/booklet-12.webp",
+      "assets/booklets/booklet-13.webp"
     ]
   },
   {
     "name": "Респифорс",
     "category": "Сироплар",
-    "image": "assets/products/product-5617.png",
+    "image": "assets/products/product-5617.webp",
     "leaflets": [
-      "assets/booklets/booklet-28.jpg",
-      "assets/booklets/booklet-29.jpg"
+      "assets/booklets/booklet-28.webp",
+      "assets/booklets/booklet-29.webp"
     ]
   },
   {
     "name": "Офтолин",
     "category": "Сироплар",
-    "image": "assets/products/product-5620.png",
+    "image": "assets/products/product-5620.webp",
     "leaflets": [
-      "assets/booklets/booklet-26.jpg",
-      "assets/booklets/booklet-27.jpg"
+      "assets/booklets/booklet-26.webp",
+      "assets/booklets/booklet-27.webp"
     ]
   },
   {
     "name": "Глистон",
     "category": "Сироплар",
-    "image": "assets/products/gliston.png",
+    "image": "assets/products/gliston.webp",
     "leaflets": [
-      "assets/booklets/booklet-6.jpg",
-      "assets/booklets/booklet-23.jpg"
+      "assets/booklets/booklet-6.webp",
+      "assets/booklets/booklet-23.webp"
     ]
   },
   {
     "name": "Нефросен",
     "category": "Сироплар",
-    "image": "assets/products/product-5634.png",
+    "image": "assets/products/product-5634.webp",
     "leaflets": [
-      "assets/booklets/booklet-16.jpg",
-      "assets/booklets/booklet-24.jpg"
+      "assets/booklets/booklet-16.webp",
+      "assets/booklets/booklet-24.webp"
     ]
   },
   {
     "name": "Лораген",
     "category": "Спрейлар",
-    "image": "assets/products/product-5639.png",
+    "image": "assets/products/product-5639.webp",
     "leaflets": [
-      "assets/booklets/booklet-7.jpg",
-      "assets/booklets/booklet-54.jpg"
+      "assets/booklets/booklet-7.webp",
+      "assets/booklets/booklet-54.webp"
     ]
   },
   {
     "name": "Дермисофт",
     "category": "Спрейлар",
-    "image": "assets/products/product-5628.png",
+    "image": "assets/products/product-5628.webp",
     "leaflets": [
-      "assets/booklets/booklet-0.jpg",
-      "assets/booklets/booklet-17.jpg"
+      "assets/booklets/booklet-0.webp",
+      "assets/booklets/booklet-17.webp"
     ]
   },
   {
     "name": "Синулор спрей",
     "category": "Спрейлар",
-    "image": "assets/products/product-5627.png",
+    "image": "assets/products/product-5627.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-49.jpg"
+      "assets/leaflets/leaflet-49.webp"
     ]
   },
   {
     "name": "Аксоден",
     "category": "Спрейлар",
-    "image": "assets/products/product-5594.png",
+    "image": "assets/products/product-5594.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-16.jpg"
+      "assets/leaflets/leaflet-16.webp"
     ]
   },
   {
     "name": "Экстра спрей",
     "category": "Спрейлар",
-    "image": "assets/products/product-5597.png",
+    "image": "assets/products/product-5597.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-55.jpg",
-      "assets/leaflets/leaflet-56.jpg"
+      "assets/leaflets/leaflet-55.webp",
+      "assets/leaflets/leaflet-56.webp"
     ]
   },
   {
     "name": "Абсолют спрей",
     "category": "Спрейлар",
-    "image": "assets/products/product-5595.png",
+    "image": "assets/products/product-5595.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-1.jpg"
+      "assets/leaflets/leaflet-1.webp"
     ]
   },
   {
     "name": "Аксалор спрей",
     "category": "Спрейлар",
-    "image": "assets/products/aksalor.png",
+    "image": "assets/products/aksalor.webp",
     "leaflets": [
-      "assets/booklets/booklet-32.jpg",
-      "assets/booklets/booklet-33.jpg"
+      "assets/booklets/booklet-32.webp",
+      "assets/booklets/booklet-33.webp"
     ]
   },
   {
     "name": "Гелмаксон",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5657.png",
+    "image": "assets/products/product-5657.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-26.jpg"
+      "assets/leaflets/leaflet-26.webp"
     ]
   },
   {
     "name": "Аксон Энерджи",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/akson-energy.png",
+    "image": "assets/products/akson-energy.webp",
     "leaflets": [
-      "assets/booklets/booklet-25.jpg"
+      "assets/booklets/booklet-25.webp"
     ]
   },
   {
     "name": "Кальмакс",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5636.png",
+    "image": "assets/products/product-5636.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-30.jpg"
+      "assets/leaflets/leaflet-30.webp"
     ]
   },
   {
     "name": "Магпарим",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5637.png",
+    "image": "assets/products/product-5637.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-34.jpg"
+      "assets/leaflets/leaflet-34.webp"
     ]
   },
   {
     "name": "Асмосед",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5652.png",
+    "image": "assets/products/product-5652.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-19.png"
+      "assets/leaflets/leaflet-19.webp"
     ]
   },
   {
     "name": "Асмофер",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5641.png",
+    "image": "assets/products/product-5641.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-2.jpg",
-      "assets/leaflets/leaflet-20.png"
+      "assets/leaflets/leaflet-2.webp",
+      "assets/leaflets/leaflet-20.webp"
     ]
   },
   {
     "name": "Нефростаб",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/nefrostab.png",
+    "image": "assets/products/nefrostab.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-12.jpg",
-      "assets/leaflets/leaflet-38.png"
+      "assets/leaflets/leaflet-12.webp",
+      "assets/leaflets/leaflet-38.webp"
     ]
   },
   {
     "name": "Гепастаб",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5653.png",
+    "image": "assets/products/product-5653.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-9.jpg",
-      "assets/leaflets/leaflet-28.png"
+      "assets/leaflets/leaflet-9.webp",
+      "assets/leaflets/leaflet-28.webp"
     ]
   },
   {
     "name": "Цинк-Актив",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5642.png",
+    "image": "assets/products/product-5642.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-13.jpg",
-      "assets/leaflets/leaflet-60.png"
+      "assets/leaflets/leaflet-13.webp",
+      "assets/leaflets/leaflet-60.webp"
     ]
   },
   {
     "name": "Андроксен",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5612.png",
+    "image": "assets/products/product-5612.webp",
     "leaflets": [
-      "assets/booklets/booklet-4.jpg",
-      "assets/booklets/booklet-21.jpg"
+      "assets/booklets/booklet-4.webp",
+      "assets/booklets/booklet-21.webp"
     ]
   },
   {
     "name": "Дамиана",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5621.png",
+    "image": "assets/products/product-5621.webp",
     "leaflets": [
-      "assets/booklets/booklet-37.jpg",
-      "assets/booklets/booklet-48.jpg"
+      "assets/booklets/booklet-37.webp",
+      "assets/booklets/booklet-48.webp"
     ]
   },
   {
     "name": "Седора",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5638.png",
+    "image": "assets/products/product-5638.webp",
     "leaflets": [
-      "assets/booklets/sedora.png"
+      "assets/booklets/sedora.webp"
     ]
   },
   {
     "name": "Фераксон",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5650.png",
+    "image": "assets/products/product-5650.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-53.jpg"
+      "assets/leaflets/leaflet-53.webp"
     ]
   },
   {
     "name": "Седаксон",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5649.png",
+    "image": "assets/products/product-5649.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-48.jpg"
+      "assets/leaflets/leaflet-48.webp"
     ]
   },
   {
     "name": "Гепаксон",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5656.png",
+    "image": "assets/products/product-5656.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-27.jpg"
+      "assets/leaflets/leaflet-27.webp"
     ]
   },
   {
     "name": "Нефраксон",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5654.png",
+    "image": "assets/products/product-5654.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-37.jpg"
+      "assets/leaflets/leaflet-37.webp"
     ]
   },
   {
     "name": "Цинк-Аксон",
     "category": "Таблетка ва капсулалар",
-    "image": "assets/products/product-5640.png",
+    "image": "assets/products/product-5640.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-54.jpg"
+      "assets/leaflets/leaflet-54.webp"
     ]
   },
   {
     "name": "Кидолак",
     "category": "Томчилар",
-    "image": "assets/products/product-5593.png",
+    "image": "assets/products/product-5593.webp",
     "leaflets": [
-      "assets/booklets/booklet-1.jpg",
-      "assets/booklets/booklet-18.jpg"
+      "assets/booklets/booklet-1.webp",
+      "assets/booklets/booklet-18.webp"
     ]
   },
   {
     "name": "Детрино",
     "category": "Томчилар",
-    "image": "assets/products/product-5591.png",
+    "image": "assets/products/product-5591.webp",
     "leaflets": [
-      "assets/booklets/booklet-2.jpg",
-      "assets/booklets/booklet-19.jpg"
+      "assets/booklets/booklet-2.webp",
+      "assets/booklets/booklet-19.webp"
     ]
   },
   {
     "name": "Бейбифлор",
     "category": "Томчилар",
-    "image": "assets/products/product-5611.png",
+    "image": "assets/products/product-5611.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-22.jpg"
+      "assets/leaflets/leaflet-22.webp"
     ]
   },
   {
     "name": "Натуралергин",
     "category": "Томчилар",
-    "image": "assets/products/product-5596.png",
+    "image": "assets/products/product-5596.webp",
     "leaflets": [
-      "assets/booklets/booklet-35.jpg",
-      "assets/booklets/booklet-46.jpg"
+      "assets/booklets/booklet-35.webp",
+      "assets/booklets/booklet-46.webp"
     ]
   },
   {
     "name": "Ацидофлор",
     "category": "Саше ва порошоклар",
-    "image": "assets/products/product-5615.png",
+    "image": "assets/products/product-5615.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-21.jpg"
+      "assets/leaflets/leaflet-21.webp"
     ]
   },
   {
     "name": "Инубакт",
     "category": "Саше ва порошоклар",
-    "image": "assets/products/product-5618.png",
+    "image": "assets/products/product-5618.webp",
     "leaflets": [
-      "assets/booklets/booklet-44.jpg",
-      "assets/booklets/booklet-45.jpg"
+      "assets/booklets/booklet-44.webp",
+      "assets/booklets/booklet-45.webp"
     ]
   },
   {
     "name": "Унбактум",
     "category": "Саше ва порошоклар",
-    "image": "assets/products/product-5655.png",
+    "image": "assets/products/product-5655.webp",
     "leaflets": [
-      "assets/leaflets/leaflet-52.jpg"
+      "assets/leaflets/leaflet-52.webp"
     ]
   }
 ]

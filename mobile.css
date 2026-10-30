@@ -1,0 +1,17 @@
+/* Сўнгги тузатишлар: бошқа CSS файллардан кейин уланади. */
+
+/* Каталог сарлавҳаси h1 бўлди — кўриниши олдинги h2 билан бир хил қолади */
+.catalog-title h1{font-size:32px;font-weight:500;letter-spacing:-1px;line-height:normal;margin:18px 0 30px}
+@media(max-width:650px){.catalog-title h1{font-size:26px}}
+
+/* 801–920px (планшетлар): меню бир қаторга сиғмай, саҳифа ёнга чўзиларди.
+   800px'дан кичик экрандаги каби менюни иккинчи қаторга туширамиз. */
+@media(min-width:801px) and (max-width:920px){
+  header{flex-wrap:wrap;height:auto;padding-top:14px;padding-bottom:10px;row-gap:7px;border-radius:28px}
+  .main-links{order:3;width:100%;justify-content:center;flex-wrap:wrap}
+  .main-links a{font-size:13px;padding:10px 12px}
+}
+
+/* 404 саҳифаси */
+.not-found{padding-bottom:80px}
+.not-found-home{display:inline-block;margin-left:18px;color:var(--green);font-weight:600}

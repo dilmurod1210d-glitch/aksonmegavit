@@ -277,7 +277,7 @@ function renderLogin(error) {
   const needRepo = !CFG.owner || !CFG.repo;
   $('#app').innerHTML = `
   <div class="wrap"><form class="login" id="login">
-    <div class="logos"><img src="../assets/brands/akson.png" alt=""><img src="../assets/brands/megavit.jpg" alt=""></div>
+    <div class="logos"><img src="../assets/brands/akson.webp" alt=""><img src="../assets/brands/megavit.webp" alt=""></div>
     <h1>Вход в админку</h1>
     <div class="hint">Изменения на сайте может вносить только владелец ключа доступа.</div>
     ${error ? `<div class="err">${esc(error)}</div>` : ''}
