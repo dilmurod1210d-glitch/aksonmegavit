@@ -5,10 +5,12 @@
   const input = $('#search'), chips = [...document.querySelectorAll('[data-filter]')];
   const sections = [...document.querySelectorAll('.product-category')];
   const count = $('#result-count'), reset = $('#reset'), empty = $('#empty');
-  const norm = s => s.toLocaleLowerCase().replace(/ё/g, 'е').trim();
+  const norm = s => s.toLocaleLowerCase().replace(/ё/g, 'е').replace(/[ʻʼ'‘’]/g, '').trim();
   const params = new URLSearchParams(location.search);
-  let cat = params.get('category') || '';
-  if (!chips.some(b => b.dataset.filter === cat)) cat = '';
+  // ?category= — латинский ключ; старые ссылки с названием на кириллице тоже работают.
+  const wanted = params.get('category') || '';
+  const chip = chips.find(b => b.dataset.filter === wanted || b.dataset.name === wanted);
+  let cat = chip ? chip.dataset.filter : '';
   input.value = params.get('q') || '';
 
   function apply() {
@@ -25,7 +27,7 @@
       sec.hidden = !n;
       total += n;
     });
-    count.textContent = total + ' та маҳсулот';
+    count.textContent = count.dataset.template.replace('{n}', total);
     empty.hidden = total > 0;
     reset.hidden = !q && !cat;
     chips.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.filter === cat)));

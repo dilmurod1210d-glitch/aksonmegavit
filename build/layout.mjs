@@ -1,11 +1,15 @@
 // Общий каркас всех страниц: <head>, шапка, подвал, нижняя панель звонка.
 // Страницы (build/pages.mjs, build/product-page.mjs) передают только содержимое <main>.
+// Каждая страница собирается на трёх языках (build/i18n.mjs).
+import { LANGS, LANG_ORDER, L, href, dataText, productPath } from './i18n.mjs';
+
 export const SITE = 'https://aksonmegavit.uz';
 export const PHONES = [['+998912740000', '91 274 00 00'], ['+998975840000', '97 584 00 00'], ['+998902547000', '90 254 70 00']];
-export const ADDRESS = 'Андижон вилояти, Андижон шаҳри';
+export const address = lang => L(lang)('Андижон вилояти, Андижон шаҳри', 'Андижанская область, г. Андижан');
 
 export const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-export const catalogUrl = cat => '/catalog.html' + (cat ? '?category=' + encodeURIComponent(cat) : '');
+// Ссылка на категорию в каталоге: ?category=<латинский ключ>
+export const catalogUrl = (lang, cat) => href(lang, '/catalog.html') + (cat ? '?category=' + cat.key : '');
 
 // Иконки (24×24, обводка) — без внешних библиотек.
 const svg = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
@@ -18,75 +22,82 @@ export const ICON = {
   search: svg('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>'),
   arrow: svg('<path d="M5 12h14M13 6l6 6-6 6"/>'),
   info: svg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>'),
-  leaf: svg('<path d="M11 20A7 7 0 0 1 4 13c0-5 4-9 16-9 0 12-4 16-9 16z"/><path d="M4 20c4-4 7-6 11-8"/>'),
   doc: svg('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>'),
   pin: svg('<path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0z"/><circle cx="12" cy="10" r="2.5"/>'),
   flask: svg('<path d="M9 3h6M10 3v6L4.5 18.5A1.7 1.7 0 0 0 6 21h12a1.7 1.7 0 0 0 1.5-2.5L14 9V3"/><path d="M7 15h10"/>'),
-  clock: svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>')
+  clock: svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>'),
+  globe: svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>')
 };
-
-const NAV = [['/catalog.html', 'Каталог', 'catalog'], ['/about.html', 'Биз ҳақимизда', 'about'], ['/planned.html', 'Режадаги маҳсулотлар', 'planned'], ['#contacts', 'Алоқа', '']];
 
 const logos = `<img class="logo-akson" src="/assets/brands/akson.webp" width="680" height="158" alt="Akson Pharmaceutical company"><span class="logo-divider" aria-hidden="true"></span><img class="logo-megavit" src="/assets/brands/megavit.webp" width="460" height="307" alt="MegavitFarm">`;
 
-function header(active) {
-  return `<a class="skip" href="#main">Асосий матнга ўтиш</a>
+function header(lang, active, alternates) {
+  const t = L(lang);
+  const nav = [['/catalog.html', t('Каталог', 'Каталог'), 'catalog'], ['/about.html', t('Биз ҳақимизда', 'О компании'), 'about'], ['/planned.html', t('Режадаги маҳсулотлар', 'Планируемые продукты'), 'planned']];
+  const langs = LANG_ORDER.map(l => `<a href="${alternates[l]}" hreflang="${LANGS[l].hreflang}" lang="${LANGS[l].html}" title="${LANGS[l].name}"${l === lang ? ' aria-current="true"' : ''}>${LANGS[l].label}</a>`).join('');
+  return `<a class="skip" href="#main">${t('Асосий матнга ўтиш', 'Перейти к содержанию')}</a>
 <header class="site-header"><div class="container header-inner">
-<a class="brand" href="/" aria-label="Akson Megavit — бош саҳифа">${logos}</a>
-<nav class="site-nav" id="site-nav" aria-label="Асосий меню">${NAV.map(([href, label, key]) => `<a href="${href}"${key && key === active ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav>
+<a class="brand" href="${href(lang, '/')}" aria-label="Akson Megavit — ${t('бош саҳифа', 'главная')}">${logos}</a>
+<nav class="site-nav" id="site-nav" aria-label="${t('Асосий меню', 'Основное меню')}">${nav.map(([p, label, key]) => `<a href="${href(lang, p)}"${key === active ? ' aria-current="page"' : ''}>${label}</a>`).join('')}<a href="#contacts">${t('Алоқа', 'Контакты')}</a><button type="button" class="nav-theme theme-toggle" data-theme-toggle><span class="sun">${ICON.sun}</span><span class="moon">${ICON.moon}</span>${t('Тунги / кундузги режим', 'Тёмная / светлая тема')}</button></nav>
 <div class="header-tools">
-<button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-label="Тунги / кундузги режим"><span class="sun">${ICON.sun}</span><span class="moon">${ICON.moon}</span></button>
+<nav class="lang-switch" aria-label="${t('Тил', 'Язык')}">${langs}</nav>
+<button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-label="${t('Тунги / кундузги режим', 'Тёмная / светлая тема')}"><span class="sun">${ICON.sun}</span><span class="moon">${ICON.moon}</span></button>
 <a class="btn btn-primary btn-sm header-call" href="tel:${PHONES[0][0]}">${ICON.phone}${PHONES[0][1]}</a>
-<button type="button" class="icon-btn menu-toggle" data-menu-toggle aria-controls="site-nav" aria-expanded="false" aria-label="Менюни очиш"><span class="open-icon">${ICON.menu}</span><span class="close-icon">${ICON.close}</span></button>
+<button type="button" class="icon-btn menu-toggle" data-menu-toggle aria-controls="site-nav" aria-expanded="false" aria-label="${t('Менюни очиш', 'Открыть меню')}" data-label-open="${t('Менюни очиш', 'Открыть меню')}" data-label-close="${t('Менюни ёпиш', 'Закрыть меню')}"><span class="open-icon">${ICON.menu}</span><span class="close-icon">${ICON.close}</span></button>
 </div>
 </div></header>`;
 }
 
-function footer(categories) {
+function footer(lang, categories) {
+  const t = L(lang);
   return `<footer class="site-footer" id="contacts"><div class="container">
 <div class="footer-grid">
-<div class="footer-about"><a class="brand" href="/" aria-label="Akson Megavit — бош саҳифа">${logos}</a><p>Akson ва Megavit — 2017 йилдан буён биологик фаол қўшимчалар ишлаб чиқаради. ${ADDRESS}.</p></div>
-<div><h2>Боғланиш</h2><ul class="footer-phones">${PHONES.map(([t, l]) => `<li><a href="tel:${t}">${l}</a></li>`).join('')}</ul><p class="muted" style="margin-top:12px">${ADDRESS}</p></div>
-<div><h2>Каталог</h2><ul>${categories.map(c => `<li><a href="${esc(catalogUrl(c))}">${esc(c)}</a></li>`).join('')}<li><a href="/planned.html">Режадаги маҳсулотлар</a></li></ul></div>
+<div class="footer-about"><a class="brand" href="${href(lang, '/')}" aria-label="Akson Megavit — ${t('бош саҳифа', 'главная')}">${logos}</a><p>${t('Akson ва Megavit — 2017 йилдан буён биологик фаол қўшимчалар ишлаб чиқаради.', 'Akson и Megavit с 2017 года производят биологически активные добавки.')} ${address(lang)}.</p></div>
+<div><h2>${t('Боғланиш', 'Контакты')}</h2><ul class="footer-phones">${PHONES.map(([tel, l]) => `<li><a href="tel:${tel}">${l}</a></li>`).join('')}</ul><p class="muted" style="margin-top:12px">${address(lang)}</p></div>
+<div><h2>${t('Каталог', 'Каталог')}</h2><ul>${categories.map(c => `<li><a href="${esc(catalogUrl(lang, c))}">${esc(dataText(lang, c.name, 'category'))}</a></li>`).join('')}<li><a href="${href(lang, '/planned.html')}">${t('Режадаги маҳсулотлар', 'Планируемые продукты')}</a></li></ul></div>
 </div>
-<div class="footer-bottom"><span>© <span id="year">${new Date().getFullYear()}</span> Akson Megavit pharmaceutical</span><span>Биологик фаол қўшимча дори воситаси ҳисобланмайди.</span></div>
+<div class="footer-bottom"><span>© <span id="year">${new Date().getFullYear()}</span> Akson Megavit pharmaceutical</span><span>${t('Биологик фаол қўшимча дори воситаси ҳисобланмайди.', 'БАД не является лекарственным средством.')}</span></div>
 </div></footer>
-<div class="call-bar"><a class="btn btn-primary" href="tel:${PHONES[0][0]}">${ICON.phone}Қўнғироқ қилиш</a><a class="btn btn-outline" href="/catalog.html">Каталог</a></div>`;
+<div class="call-bar"><a class="btn btn-primary" href="tel:${PHONES[0][0]}">${ICON.phone}${t('Қўнғироқ қилиш', 'Позвонить')}</a><a class="btn btn-outline" href="${href(lang, '/catalog.html')}">${t('Каталог', 'Каталог')}</a></div>`;
 }
 
-const ORG_LD = { '@context': 'https://schema.org', '@type': 'Organization', name: 'Akson Megavit', url: SITE + '/', logo: SITE + '/favicon-512.png', telephone: PHONES.map(p => p[0]), address: { '@type': 'PostalAddress', addressLocality: 'Андижон', addressRegion: 'Андижон вилояти', addressCountry: 'UZ' } };
+const orgLd = lang => ({ '@context': 'https://schema.org', '@type': 'Organization', name: 'Akson Megavit', url: SITE + '/', logo: SITE + '/favicon-512.png', telephone: PHONES.map(p => p[0]), address: { '@type': 'PostalAddress', addressLocality: L(lang)('Андижон', 'Андижан'), addressCountry: 'UZ' } });
 
-export function page({ title, description, path, active = '', bodyClass = '', main, categories, ld = [], ogType = 'website', ogImage, scripts = [], noindex = false, extraHead = '' }) {
-  const url = SITE + path;
+// alternates: { kr: '/catalog', uz: '/uz/catalog', ru: '/ru/catalog' } — один и тот же адрес на всех языках.
+export function page({ lang, title, description, alternates, active = '', main, categories, ld = [], ogType = 'website', ogImage, scripts = [], noindex = false, extraHead = '' }) {
+  const t = L(lang);
+  const url = SITE + alternates[lang];
   const image = ogImage || SITE + '/assets/og/og-image.jpg';
-  const jsonLd = [ORG_LD, ...ld];
+  const jsonLd = [orgLd(lang), ...ld];
+  const links = LANG_ORDER.map(l => `<link rel="alternate" hreflang="${LANGS[l].hreflang}" href="${SITE + alternates[l]}">`).join('') + `<link rel="alternate" hreflang="x-default" href="${SITE + alternates.kr}">`;
   return `<!doctype html>
-<html lang="uz-Cyrl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="${LANGS[lang].html}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title><meta name="description" content="${esc(description)}">
 <script>try{document.documentElement.dataset.theme=localStorage.getItem("akson-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")}catch(e){}</script>
-<link rel="preload" href="/assets/fonts/manrope-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/${lang === 'uz' ? 'manrope-latin' : 'manrope-cyrillic'}.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/site.css">
-${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${url}"><meta name="robots" content="index,follow">`}
-<meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${url}"><meta property="og:type" content="${ogType}"><meta property="og:image" content="${esc(image)}"><meta property="og:site_name" content="Akson Megavit"><meta property="og:locale" content="uz_UZ"><meta name="twitter:card" content="summary_large_image">
+${noindex ? '<meta name="robots" content="noindex">' : `<link rel="canonical" href="${url}"><meta name="robots" content="index,follow">${links}`}
+<meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${url}"><meta property="og:type" content="${ogType}"><meta property="og:image" content="${esc(image)}"><meta property="og:site_name" content="Akson Megavit"><meta property="og:locale" content="${LANGS[lang].og}"><meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#16204a">
 <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48"><link rel="icon" type="image/png" href="/favicon-48.png" sizes="48x48"><link rel="icon" type="image/png" href="/favicon-192.png" sizes="192x192"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
-${extraHead}<script type="application/ld+json">${JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : jsonLd).replace(/</g, '\\u003c')}</script>
+${extraHead}<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>
 </head>
-<body${bodyClass ? ` class="${bodyClass}"` : ''}>
-${header(active)}
+<body>
+${header(lang, active, alternates)}
 <main id="main">
 ${main}
 </main>
-${footer(categories)}
+${footer(lang, categories)}
 <script src="/theme.js" defer></script>${scripts.map(s => `<script src="${s}" defer></script>`).join('')}
 </body></html>
 `;
 }
 
 // Карточка товара — одинаковая в каталоге, на главной и в «похожих».
-export function productCard(p, { sizes = '(max-width:640px) 45vw, 280px', heading = 'h3' } = {}) {
+export function productCard(lang, p, { attrs = '' } = {}) {
+  const name = dataText(lang, p.name);
   const img = p.image
-    ? `<img loading="lazy" src="/${esc(p.thumb || p.image)}"${p.srcset ? ` srcset="${esc(p.srcset.replace(/(^|, )assets\//g, '$1/assets/'))}" sizes="${sizes}"` : ''} alt="${esc(p.name)}" width="400" height="400">`
-    : '<span class="placeholder">Сурат тайёрланмоқда</span>';
-  return `<a class="card" href="/${p.url}"><div class="photo">${img}</div><div class="card-text"><${heading}>${esc(p.name)}</${heading}><span>${esc(p.form || p.category)}</span></div></a>`;
+    ? `<img loading="lazy" src="/${esc(p.thumb || p.image)}"${p.srcset ? ` srcset="${esc(p.srcset.replace(/(^|, )assets\//g, '$1/assets/'))}" sizes="(max-width:640px) 45vw, 280px"` : ''} alt="${esc(name)}" width="400" height="400">`
+    : `<span class="placeholder">${L(lang)('Сурат тайёрланмоқда', 'Фото готовится')}</span>`;
+  return `<a class="card" href="${productPath(lang, p.slug)}"${attrs}><div class="photo">${img}</div><div class="card-text"><h3>${esc(name)}</h3><span>${esc(dataText(lang, p.form, 'form') || dataText(lang, p.category, 'category'))}</span></div></a>`;
 }

@@ -16,7 +16,7 @@
   const set = open => {
     nav.classList.toggle('open', open);
     toggle.setAttribute('aria-expanded', String(open));
-    toggle.setAttribute('aria-label', open ? 'Менюни ёпиш' : 'Менюни очиш');
+    toggle.setAttribute('aria-label', open ? toggle.dataset.labelClose : toggle.dataset.labelOpen);
   };
   toggle.addEventListener('click', () => set(!nav.classList.contains('open')));
   nav.addEventListener('click', e => { if (e.target.closest('a')) set(false); });

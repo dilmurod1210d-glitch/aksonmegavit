@@ -107,6 +107,11 @@ section{scroll-margin-top:calc(var(--header-h) + 16px)}
 .site-nav a:hover{color:var(--ink);background:var(--surface)}
 .site-nav a[aria-current="page"]{color:var(--primary);background:var(--primary-soft)}
 .header-tools{display:flex;align-items:center;gap:8px}
+/* Переключатель языка */
+.lang-switch{display:flex;border:1px solid var(--line);border-radius:999px;padding:3px}
+.lang-switch a{min-width:38px;height:36px;display:grid;place-items:center;padding:0 8px;border-radius:999px;font-size:14px;font-weight:700;color:var(--muted)}
+.lang-switch a:hover{color:var(--ink)}
+.lang-switch a[aria-current="true"]{background:var(--ink);color:var(--bg)}
 .icon-btn{display:inline-grid;place-items:center;width:44px;height:44px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
 .icon-btn:hover{border-color:var(--primary);color:var(--primary)}
 .icon-btn svg{width:20px;height:20px}
@@ -114,6 +119,7 @@ section{scroll-margin-top:calc(var(--header-h) + 16px)}
 :root[data-theme="dark"] .theme-toggle .sun{display:none}
 :root[data-theme="dark"] .theme-toggle .moon{display:block}
 .menu-toggle{display:none}
+.nav-theme{display:none}
 .menu-toggle .close-icon,.menu-toggle[aria-expanded="true"] .open-icon{display:none}
 .menu-toggle[aria-expanded="true"] .close-icon{display:block}
 .header-call{display:inline-flex}
@@ -268,6 +274,7 @@ body.modal-open{overflow:hidden}
   .category-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .product-grid,.planned-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
+@media (max-width:1240px){.header-call{display:none}}
 /* Меню прячется в «бургер», когда пункты перестают помещаться в строку */
 @media (max-width:1080px){
   .menu-toggle{display:inline-grid}
@@ -293,6 +300,13 @@ body.modal-open{overflow:hidden}
   body{padding-bottom:76px}
 }
 @media (max-width:640px){
+  .lang-switch a{min-width:32px;height:32px;padding:0 6px;font-size:13px}
+  /* На телефоне переключатель темы — внутри меню, чтобы шапка помещалась */
+  .header-tools .theme-toggle{display:none}
+  .nav-theme{display:flex;align-items:center;gap:12px;border:0;background:none;color:var(--ink-2);font-weight:600;font-size:17px;padding:14px 12px;text-align:left}
+  .nav-theme svg{width:20px;height:20px}
+  .header-tools{gap:6px}
+  .icon-btn{width:40px;height:40px}
   .category-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .category-tile{padding:14px}
   .category-tile img{height:110px}
@@ -305,8 +319,19 @@ body.modal-open{overflow:hidden}
   .cta-band .cta-phones{width:100%}
   .cta-band .btn{flex:1 1 100%}
   .brand{gap:8px}
-  .brand .logo-akson{height:24px}
-  .brand .logo-megavit{height:30px}
+  .brand .logo-akson{height:22px}
+  .brand .logo-megavit{height:28px}
+  .brand .logo-divider{height:22px}
+}
+@media (max-width:360px){
+  .brand{gap:6px}
+  .brand .logo-akson{height:18px}
+  .brand .logo-megavit{height:24px}
+  .header-inner{gap:8px}
+  .header-tools{gap:4px}
+  .lang-switch{padding:2px}
+  .lang-switch a{min-width:28px;padding:0 4px}
+  .icon-btn{width:38px;height:38px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}

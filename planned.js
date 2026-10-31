@@ -6,7 +6,7 @@
   document.querySelectorAll('[data-viewer]').forEach(b => b.addEventListener('click', () => {
     document.getElementById('viewer-title').textContent = b.dataset.title;
     img.src = link.href = b.dataset.viewer;
-    img.alt = b.dataset.title + ' — қадоқ макети';
+    img.alt = b.dataset.title + ' — ' + dialog.dataset.alt;
     dialog.showModal();
     document.body.classList.add('modal-open');
   }));

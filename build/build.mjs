@@ -8,6 +8,7 @@ import sharp from 'sharp';
 import { productPage } from './product-page.mjs';
 import { home, catalog, about, plannedPage, notFound } from './pages.mjs';
 import { SITE } from './layout.mjs';
+import { LANGS, LANG_ORDER, href, productPath } from './i18n.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, '_site');
@@ -47,10 +48,13 @@ async function makeThumbs(image) {
   return { thumb: sizes[0].rel, srcset: sizes.map(s => `${s.rel} ${s.w}w`).join(', ') };
 }
 
+// Каждый адрес на трёх языках, с перекрёстными ссылками hreflang.
 function sitemap(products) {
-  const urls = ['/', '/catalog', '/about', '/planned', ...products.map(p => '/' + p.url)];
-  return '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-    + urls.map(u => `<url><loc>${SITE}${u}</loc></url>`).join('\n') + '\n</urlset>\n';
+  const groups = [...['/', '/catalog', '/about', '/planned'].map(p => Object.fromEntries(LANG_ORDER.map(l => [l, href(l, p)]))),
+    ...products.map(p => Object.fromEntries(LANG_ORDER.map(l => [l, productPath(l, p.slug)])))];
+  const alt = g => LANG_ORDER.map(l => `<xhtml:link rel="alternate" hreflang="${LANGS[l].hreflang}" href="${SITE}${g[l]}"/>`).join('');
+  return '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+    + groups.flatMap(g => LANG_ORDER.map(l => `<url><loc>${SITE}${g[l]}</loc>${alt(g)}</url>`)).join('\n') + '\n</urlset>\n';
 }
 
 async function main() {
@@ -68,21 +72,23 @@ async function main() {
     if (p.image) Object.assign(p, await makeThumbs(p.image));
   }
 
-  const categories = [...new Set(products.map(p => p.category))];
-  const byCat = Object.fromEntries(categories.map(c => [c, products.filter(p => p.category === c)]));
+  // Категория: name — как в products.json, key — латинский ключ для адреса ?category=
+  const categories = [...new Set(products.map(p => p.category))].map(name => ({ name, key: slugify(name) }));
+  const byCat = Object.fromEntries(categories.map(c => [c.name, products.filter(p => p.category === c.name)]));
   let planned = [];
   try { planned = await readJson('planned.json'); } catch { console.warn('Нет planned.json'); }
   const data = { products, categories, byCat, planned };
 
-  for (const p of products) {
-    const related = byCat[p.category].filter(x => x !== p).slice(0, 4);
-    const dir = path.join(OUT, 'mahsulot', p.slug);
-    await fs.mkdir(dir, { recursive: true });
-    await fs.writeFile(path.join(dir, 'index.html'), productPage(p, related, categories));
+  const write = async (rel, html) => { const f = path.join(OUT, rel); await fs.mkdir(path.dirname(f), { recursive: true }); await fs.writeFile(f, html); };
+  for (const lang of LANG_ORDER) {
+    for (const p of products) {
+      const related = byCat[p.category].filter(x => x !== p).slice(0, 4);
+      await write(productPath(lang, p.slug) + 'index.html', productPage(lang, p, related, categories));
+    }
+    const pages = { '/index.html': home, '/catalog.html': catalog, '/about.html': about, '/planned.html': plannedPage };
+    for (const [file, render] of Object.entries(pages)) await write(href(lang, file), render(lang, data));
   }
-
-  const pages = { 'index.html': home, 'catalog.html': catalog, 'about.html': about, 'planned.html': plannedPage, '404.html': notFound };
-  for (const [file, render] of Object.entries(pages)) await fs.writeFile(path.join(OUT, file), render(data));
+  await write('404.html', notFound('kr', data));
 
   // Готовые ссылки и превью — для внешних потребителей (сам сайт этот файл не читает).
   await fs.writeFile(path.join(OUT, 'products.json'), JSON.stringify(products, null, 2) + '\n');
@@ -91,7 +97,7 @@ async function main() {
   // Админка сверяет этот файл, чтобы понять, что её коммит уже на сайте.
   await fs.writeFile(path.join(OUT, 'version.json'), JSON.stringify({ commit: process.env.GITHUB_SHA || 'local', built: new Date().toISOString() }) + '\n');
 
-  console.log(`Готово: ${products.length} страниц товаров → ${path.relative(ROOT, OUT)}/`);
+  console.log(`Готово: ${products.length} товаров × ${LANG_ORDER.length} языка → ${path.relative(ROOT, OUT)}/`);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
