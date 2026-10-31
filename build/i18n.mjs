@@ -56,6 +56,9 @@ export function dataText(lang, text, kind) {
   return text;
 }
 
+// Название товара: для латиницы можно задать своё (name_lat в админке), иначе — транслитерация.
+export const productName = (lang, p) => lang === 'uz' && p.name_lat ? p.name_lat : dataText(lang, p.name);
+
 // L(lang)('текст на кириллице', 'русский текст') — строка интерфейса.
 export const L = lang => (kr, ru) => lang === 'ru' ? ru : lang === 'uz' ? toLatin(kr) : kr;
 

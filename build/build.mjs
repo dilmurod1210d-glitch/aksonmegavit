@@ -6,13 +6,13 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { productPage } from './product-page.mjs';
-import { home, catalog, about, plannedPage, notFound } from './pages.mjs';
-import { SITE } from './layout.mjs';
+import { home, catalog, about, plannedPage, contacts, partners, notFound } from './pages.mjs';
+import { SITE, useSettings } from './layout.mjs';
 import { LANGS, LANG_ORDER, href, productPath } from './i18n.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, '_site');
-const SKIP = new Set(['.git', '.github', '.gitignore', 'node_modules', '_site', 'build', 'package.json', 'package-lock.json', 'README.md']);
+const SKIP = new Set(['site.json', '.git', '.github', '.gitignore', 'node_modules', '_site', 'build', 'package.json', 'package-lock.json', 'README.md']);
 const THUMBS = [400, 800];
 
 // Та же транслитерация, что и в админке (admin/index.html → slug()).
@@ -50,7 +50,7 @@ async function makeThumbs(image) {
 
 // Каждый адрес на трёх языках, с перекрёстными ссылками hreflang.
 function sitemap(products) {
-  const groups = [...['/', '/catalog', '/about', '/planned'].map(p => Object.fromEntries(LANG_ORDER.map(l => [l, href(l, p)]))),
+  const groups = [...['/', '/catalog', '/about', '/planned', '/contacts', '/partners'].map(p => Object.fromEntries(LANG_ORDER.map(l => [l, href(l, p)]))),
     ...products.map(p => Object.fromEntries(LANG_ORDER.map(l => [l, productPath(l, p.slug)])))];
   const alt = g => LANG_ORDER.map(l => `<xhtml:link rel="alternate" hreflang="${LANGS[l].hreflang}" href="${SITE}${g[l]}"/>`).join('');
   return '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
@@ -59,6 +59,7 @@ function sitemap(products) {
 
 async function main() {
   await copyStatic();
+  useSettings(await readJson('site.json'));
   const products = await readJson('products.json');
 
   const used = new Set();
@@ -85,7 +86,7 @@ async function main() {
       const related = byCat[p.category].filter(x => x !== p).slice(0, 4);
       await write(productPath(lang, p.slug) + 'index.html', productPage(lang, p, related, categories));
     }
-    const pages = { '/index.html': home, '/catalog.html': catalog, '/about.html': about, '/planned.html': plannedPage };
+    const pages = { '/index.html': home, '/catalog.html': catalog, '/about.html': about, '/planned.html': plannedPage, '/contacts.html': contacts, '/partners.html': partners };
     for (const [file, render] of Object.entries(pages)) await write(href(lang, file), render(lang, data));
   }
   await write('404.html', notFound('kr', data));

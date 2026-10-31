@@ -98,6 +98,11 @@ dialog::backdrop{background:#1c284666}
 .slugrow:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 fieldset.more{border:1px solid var(--line);border-radius:12px;padding:4px 14px 14px;margin:18px 0 0}
 fieldset.more legend{font-weight:700;padding:0 6px}
+.settings{display:grid;gap:14px;margin-bottom:40px}
+.set-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:6px 18px 18px}
+.set-card h2{font-size:16px;margin:14px 0 4px}
+.phone-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;margin:10px 0}
+@media (max-width:640px){.phone-row{grid-template-columns:1fr auto}.phone-row [name=ph-label],.phone-row [name=ph-label-ru]{grid-column:1/-1;grid-row:auto}}
 
 /* Загрузка */
 .busy{position:fixed;inset:0;background:#1c2846aa;display:grid;place-items:center;z-index:50;padding:16px}
@@ -182,7 +187,10 @@ function slug(s) {
 const productSlug = s => String(s || '').toLowerCase().split('').map(c => TR[c] != null ? TR[c] : c).join('')
   .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
 // Порядок полей в products.json; пустые необязательные поля не сохраняем.
-const PRODUCT_FIELDS = ['name', 'slug', 'category', 'brand', 'form', 'image', 'leaflets', 'description', 'composition', 'usage'];
+const PRODUCT_FIELDS = ['name', 'name_lat', 'slug', 'category', 'brand', 'form', 'image', 'leaflets', 'description', 'composition', 'usage', 'description_ru', 'composition_ru', 'usage_ru'];
+// Подсказка, как название будет выглядеть латиницей (как в build/i18n.mjs, без учёта «е/ye»).
+const LAT = { а:'a',б:'b',в:'v',г:'g',д:'d',е:'e',ё:'yo',ж:'j',з:'z',и:'i',й:'y',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'x',ц:'ts',ч:'ch',ш:'sh',щ:'sh',ъ:'ʼ',ы:'i',ь:'',э:'e',ю:'yu',я:'ya',ў:'oʻ',қ:'q',ғ:'gʻ',ҳ:'h' };
+const latinPreview = s => String(s || '').split('').map(c => { const l = LAT[c.toLowerCase()]; return l == null ? c : c === c.toLowerCase() ? l : l.charAt(0).toUpperCase() + l.slice(1); }).join('');
 const REQUIRED = ['name', 'slug', 'category', 'image', 'leaflets'];
 function tidyProduct(d) {
   const o = {};
@@ -260,6 +268,113 @@ async function loadData() {
     list.forEach(x => { x._id = ++uid; if (kind === 'products' && !Array.isArray(x.leaflets)) x.leaflets = []; });
     S.d[kind] = { orig: list, cur: clone(list), sha };
   }
+  let site = {}, sha = null;
+  try {
+    const f = await api(repoPath() + '/contents/' + SETTINGS_FILE + '?ref=' + encodeURIComponent(S.branch));
+    site = JSON.parse(b64ToText(f.content)); sha = f.sha;
+  } catch (e) { if (e.status !== 404) throw e; }
+  S.settings = { orig: site, cur: clone(site), sha };
+}
+
+/* ---------- настройки сайта (site.json): контакты, адрес, карта, аналитика ---------- */
+const SETTINGS_FILE = 'site.json';
+const settingsChanged = () => !!S.settings && JSON.stringify(S.settings.orig) !== JSON.stringify(S.settings.cur);
+const phoneLabel = n => { const d = String(n).replace(/\D/g, '').replace(/^998/, ''); return d.length === 9 ? d.replace(/(\d{2})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4') : n; };
+
+function renderSettings(draft) {
+  const s = draft || S.settings.cur;
+  const v = (k, sub) => esc(sub ? ((s[k] || {})[sub] || '') : (s[k] || ''));
+  const phones = s.phones && s.phones.length ? s.phones : [{ number: '' }];
+  return `
+    <form class="settings" id="settings">
+      <section class="set-card"><h2>Телефоны</h2>
+        <div class="hint">Первый номер — главный: он на кнопке «Позвонить». Подпись необязательна (например: отдел продаж).</div>
+        ${phones.map((p, i) => `<div class="phone-row">
+          <input type="text" name="ph-number" value="${esc(p.number || '')}" placeholder="+998 91 274 00 00" inputmode="tel" aria-label="Номер ${i + 1}">
+          <input type="text" name="ph-label" value="${esc(p.label || '')}" placeholder="Подпись по-узбекски (кириллица)" aria-label="Подпись ${i + 1}">
+          <input type="text" name="ph-label-ru" value="${esc(p.label_ru || '')}" placeholder="Подпись по-русски" aria-label="Подпись по-русски ${i + 1}">
+          <button type="button" class="btn small danger" data-ph-del="${i}" ${phones.length < 2 ? 'disabled' : ''} title="Убрать">✕</button>
+        </div>`).join('')}
+        <button type="button" class="btn small" id="ph-add">+ Добавить номер</button>
+      </section>
+      <section class="set-card"><h2>Мессенджер и почта</h2>
+        <div class="two">
+          <div><label class="f" for="s-telegram">Telegram</label><input type="text" id="s-telegram" value="${v('telegram')}" placeholder="https://t.me/akson_megavit или @akson_megavit"></div>
+          <div><label class="f" for="s-email">Эл. почта</label><input type="text" id="s-email" value="${v('email')}" placeholder="info@aksonmegavit.uz" inputmode="email"></div>
+        </div>
+        <div class="hint">Пока поле пустое, кнопка Telegram и почта на сайте не показываются.</div>
+      </section>
+      <section class="set-card"><h2>Адрес и время работы</h2>
+        <div class="two">
+          <div><label class="f" for="s-address">Адрес (по-узбекски, кириллица)</label><input type="text" id="s-address" value="${v('address')}" placeholder="Андижон шаҳри, … кўчаси, 1-уй"></div>
+          <div><label class="f" for="s-address-ru">Адрес (по-русски)</label><input type="text" id="s-address-ru" value="${v('address_ru')}" placeholder="г. Андижан, ул. …, дом 1"></div>
+          <div><label class="f" for="s-hours">Время работы (по-узбекски)</label><input type="text" id="s-hours" value="${v('hours')}" placeholder="Душанба–жума, 9:00–18:00"></div>
+          <div><label class="f" for="s-hours-ru">Время работы (по-русски)</label><input type="text" id="s-hours-ru" value="${v('hours_ru')}" placeholder="Пн–пт, 9:00–18:00"></div>
+          <div><label class="f" for="s-lat">Карта: широта</label><input type="text" id="s-lat" value="${v('map', 'lat')}" placeholder="40.7821" inputmode="decimal"></div>
+          <div><label class="f" for="s-lng">Карта: долгота</label><input type="text" id="s-lng" value="${v('map', 'lng')}" placeholder="72.3442" inputmode="decimal"></div>
+        </div>
+        <div class="hint">Координаты: откройте Google Карты, нажмите правой кнопкой на здание — первые два числа и есть широта и долгота. Пока их нет, карта не показывается.</div>
+      </section>
+      <section class="set-card"><h2>Для аптек и дистрибьюторов</h2>
+        <div class="hint">Условия сотрудничества: минимальный заказ, доставка, регионы. Пустая строка — новый абзац. Пока пусто, на странице «Ҳамкорлар» только призыв позвонить.</div>
+        <label class="f" for="s-partners">По-узбекски (кириллица)</label><textarea id="s-partners">${v('partners')}</textarea>
+        <label class="f" for="s-partners-ru">По-русски</label><textarea id="s-partners-ru">${v('partners_ru')}</textarea>
+      </section>
+      <section class="set-card"><h2>Аналитика</h2>
+        <div class="two">
+          <div><label class="f" for="s-ga4">Google Analytics 4 (ID)</label><input type="text" id="s-ga4" value="${v('analytics', 'ga4')}" placeholder="G-XXXXXXXXXX"></div>
+          <div><label class="f" for="s-ym">Яндекс Метрика (номер счётчика)</label><input type="text" id="s-ym" value="${v('analytics', 'yandex')}" placeholder="12345678" inputmode="numeric"></div>
+        </div>
+        <div class="hint">Сайт будет считать посещения и нажатия на «Позвонить» и Telegram.</div>
+      </section>
+      <div id="settings-msg"></div>
+      <p><button type="submit" class="btn primary">Применить</button> <span class="hint">&nbsp;Затем нажмите «Опубликовать на сайте».</span></p>
+    </form>`;
+}
+
+const readPhones = () => [...document.querySelectorAll('.phone-row')].map(r => ({
+  number: r.querySelector('[name=ph-number]').value.trim(),
+  label: r.querySelector('[name=ph-label]').value.trim(),
+  label_ru: r.querySelector('[name=ph-label-ru]').value.trim()
+}));
+// Всё, что сейчас введено в форме, без проверки — чтобы не потерять при перерисовке.
+function settingsDraft() {
+  const val = id => $('#' + id).value;
+  return { phones: readPhones(), telegram: val('s-telegram'), email: val('s-email'), address: val('s-address'), address_ru: val('s-address-ru'),
+    hours: val('s-hours'), hours_ru: val('s-hours-ru'), map: { lat: val('s-lat'), lng: val('s-lng') },
+    partners: val('s-partners'), partners_ru: val('s-partners-ru'), analytics: { ga4: val('s-ga4'), yandex: val('s-ym') } };
+}
+
+// Читает форму настроек; возвращает { value } или { error }.
+function readSettings() {
+  const val = id => ($('#' + id).value || '').trim();
+  const phones = readPhones();
+  let telegram = val('s-telegram');
+  if (telegram) {
+    const m = telegram.match(/^(?:@|(?:https?:\/\/)?(?:t\.me|telegram\.me)\/)?([A-Za-z0-9_]{4,})\/?$/);
+    if (!m) return { error: 'Telegram: укажите ссылку вида https://t.me/имя или @имя.', phones };
+    telegram = 'https://t.me/' + m[1];
+  }
+  const email = val('s-email');
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return { error: 'Проверьте адрес эл. почты.', phones };
+  const ga4 = val('s-ga4').toUpperCase(), ym = val('s-ym');
+  if (ga4 && !/^G-[A-Z0-9]{4,}$/.test(ga4)) return { error: 'Google Analytics: ID начинается с «G-», например G-AB12CD34EF.', phones };
+  if (ym && !/^\d{5,}$/.test(ym)) return { error: 'Яндекс Метрика: укажите только номер счётчика (цифры).', phones };
+  const lat = val('s-lat').replace(',', '.'), lng = val('s-lng').replace(',', '.');
+  if ((lat || lng) && !(Math.abs(+lat) <= 90 && Math.abs(+lng) <= 180 && lat && lng)) return { error: 'Карта: укажите и широту, и долготу числами, например 40.7821 и 72.3442.', phones };
+  const clean = phones.filter(p => p.number);
+  for (const p of clean) if (String(p.number).replace(/\D/g, '').length < 9) return { error: 'Телефон «' + p.number + '»: слишком короткий номер.', phones };
+  if (!clean.length) return { error: 'Нужен хотя бы один телефон.', phones };
+  // Порядок ключей фиксированный, пустые поля не храним.
+  const out = { phones: clean.map(p => { const d = p.number.replace(/\D/g, ''); const o = { number: '+' + (d.length === 9 ? '998' + d : d) }; if (p.label) o.label = p.label; if (p.label_ru) o.label_ru = p.label_ru; return o; }) };
+  const put = (k, x) => { if (x) out[k] = x; };
+  put('telegram', telegram); put('email', email);
+  put('address', val('s-address')); put('address_ru', val('s-address-ru'));
+  put('hours', val('s-hours')); put('hours_ru', val('s-hours-ru'));
+  if (lat && lng) out.map = { lat: +lat, lng: +lng };
+  put('partners', $('#s-partners').value.trim()); put('partners_ru', $('#s-partners-ru').value.trim());
+  if (ga4 || ym) { out.analytics = {}; if (ga4) out.analytics.ga4 = ga4; if (ym) out.analytics.yandex = ym; }
+  return { value: out };
 }
 
 /* ---------- изменения ---------- */
@@ -272,7 +387,7 @@ function diff(kind) {
   const reordered = orig.filter(x => cm.has(x._id)).map(x => x._id).join() !== cur.filter(x => om.has(x._id)).map(x => x._id).join();
   return { added, removed, changed, reordered, count: added.length + removed.length + changed.length + (reordered ? 1 : 0) };
 }
-const totalChanges = () => Object.keys(KINDS).reduce((n, k) => n + (S.d[k] ? diff(k).count : 0), 0);
+const totalChanges = () => Object.keys(KINDS).reduce((n, k) => n + (S.d[k] ? diff(k).count : 0), 0) + (settingsChanged() ? 1 : 0);
 window.addEventListener('beforeunload', e => { if (S.token && totalChanges()) { e.preventDefault(); e.returnValue = ''; } });
 
 /* ---------- обработка картинок ---------- */
@@ -372,8 +487,9 @@ function categories() {
 function renderMain() {
   const n = totalChanges();
   const k = S.tab;
-  const data = S.d[k];
-  const df = diff(k);
+  const isSettings = k === 'settings';
+  const data = S.d[isSettings ? 'products' : k];
+  const df = diff(isSettings ? 'products' : k);
   const addedIds = new Set(df.added.map(x => x._id)), changedIds = new Set(df.changed.map(x => x._id));
   const q = S.q.trim().toLowerCase();
   const visible = data.cur.filter(x => (!q || String(x.name).toLowerCase().includes(q)) && (k !== 'products' || !S.cat || x.category === S.cat));
@@ -392,7 +508,9 @@ function renderMain() {
     ${S.status ? `<div class="${S.status.ok ? 'okmsg' : 'err'} status">${esc(S.status.text)}</div>` : ''}
     <div class="tabs" role="tablist">
       ${Object.keys(KINDS).map(t => `<button role="tab" data-tab="${t}" aria-selected="${t === k}">${KINDS[t].title} (${S.d[t].cur.length})</button>`).join('')}
+      <button role="tab" data-tab="settings" aria-selected="${isSettings}">Настройки сайта${settingsChanged() ? ' •' : ''}</button>
     </div>
+    ${isSettings ? renderSettings() : `
     <div class="toolbar">
       <input type="search" id="q" placeholder="Поиск по названию…" value="${esc(S.q)}">
       ${k === 'products' ? `<select id="cat"><option value="">Все категории</option>${cats.map(c => `<option ${c === S.cat ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select>` : ''}
@@ -418,7 +536,7 @@ function renderMain() {
         </div>`).join('') : `<div class="empty-list">${data.cur.length ? 'Ничего не найдено' : 'Пока пусто'}</div>`}
     </div>
     ${df.removed.length ? `<div class="removed">Будут удалены после публикации: ${df.removed.map(x => esc(x.name)).join(', ')}</div>` : ''}
-    <p class="hint" style="margin:18px 0 40px">Порядок в списке — это порядок на сайте. Изменения сначала копятся здесь, а на сайт попадают после кнопки «Опубликовать на сайте».</p>
+    <p class="hint" style="margin:18px 0 40px">Порядок в списке — это порядок на сайте. Изменения сначала копятся здесь, а на сайт попадают после кнопки «Опубликовать на сайте».</p>`}
   </main>`;
   window.scrollTo(0, scroll);
 
@@ -430,9 +548,11 @@ function renderMain() {
   if ($('#discard')) $('#discard').onclick = () => {
     if (!confirm('Отменить все неопубликованные изменения?')) return;
     Object.keys(KINDS).forEach(t => { S.d[t].cur = clone(S.d[t].orig); });
+    S.settings.cur = clone(S.settings.orig);
     S.status = null; renderMain();
   };
   document.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { S.tab = b.dataset.tab; S.q = ''; S.cat = ''; renderMain(); });
+  if (isSettings) return bindSettings();
   const qi = $('#q');
   qi.oninput = () => { S.q = qi.value; renderMain(); const el = $('#q'); el.focus(); el.setSelectionRange(el.value.length, el.value.length); };
   if ($('#cat')) $('#cat').onchange = e => { S.cat = e.target.value; renderMain(); };
@@ -457,6 +577,21 @@ function renderMain() {
   });
 }
 
+function bindSettings() {
+  const form = $('#settings');
+  // Добавление/удаление строк телефона не должно терять уже введённое.
+  const redraw = change => { const d = settingsDraft(); change(d.phones); form.outerHTML = renderSettings(d); bindSettings(); };
+  $('#ph-add').onclick = () => redraw(p => p.push({ number: '' }));
+  document.querySelectorAll('[data-ph-del]').forEach(b => b.onclick = () => redraw(p => p.splice(Number(b.dataset.phDel), 1)));
+  form.onsubmit = e => {
+    e.preventDefault();
+    const r = readSettings();
+    if (r.error) { $('#settings-msg').innerHTML = `<div class="err">${esc(r.error)}</div>`; return; }
+    S.settings.cur = r.value; S.status = null; renderMain();
+    toast(settingsChanged() ? 'Настройки применены. Не забудьте нажать «Опубликовать на сайте».' : 'Изменений нет.');
+  };
+}
+
 /* ---------- редактор ---------- */
 function openEditor(kind, id) {
   const list = S.d[kind].cur;
@@ -464,7 +599,7 @@ function openEditor(kind, id) {
   const E = {
     kind, id,
     draft: existing ? clone(existing) : (kind === 'products'
-      ? { name: '', slug: '', category: S.cat || categories()[0] || '', brand: '', form: '', image: '', leaflets: [], description: '', composition: '', usage: '' }
+      ? { name: '', slug: '', category: S.cat || categories()[0] || '', brand: '', form: '', image: '', leaflets: [], description: '', composition: '', usage: '', name_lat: '', description_ru: '', composition_ru: '', usage_ru: '' }
       : { name: '', subtitle: '', image: '' })
   };
   const dlg = $('#editor');
@@ -514,13 +649,24 @@ function openEditor(kind, id) {
           </div>
           ${kind === 'products' ? `
             <fieldset class="more"><legend>Текст на странице товара</legend>
-              <div class="hint">Необязательно, на узбекском. Пустая строка — новый абзац. Пока текста нет, на странице показывается буклет.</div>
+              <div class="hint">Необязательно, на узбекском (кириллица) — латинская версия сайта получится автоматически. Пустая строка — новый абзац. Пока текста нет, на странице показывается буклет.</div>
               <label class="f" for="ed-desc">Краткое описание</label>
               <textarea id="ed-desc" placeholder="Для чего этот продукт, 2–3 предложения">${esc(d.description || '')}</textarea>
               <label class="f" for="ed-comp">Состав</label>
               <textarea id="ed-comp">${esc(d.composition || '')}</textarea>
               <label class="f" for="ed-usage">Способ применения</label>
               <textarea id="ed-usage">${esc(d.usage || '')}</textarea>
+            </fieldset>
+            <fieldset class="more"><legend>Русская версия и латиница</legend>
+              <div class="hint">Необязательно. Медицинский текст на русском лучше доверить специалисту; пока полей нет, на русской странице показывается буклет.</div>
+              <label class="f" for="ed-name-lat">Название латиницей</label>
+              <input type="text" id="ed-name-lat" value="${esc(d.name_lat || '')}" placeholder="Если пусто — получится само, например: ${esc(latinPreview(d.name) || 'Gemovit')}">
+              <label class="f" for="ed-desc-ru">Краткое описание (рус.)</label>
+              <textarea id="ed-desc-ru">${esc(d.description_ru || '')}</textarea>
+              <label class="f" for="ed-comp-ru">Состав (рус.)</label>
+              <textarea id="ed-comp-ru">${esc(d.composition_ru || '')}</textarea>
+              <label class="f" for="ed-usage-ru">Способ применения (рус.)</label>
+              <textarea id="ed-usage-ru">${esc(d.usage_ru || '')}</textarea>
             </fieldset>
             <label class="f">Буклет / инструкция (страницы по порядку)</label>
             <div class="pages">
@@ -553,6 +699,7 @@ function openEditor(kind, id) {
         else d.category = sel;
         d.slug = $('#ed-slug').value; d.brand = $('#ed-brand').value; d.form = $('#ed-form').value;
         d.description = $('#ed-desc').value; d.composition = $('#ed-comp').value; d.usage = $('#ed-usage').value;
+        d.name_lat = $('#ed-name-lat').value; d.description_ru = $('#ed-desc-ru').value; d.composition_ru = $('#ed-comp-ru').value; d.usage_ru = $('#ed-usage-ru').value;
       } else d.subtitle = $('#ed-sub').value;
     };
     const close = () => { if (dlg.open) dlg.close(); };
@@ -632,6 +779,7 @@ function summary() {
     df.removed.forEach(x => parts.push('удалён ' + w + ' «' + x.name + '»'));
     if (df.reordered) parts.push('изменён порядок (' + KINDS[k].title.toLowerCase() + ')');
   });
+  if (settingsChanged()) parts.push('изменены настройки сайта');
   return parts;
 }
 function usedPaths(list) {
@@ -658,6 +806,8 @@ async function publish() {
       const nowSha = inRepo.get(KINDS[k].file) || null;
       if (nowSha !== S.d[k].sha) throw new Error('Данные на сайте изменились с другого устройства после того, как вы открыли админку. Обновите страницу и повторите правки.');
     }
+    const withSettings = settingsChanged();
+    if (withSettings && (inRepo.get(SETTINGS_FILE) || null) !== S.settings.sha) throw new Error('Настройки сайта изменились с другого устройства после того, как вы открыли админку. Обновите страницу и повторите правки.');
 
     const before = new Set(), after = new Set();
     Object.keys(KINDS).forEach(k => {
@@ -674,6 +824,7 @@ async function publish() {
     [...before].filter(p => !after.has(p) && ASSET_DIRS.test(p) && inRepo.has(p))
       .forEach(p => entries.push({ path: p, mode: '100644', type: 'blob', sha: null }));
     kinds.forEach(k => entries.push({ path: KINDS[k].file, mode: '100644', type: 'blob', content: JSON.stringify(strip(S.d[k].cur), null, 2) + '\n' }));
+    if (withSettings) entries.push({ path: SETTINGS_FILE, mode: '100644', type: 'blob', content: JSON.stringify(S.settings.cur, null, 2) + '\n' });
 
     busy('Сохраняю изменения…');
     const newTree = await api(base + '/git/trees', { method: 'POST', body: { base_tree: parent.tree.sha, tree: entries } });
@@ -688,6 +839,11 @@ async function publish() {
         S.d[k].sha = f ? f.sha : S.d[k].sha;
       }
       S.d[k].orig = clone(S.d[k].cur);
+    }
+    if (withSettings) {
+      const f = await api(base + '/contents/' + SETTINGS_FILE + '?ref=' + encodeURIComponent(S.branch)).catch(() => null);
+      S.settings.sha = f ? f.sha : S.settings.sha;
+      S.settings.orig = clone(S.settings.cur);
     }
     busy(false);
     S.status = { ok: true, text: 'Опубликовано: ' + parts.join('; ') + '. Сайт обновится примерно через 2–3 минуты.' };

@@ -11,6 +11,14 @@
     });
   });
 
+  // Цели аналитики: звонок и Telegram (если счётчики подключены в настройках сайта).
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="tel:"], a[href^="https://t.me/"]');
+    if (!a) return;
+    const goal = a.href.startsWith('tel:') ? 'phone_click' : 'telegram_click';
+    try { if (window.gtag) gtag('event', goal, { link_url: a.href }); if (window.ym && window.YM_ID) ym(window.YM_ID, 'reachGoal', goal); } catch (err) {}
+  });
+
   const toggle = document.querySelector('[data-menu-toggle]'), nav = document.getElementById('site-nav');
   if (!toggle || !nav) return;
   const set = open => {

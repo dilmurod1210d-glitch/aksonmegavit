@@ -1,7 +1,7 @@
 // Страница товара на общем каркасе (build/layout.mjs):
 // /mahsulot/<slug>/, /uz/mahsulot/<slug>/, /ru/product/<slug>/.
 import { page, esc, SITE, ICON, PHONES, catalogUrl, productCard } from './layout.mjs';
-import { L, href, dataText, productPath, LANG_ORDER } from './i18n.mjs';
+import { L, href, dataText, productPath, LANG_ORDER, productName } from './i18n.mjs';
 import { crumbs } from './pages.mjs';
 
 // Текст из админки: пустая строка — новый абзац, перенос строки — <br>.
@@ -11,15 +11,15 @@ export function productPage(lang, p, related, categories) {
   const t = L(lang);
   const url = SITE + productPath(lang, p.slug);
   const abs = rel => rel ? `${SITE}/${rel}` : '';
-  const name = dataText(lang, p.name), category = dataText(lang, p.category, 'category'), form = dataText(lang, p.form, 'form');
+  const name = productName(lang, p), category = dataText(lang, p.category, 'category'), form = dataText(lang, p.form, 'form');
   const catObj = categories.find(c => c.name === p.category);
-  // Описание, состав и применение админка хранит на узбекском (кириллица):
-  // для латиницы транслитерируем, для русского пока не показываем.
-  const text = v => !v ? '' : lang === 'ru' ? '' : dataText(lang, v);
-  const description = text(p.description);
+  // Описание, состав и применение: узбекский (кириллица) — основной, латиница — транслитерация,
+  // русский — отдельные поля *_ru из админки (пока их нет, показываем только буклет).
+  const text = key => lang === 'ru' ? (p[key + '_ru'] || '') : dataText(lang, p[key] || '');
+  const description = text('description');
   const title = `${name} — ${category} | Akson Megavit`;
   const metaDescription = description ? description.replace(/\s+/g, ' ').trim().slice(0, 155)
-    : t(`${p.name}${p.form ? ' (' + p.form + ')' : ''} — ${p.category.toLowerCase()} тоифасидаги биологик фаол қўшимча. Маҳсулот сурати ва асл қўлланиш буклети.`,
+    : t(`${name}${form ? ' (' + form + ')' : ''} — ${p.category.toLowerCase()} тоифасидаги биологик фаол қўшимча. Маҳсулот сурати ва асл қўлланиш буклети.`,
         `${name}${form ? ' (' + form + ')' : ''} — биологически активная добавка, категория «${category}». Фото продукта и оригинальная инструкция.`);
 
   const ld = [{
@@ -37,8 +37,8 @@ export function productPage(lang, p, related, categories) {
   }];
 
   const facts = [[t('Бренд', 'Бренд'), p.brand], [t('Шакли ва ҳажми', 'Форма и объём'), form], [t('Тоифа', 'Категория'), category]].filter(f => f[1]);
-  const texts = [[t('Таркиби', 'Состав'), text(p.composition)], [t('Қўлланиши', 'Применение'), text(p.usage)]].filter(x => x[1]);
-  const ruPending = lang === 'ru' && (p.description || p.composition || p.usage);
+  const texts = [[t('Таркиби', 'Состав'), text('composition')], [t('Қўлланиши', 'Применение'), text('usage')]].filter(x => x[1]);
+  const ruPending = lang === 'ru' && !description && (p.description || p.composition || p.usage);
   const photo = p.image
     ? `<img src="/${esc(p.image)}"${p.srcset ? ` srcset="${esc(p.srcset.replace(/(^|, )assets\//g, '$1/assets/'))}" sizes="(max-width:900px) 90vw, 560px"` : ''} alt="${esc(name)}" width="800" height="800" fetchpriority="high">`
     : `<span class="placeholder">${t('Сурат тайёрланмоқда', 'Фото готовится')}</span>`;
