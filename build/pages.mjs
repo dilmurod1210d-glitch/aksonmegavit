@@ -184,5 +184,5 @@ ${ctaBand(t('Ҳамкор бўлинг', 'Станьте партнёром'), t
 export function notFound(lang, d) {
   const block = l => { const t = L(l); return `<div lang="${l === 'ru' ? 'ru' : l === 'uz' ? 'uz-Latn' : 'uz-Cyrl'}" style="margin-bottom:32px"><h${l === 'kr' ? 1 : 2}>${t('Саҳифа топилмади', 'Страница не найдена')}</h${l === 'kr' ? 1 : 2}><p class="lead">${t('Бу манзилда саҳифа йўқ ёки у кўчирилган.', 'По этому адресу страницы нет, или она перемещена.')}</p><div class="hero-actions"><a class="btn btn-primary" href="${href(l, '/catalog.html')}">${t('Маҳсулотлар каталоги', 'Каталог продуктов')} ${ICON.arrow}</a><a class="btn btn-outline" href="${href(l, '/')}">${t('Бош саҳифа', 'Главная')}</a></div></div>`; };
   const main = `<div class="container not-found"><span class="eyebrow">404</span>${LANG_ORDER.map(block).join('')}</div>`;
-  return page({ lang, main, categories: d.categories, alternates: alternatesOf('/404'), noindex: true, title: 'Саҳифа топилмади / Sahifa topilmadi / Страница не найдена — Akson Megavit', description: '404' });
+  return page({ lang, main, categories: d.categories, alternates: alternatesOf('/'), noindex: true, title: 'Саҳифа топилмади / Sahifa topilmadi / Страница не найдена — Akson Megavit', description: '404' });
 }
