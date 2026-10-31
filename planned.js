@@ -1,6 +1,16 @@
-(()=>{const dialog=document.querySelector('#planned-detail'),grid=document.querySelector('#planned-grid');
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function open(name,src){document.querySelector('#planned-title').textContent=name;const image=document.querySelector('#planned-full');image.src=src;image.alt=name+' — қадоқ макети';document.querySelector('#planned-original').href=src;dialog.showModal();dialog.scrollTop=0;document.body.classList.add('modal-open')}
-window.SiteData.then(data=>{grid.innerHTML=data.planned.map(p=>`<article class="planned-card"><div class="planned-image"><span class="planned-badge">Ишлаб чиқариш режада</span>${p.image?`<img loading="lazy" src="${esc(p.image)}" alt="${esc(p.name)} — қадоқ макети">`:''}</div><div class="planned-text"><p>${esc(p.subtitle||'')}</p><h2>${esc(p.name)}</h2>${p.image?`<button type="button" data-name="${esc(p.name)}" data-image="${esc(p.image)}">Қадоқ макетини кўриш <span>↗</span></button>`:''}</div></article>`).join('');
-grid.querySelectorAll('[data-image]').forEach(b=>b.addEventListener('click',()=>open(b.dataset.name,b.dataset.image)))});
-document.querySelector('#planned-close').onclick=()=>dialog.close();dialog.addEventListener('close',()=>document.body.classList.remove('modal-open'));dialog.addEventListener('click',e=>{if(e.target!==dialog)return;const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()})})();
+// Просмотр макета упаковки планируемого продукта.
+(() => {
+  const dialog = document.getElementById('viewer');
+  if (!dialog) return;
+  const img = document.getElementById('viewer-img'), link = document.getElementById('viewer-link');
+  document.querySelectorAll('[data-viewer]').forEach(b => b.addEventListener('click', () => {
+    document.getElementById('viewer-title').textContent = b.dataset.title;
+    img.src = link.href = b.dataset.viewer;
+    img.alt = b.dataset.title + ' — қадоқ макети';
+    dialog.showModal();
+    document.body.classList.add('modal-open');
+  }));
+  document.getElementById('viewer-close').addEventListener('click', () => dialog.close());
+  dialog.addEventListener('close', () => document.body.classList.remove('modal-open'));
+  dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
+})();
