@@ -12,6 +12,9 @@
   .main-links a{font-size:13px;padding:10px 12px}
 }
 
+/* Карточка товара теперь ссылка на его страницу, а не кнопка */
+a.card{display:block;text-decoration:none}
+
 /* 404 саҳифаси */
 .not-found{padding-bottom:80px}
 .not-found-home{display:inline-block;margin-left:18px;color:var(--green);font-weight:600}

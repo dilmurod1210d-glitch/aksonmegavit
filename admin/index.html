@@ -11,7 +11,7 @@
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
-button,input,select{font:inherit;color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 a{color:var(--accent)}
 .wrap{max-width:1100px;margin:0 auto;padding:0 16px}
@@ -23,8 +23,9 @@ a{color:var(--accent)}
 .btn.small{padding:6px 10px;font-size:13px}
 .btn.icon{padding:6px 9px;min-width:34px;justify-content:center}
 .btn:disabled{opacity:.4;cursor:not-allowed}
-input[type=text],input[type=password],input[type=search],select{width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;outline:none}
-input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+input[type=text],input[type=password],input[type=search],select,textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 12px;outline:none}
+textarea{min-height:90px;resize:vertical;line-height:1.5}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 label.f{display:block;font-weight:600;margin:14px 0 6px}
 .hint{color:var(--muted);font-size:13px}
 .err{background:var(--bad-soft);color:var(--bad);border-radius:10px;padding:10px 12px;margin:12px 0}
@@ -89,6 +90,14 @@ dialog::backdrop{background:#1c284666}
 .upload-btn{position:relative;overflow:hidden}
 .upload-btn input{position:absolute;inset:0;opacity:0;cursor:pointer}
 .newcat{margin-top:8px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.slugrow{display:flex;align-items:center;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
+.slugrow span{padding:10px 0 10px 12px;color:var(--muted);white-space:nowrap;font-size:14px}
+.slugrow input{border:0;padding-left:2px}
+.slugrow input:focus{box-shadow:none}
+.slugrow:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+fieldset.more{border:1px solid var(--line);border-radius:12px;padding:4px 14px 14px;margin:18px 0 0}
+fieldset.more legend{font-weight:700;padding:0 6px}
 
 /* Загрузка */
 .busy{position:fixed;inset:0;background:#1c2846aa;display:grid;place-items:center;z-index:50;padding:16px}
@@ -105,6 +114,8 @@ dialog::backdrop{background:#1c284666}
   .actions{grid-column:1/-1;justify-content:flex-start}
   header.top .wrap{gap:8px}
   .ed-body{padding:4px 14px 16px}
+  .two{grid-template-columns:1fr}
+  .slugrow span{font-size:12px}
 }
 </style>
 </head>
@@ -165,6 +176,27 @@ function slug(s) {
   const out = String(s || '').toLowerCase().split('').map(c => TR[c] != null ? TR[c] : c).join('')
     .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40);
   return out || 'item';
+}
+
+// Адрес страницы товара на сайте: /mahsulot/<slug>/ (та же транслитерация, что в build/build.mjs).
+const productSlug = s => String(s || '').toLowerCase().split('').map(c => TR[c] != null ? TR[c] : c).join('')
+  .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
+// Порядок полей в products.json; пустые необязательные поля не сохраняем.
+const PRODUCT_FIELDS = ['name', 'slug', 'category', 'brand', 'form', 'image', 'leaflets', 'description', 'composition', 'usage'];
+const REQUIRED = ['name', 'slug', 'category', 'image', 'leaflets'];
+function tidyProduct(d) {
+  const o = {};
+  PRODUCT_FIELDS.forEach(k => {
+    if (k === 'leaflets') o[k] = d[k] || [];
+    else if (REQUIRED.includes(k) || (d[k] != null && String(d[k]).trim())) o[k] = String(d[k] == null ? '' : d[k]).trim();
+  });
+  Object.keys(d).forEach(k => { if (!PRODUCT_FIELDS.includes(k)) o[k] = d[k]; });
+  return o;
+}
+function brands() {
+  const set = new Set(['Akson', 'Megavit']);
+  (S.d.products ? S.d.products.cur : []).forEach(p => { if (p.brand) set.add(p.brand); });
+  return [...set];
 }
 
 /* ---------- GitHub API ---------- */
@@ -432,12 +464,14 @@ function openEditor(kind, id) {
   const E = {
     kind, id,
     draft: existing ? clone(existing) : (kind === 'products'
-      ? { name: '', category: S.cat || categories()[0] || '', image: '', leaflets: [] }
+      ? { name: '', slug: '', category: S.cat || categories()[0] || '', brand: '', form: '', image: '', leaflets: [], description: '', composition: '', usage: '' }
       : { name: '', subtitle: '', image: '' })
   };
   const dlg = $('#editor');
   const cats = categories();
   let newCat = !!(E.draft.category && !cats.includes(E.draft.category));
+  // У нового товара адрес строится из названия, пока его не поменяли вручную.
+  let slugTouched = !!(existing && existing.slug);
 
   function draw(msg) {
     const d = E.draft;
@@ -455,6 +489,16 @@ function openEditor(kind, id) {
               <option value="__new" ${newCat ? 'selected' : ''}>＋ Новая категория…</option>
             </select>
             ${newCat ? `<input type="text" class="newcat" id="ed-newcat" value="${esc(cats.includes(d.category) ? '' : d.category)}" placeholder="Название новой категории (как на сайте, кириллицей)">` : ''}
+            <label class="f" for="ed-slug">Адрес страницы на сайте</label>
+            <div class="slugrow"><span>aksonmegavit.uz/mahsulot/</span><input type="text" id="ed-slug" value="${esc(d.slug || '')}" placeholder="${esc(productSlug(d.name) || 'gemovit')}" spellcheck="false"></div>
+            <div class="hint">Только латиница, цифры и «-». ${existing && existing.slug ? 'Не меняйте без необходимости: старая ссылка перестанет работать.' : 'Заполняется сам из названия.'}</div>
+            <div class="two">
+              <div><label class="f" for="ed-brand">Бренд</label>
+              <input type="text" id="ed-brand" list="ed-brands" value="${esc(d.brand || '')}" placeholder="например: Megavit">
+              <datalist id="ed-brands">${brands().map(b => `<option value="${esc(b)}">`).join('')}</datalist></div>
+              <div><label class="f" for="ed-form">Форма и объём</label>
+              <input type="text" id="ed-form" value="${esc(d.form || '')}" placeholder="например: Сироп · 150 мл"></div>
+            </div>
           ` : `
             <label class="f" for="ed-sub">Форма и объём</label>
             <input type="text" id="ed-sub" value="${esc(d.subtitle)}" placeholder="например: Сироп · 150 мл">
@@ -469,6 +513,15 @@ function openEditor(kind, id) {
             </div>
           </div>
           ${kind === 'products' ? `
+            <fieldset class="more"><legend>Текст на странице товара</legend>
+              <div class="hint">Необязательно, на узбекском. Пустая строка — новый абзац. Пока текста нет, на странице показывается буклет.</div>
+              <label class="f" for="ed-desc">Краткое описание</label>
+              <textarea id="ed-desc" placeholder="Для чего этот продукт, 2–3 предложения">${esc(d.description || '')}</textarea>
+              <label class="f" for="ed-comp">Состав</label>
+              <textarea id="ed-comp">${esc(d.composition || '')}</textarea>
+              <label class="f" for="ed-usage">Способ применения</label>
+              <textarea id="ed-usage">${esc(d.usage || '')}</textarea>
+            </fieldset>
             <label class="f">Буклет / инструкция (страницы по порядку)</label>
             <div class="pages">
               ${d.leaflets.map((p, i) => `
@@ -498,11 +551,17 @@ function openEditor(kind, id) {
         const sel = $('#ed-cat').value;
         if (sel === '__new') d.category = $('#ed-newcat') ? $('#ed-newcat').value : d.category;
         else d.category = sel;
+        d.slug = $('#ed-slug').value; d.brand = $('#ed-brand').value; d.form = $('#ed-form').value;
+        d.description = $('#ed-desc').value; d.composition = $('#ed-comp').value; d.usage = $('#ed-usage').value;
       } else d.subtitle = $('#ed-sub').value;
     };
     const close = () => { if (dlg.open) dlg.close(); };
     $('#ed-x').onclick = close;
     $('#ed-cancel').onclick = close;
+    if (kind === 'products') {
+      $('#ed-slug').oninput = () => { slugTouched = true; };
+      $('#ed-name').oninput = () => { if (!slugTouched) $('#ed-slug').value = productSlug($('#ed-name').value); };
+    }
     if (kind === 'products') $('#ed-cat').onchange = e => { keep(); newCat = e.target.value === '__new'; if (newCat) d.category = ''; draw(); if (newCat) $('#ed-newcat').focus(); };
     $('#ed-photo').onchange = async e => {
       const f = e.target.files[0]; if (!f) return;
@@ -539,15 +598,19 @@ function openEditor(kind, id) {
       if (kind === 'products') {
         d.category = (d.category || '').trim();
         if (!d.category) return draw('Укажите категорию.');
+        d.slug = productSlug(d.slug || d.name);
+        if (!d.slug) return draw('Укажите адрес страницы латиницей, например: gemovit.');
+        if (list.some(x => x._id !== E.id && x.slug === d.slug)) return draw('Адрес «' + d.slug + '» уже занят другим товаром. Укажите другой.');
       } else d.subtitle = (d.subtitle || '').trim();
       const dup = list.find(x => x._id !== E.id && x.name.trim().toLowerCase() === d.name.toLowerCase());
       if (dup && !confirm('«' + d.name + '» уже есть в списке. Всё равно сохранить?')) return;
+      const item = kind === 'products' ? tidyProduct(d) : d;
       if (existing) {
         const idx = list.findIndex(x => x._id === E.id);
-        list[idx] = Object.assign(d, { _id: E.id });
+        list[idx] = Object.assign(item, { _id: E.id });
       } else {
-        d._id = ++uid;
-        list.push(d);
+        item._id = ++uid;
+        list.push(item);
       }
       S.status = null;
       close(); renderMain();
@@ -627,7 +690,7 @@ async function publish() {
       S.d[k].orig = clone(S.d[k].cur);
     }
     busy(false);
-    S.status = { ok: true, text: 'Опубликовано: ' + parts.join('; ') + '. Сайт обновится примерно через 1–2 минуты.' };
+    S.status = { ok: true, text: 'Опубликовано: ' + parts.join('; ') + '. Сайт обновится примерно через 2–3 минуты.' };
     renderMain();
     watchBuild(commit.sha);
   } catch (e) {
@@ -637,17 +700,17 @@ async function publish() {
   }
 }
 
+// Сайт собирается в GitHub Actions; готовая сборка содержит version.json с номером коммита.
 async function watchBuild(sha) {
   const started = Date.now();
-  while (Date.now() - started < 6 * 60 * 1000) {
-    await new Promise(r => setTimeout(r, 8000));
+  while (Date.now() - started < 8 * 60 * 1000) {
+    await new Promise(r => setTimeout(r, 10000));
     if (!S.status || !S.status.ok) return;
-    let b;
-    try { b = await api(repoPath() + '/pages/builds/latest'); } catch (e) { return; }
-    if (!b || b.commit !== sha) continue;
-    if (b.status === 'built') { S.status = { ok: true, text: 'Готово — изменения уже на сайте. Если видите старую версию, обновите страницу сайта.' }; renderMain(); return; }
-    if (b.status === 'errored') { S.status = { ok: false, text: 'Изменения сохранены, но сайт не обновился из-за ошибки на GitHub Pages. Попробуйте опубликовать ещё раз позже.' }; renderMain(); return; }
+    let v;
+    try { v = await (await fetch(CFG.site + 'version.json?' + Date.now(), { cache: 'no-store' })).json(); } catch (e) { continue; }
+    if (v && v.commit === sha) { S.status = { ok: true, text: 'Готово — изменения уже на сайте. Если видите старую версию, обновите страницу сайта.' }; renderMain(); return; }
   }
+  if (S.status && S.status.ok) { S.status = { ok: true, text: 'Изменения сохранены, но сайт обновляется дольше обычного. Проверьте его через несколько минут.' }; renderMain(); }
 }
 
 /* ---------- запуск ---------- */

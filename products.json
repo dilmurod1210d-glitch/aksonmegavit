@@ -1,6 +1,7 @@
 [
   {
     "name": "Гемовит",
+    "slug": "gemovit",
     "category": "Сироплар",
     "image": "assets/products/product-5588.webp",
     "leaflets": [
@@ -10,6 +11,7 @@
   },
   {
     "name": "Уранефрит",
+    "slug": "uranefrit",
     "category": "Сироплар",
     "image": "assets/products/product-5584.webp",
     "leaflets": [
@@ -19,6 +21,7 @@
   },
   {
     "name": "Серебрал",
+    "slug": "serebral",
     "category": "Сироплар",
     "image": "assets/products/product-5586.webp",
     "leaflets": [
@@ -28,6 +31,7 @@
   },
   {
     "name": "Гептрахол",
+    "slug": "geptraxol",
     "category": "Сироплар",
     "image": "assets/products/product-5585.webp",
     "leaflets": [
@@ -37,6 +41,7 @@
   },
   {
     "name": "Бронхопол",
+    "slug": "bronxopol",
     "category": "Сироплар",
     "image": "assets/products/product-5587.webp",
     "leaflets": [
@@ -46,6 +51,7 @@
   },
   {
     "name": "Верта-Ф",
+    "slug": "verta-f",
     "category": "Сироплар",
     "image": "assets/products/verta-f.webp",
     "leaflets": [
@@ -55,6 +61,7 @@
   },
   {
     "name": "Лафия-П",
+    "slug": "lafiya-p",
     "category": "Сироплар",
     "image": "assets/products/product-5630.webp",
     "leaflets": [
@@ -64,6 +71,7 @@
   },
   {
     "name": "Седадокс",
+    "slug": "sedadoks",
     "category": "Сироплар",
     "image": "assets/products/product-5629.webp",
     "leaflets": [
@@ -73,6 +81,7 @@
   },
   {
     "name": "Ливер-ЭС",
+    "slug": "liver-es",
     "category": "Сироплар",
     "image": "assets/products/product-5631.webp",
     "leaflets": [
@@ -82,6 +91,7 @@
   },
   {
     "name": "ПК-Форте",
+    "slug": "pk-forte",
     "category": "Сироплар",
     "image": "assets/products/product-5632.webp",
     "leaflets": [
@@ -91,6 +101,7 @@
   },
   {
     "name": "Дероно",
+    "slug": "derono",
     "category": "Сироплар",
     "image": "assets/products/product-5592.webp",
     "leaflets": [
@@ -100,6 +111,7 @@
   },
   {
     "name": "МедикоВит",
+    "slug": "medikovit",
     "category": "Сироплар",
     "image": "assets/products/product-5602.webp",
     "leaflets": [
@@ -109,6 +121,7 @@
   },
   {
     "name": "Бондекс",
+    "slug": "bondeks",
     "category": "Сироплар",
     "image": "assets/products/product-5606.webp",
     "leaflets": [
@@ -118,6 +131,7 @@
   },
   {
     "name": "Орвинол",
+    "slug": "orvinol",
     "category": "Сироплар",
     "image": "assets/products/product-5644.webp",
     "leaflets": [
@@ -127,6 +141,7 @@
   },
   {
     "name": "Тотем сироп",
+    "slug": "totem-sirop",
     "category": "Сироплар",
     "image": "assets/products/product-5647.webp",
     "leaflets": [
@@ -136,6 +151,7 @@
   },
   {
     "name": "Бенок сироп",
+    "slug": "benok-sirop",
     "category": "Сироплар",
     "image": "assets/products/product-5635.webp",
     "leaflets": [
@@ -145,6 +161,7 @@
   },
   {
     "name": "Галора сироп",
+    "slug": "galora-sirop",
     "category": "Сироплар",
     "image": "assets/products/product-5643.webp",
     "leaflets": [
@@ -154,6 +171,7 @@
   },
   {
     "name": "Кардил сироп",
+    "slug": "kardil-sirop",
     "category": "Сироплар",
     "image": "assets/products/product-5645.webp",
     "leaflets": [
@@ -163,6 +181,7 @@
   },
   {
     "name": "Аксокарнил",
+    "slug": "aksokarnil",
     "category": "Сироплар",
     "image": "assets/products/product-5583.webp",
     "leaflets": [
@@ -172,6 +191,7 @@
   },
   {
     "name": "Эларгин",
+    "slug": "elargin",
     "category": "Сироплар",
     "image": "assets/products/product-5598.webp",
     "leaflets": [
@@ -181,6 +201,7 @@
   },
   {
     "name": "Оптизрения",
+    "slug": "optizreniya",
     "category": "Сироплар",
     "image": "assets/products/product-5589.webp",
     "leaflets": [
@@ -190,6 +211,7 @@
   },
   {
     "name": "Полиферрум",
+    "slug": "poliferrum",
     "category": "Сироплар",
     "image": "assets/products/product-5604.webp",
     "leaflets": [
@@ -199,6 +221,7 @@
   },
   {
     "name": "Герас Форте",
+    "slug": "geras-forte",
     "category": "Сироплар",
     "image": "assets/products/product-5590.webp",
     "leaflets": [
@@ -207,6 +230,7 @@
   },
   {
     "name": "Орвос Форте",
+    "slug": "orvos-forte",
     "category": "Сироплар",
     "image": "assets/products/product-5600.webp",
     "leaflets": [
@@ -215,6 +239,7 @@
   },
   {
     "name": "Пента - Г",
+    "slug": "penta-g",
     "category": "Сироплар",
     "image": "assets/products/product-5648.webp",
     "leaflets": [
@@ -224,6 +249,7 @@
   },
   {
     "name": "ЦитроГен",
+    "slug": "tsitrogen",
     "category": "Сироплар",
     "image": "assets/products/product-5633.webp",
     "leaflets": [
@@ -233,6 +259,7 @@
   },
   {
     "name": "Витатен",
+    "slug": "vitaten",
     "category": "Сироплар",
     "image": "assets/products/product-5608.webp",
     "leaflets": [
@@ -242,6 +269,7 @@
   },
   {
     "name": "Эквамин",
+    "slug": "ekvamin",
     "category": "Сироплар",
     "image": "assets/products/product-5614.webp",
     "leaflets": [
@@ -251,6 +279,7 @@
   },
   {
     "name": "Нейролекс",
+    "slug": "neyroleks",
     "category": "Сироплар",
     "image": "assets/products/product-5624.webp",
     "leaflets": [
@@ -260,6 +289,7 @@
   },
   {
     "name": "Левистим",
+    "slug": "levistim",
     "category": "Сироплар",
     "image": "assets/products/product-5623.webp",
     "leaflets": [
@@ -269,6 +299,7 @@
   },
   {
     "name": "Респифорс",
+    "slug": "respifors",
     "category": "Сироплар",
     "image": "assets/products/product-5617.webp",
     "leaflets": [
@@ -278,6 +309,7 @@
   },
   {
     "name": "Офтолин",
+    "slug": "oftolin",
     "category": "Сироплар",
     "image": "assets/products/product-5620.webp",
     "leaflets": [
@@ -287,6 +319,7 @@
   },
   {
     "name": "Глистон",
+    "slug": "gliston",
     "category": "Сироплар",
     "image": "assets/products/gliston.webp",
     "leaflets": [
@@ -296,6 +329,7 @@
   },
   {
     "name": "Нефросен",
+    "slug": "nefrosen",
     "category": "Сироплар",
     "image": "assets/products/product-5634.webp",
     "leaflets": [
@@ -305,6 +339,7 @@
   },
   {
     "name": "Лораген",
+    "slug": "loragen",
     "category": "Спрейлар",
     "image": "assets/products/product-5639.webp",
     "leaflets": [
@@ -314,6 +349,7 @@
   },
   {
     "name": "Дермисофт",
+    "slug": "dermisoft",
     "category": "Спрейлар",
     "image": "assets/products/product-5628.webp",
     "leaflets": [
@@ -323,6 +359,7 @@
   },
   {
     "name": "Синулор спрей",
+    "slug": "sinulor-sprey",
     "category": "Спрейлар",
     "image": "assets/products/product-5627.webp",
     "leaflets": [
@@ -331,6 +368,7 @@
   },
   {
     "name": "Аксоден",
+    "slug": "aksoden",
     "category": "Спрейлар",
     "image": "assets/products/product-5594.webp",
     "leaflets": [
@@ -339,6 +377,7 @@
   },
   {
     "name": "Экстра спрей",
+    "slug": "ekstra-sprey",
     "category": "Спрейлар",
     "image": "assets/products/product-5597.webp",
     "leaflets": [
@@ -348,6 +387,7 @@
   },
   {
     "name": "Абсолют спрей",
+    "slug": "absolyut-sprey",
     "category": "Спрейлар",
     "image": "assets/products/product-5595.webp",
     "leaflets": [
@@ -356,6 +396,7 @@
   },
   {
     "name": "Аксалор спрей",
+    "slug": "aksalor-sprey",
     "category": "Спрейлар",
     "image": "assets/products/aksalor.webp",
     "leaflets": [
@@ -365,6 +406,7 @@
   },
   {
     "name": "Гелмаксон",
+    "slug": "gelmakson",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5657.webp",
     "leaflets": [
@@ -373,6 +415,7 @@
   },
   {
     "name": "Аксон Энерджи",
+    "slug": "akson-enerdji",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/akson-energy.webp",
     "leaflets": [
@@ -381,6 +424,7 @@
   },
   {
     "name": "Кальмакс",
+    "slug": "kalmaks",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5636.webp",
     "leaflets": [
@@ -389,6 +433,7 @@
   },
   {
     "name": "Магпарим",
+    "slug": "magparim",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5637.webp",
     "leaflets": [
@@ -397,6 +442,7 @@
   },
   {
     "name": "Асмосед",
+    "slug": "asmosed",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5652.webp",
     "leaflets": [
@@ -405,6 +451,7 @@
   },
   {
     "name": "Асмофер",
+    "slug": "asmofer",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5641.webp",
     "leaflets": [
@@ -414,6 +461,7 @@
   },
   {
     "name": "Нефростаб",
+    "slug": "nefrostab",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/nefrostab.webp",
     "leaflets": [
@@ -423,6 +471,7 @@
   },
   {
     "name": "Гепастаб",
+    "slug": "gepastab",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5653.webp",
     "leaflets": [
@@ -432,6 +481,7 @@
   },
   {
     "name": "Цинк-Актив",
+    "slug": "tsink-aktiv",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5642.webp",
     "leaflets": [
@@ -441,6 +491,7 @@
   },
   {
     "name": "Андроксен",
+    "slug": "androksen",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5612.webp",
     "leaflets": [
@@ -450,6 +501,7 @@
   },
   {
     "name": "Дамиана",
+    "slug": "damiana",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5621.webp",
     "leaflets": [
@@ -459,6 +511,7 @@
   },
   {
     "name": "Седора",
+    "slug": "sedora",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5638.webp",
     "leaflets": [
@@ -467,6 +520,7 @@
   },
   {
     "name": "Фераксон",
+    "slug": "ferakson",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5650.webp",
     "leaflets": [
@@ -475,6 +529,7 @@
   },
   {
     "name": "Седаксон",
+    "slug": "sedakson",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5649.webp",
     "leaflets": [
@@ -483,6 +538,7 @@
   },
   {
     "name": "Гепаксон",
+    "slug": "gepakson",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5656.webp",
     "leaflets": [
@@ -491,6 +547,7 @@
   },
   {
     "name": "Нефраксон",
+    "slug": "nefrakson",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5654.webp",
     "leaflets": [
@@ -499,6 +556,7 @@
   },
   {
     "name": "Цинк-Аксон",
+    "slug": "tsink-akson",
     "category": "Таблетка ва капсулалар",
     "image": "assets/products/product-5640.webp",
     "leaflets": [
@@ -507,6 +565,7 @@
   },
   {
     "name": "Кидолак",
+    "slug": "kidolak",
     "category": "Томчилар",
     "image": "assets/products/product-5593.webp",
     "leaflets": [
@@ -516,6 +575,7 @@
   },
   {
     "name": "Детрино",
+    "slug": "detrino",
     "category": "Томчилар",
     "image": "assets/products/product-5591.webp",
     "leaflets": [
@@ -525,6 +585,7 @@
   },
   {
     "name": "Бейбифлор",
+    "slug": "beybiflor",
     "category": "Томчилар",
     "image": "assets/products/product-5611.webp",
     "leaflets": [
@@ -533,6 +594,7 @@
   },
   {
     "name": "Натуралергин",
+    "slug": "naturalergin",
     "category": "Томчилар",
     "image": "assets/products/product-5596.webp",
     "leaflets": [
@@ -542,6 +604,7 @@
   },
   {
     "name": "Ацидофлор",
+    "slug": "atsidoflor",
     "category": "Саше ва порошоклар",
     "image": "assets/products/product-5615.webp",
     "leaflets": [
@@ -550,6 +613,7 @@
   },
   {
     "name": "Инубакт",
+    "slug": "inubakt",
     "category": "Саше ва порошоклар",
     "image": "assets/products/product-5618.webp",
     "leaflets": [
@@ -559,6 +623,7 @@
   },
   {
     "name": "Унбактум",
+    "slug": "unbaktum",
     "category": "Саше ва порошоклар",
     "image": "assets/products/product-5655.webp",
     "leaflets": [
