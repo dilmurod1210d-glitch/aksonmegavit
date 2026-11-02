@@ -41,6 +41,17 @@
 .kicker{display:inline-block;font-size:1.6cqw;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--grad);padding:.7cqw 1.8cqw;border-radius:999px}
 .cover h1{font-size:8cqw;line-height:.95;margin:2.4cqw 0 1.6cqw;color:var(--ink)}
 .cover .sub{font-size:2.2cqw;font-weight:800;color:var(--tone-ink)}
+.tagline{font-size:2.3cqw;font-weight:800;color:var(--ink);margin-top:1.4cqw;max-width:90%}
+.badges{display:flex;flex-wrap:wrap;gap:1cqw;margin-top:1.4cqw}
+.badges span{font-size:1.5cqw;font-weight:800;color:var(--tone-ink);background:#fff;border:.25cqw solid var(--tone);padding:.6cqw 1.4cqw;border-radius:999px}
+.orig{align-self:flex-start;font-size:1.3cqw;font-weight:700;color:var(--muted);background:var(--surface);padding:.4cqw 1.2cqw;border-radius:999px}
+.orig:empty{display:none}
+.leaflet-row{position:relative;z-index:1;flex:1;display:flex;gap:2cqw;align-items:stretch;min-height:0}
+.leaflet-row figure{margin:0;flex:1;min-width:0;background:var(--surface);border-radius:1.6cqw;padding:1cqw;display:flex;align-items:center;justify-content:center}
+.leaflet-row img{max-width:100%;max-height:100%;object-fit:contain;border-radius:1cqw}
+.leaflet-row .pack-fig{flex:.8;background:var(--tone-bg)}
+.leaflet-row .pack-fig img{mix-blend-mode:multiply}
+.slide.end .maker{font-size:1.5cqw;opacity:.85;margin:.6cqw auto 0;max-width:80%}
 .cover .desc{font-size:1.9cqw;color:var(--ink-2);margin-top:1.4cqw}
 .note{font-size:1.5cqw;color:var(--muted);margin-top:2cqw;font-weight:700}
 .cover-photo{flex:1;position:relative;align-self:stretch;display:flex;align-items:center;justify-content:center}
