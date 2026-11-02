@@ -60,7 +60,7 @@ ${description ? `<div class="product-lead">${paragraphs(description)}</div>` : `
     : t('Биологик фаол қўшимча. Таркиби ва қўлланиш тартиби қуйидаги асл буклетда келтирилган.', 'Биологически активная добавка. Состав и способ применения указаны в оригинальной инструкции ниже.')}</p>`}
 ${facts.length ? `<dl class="product-facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
 ${p.info ? `<a class="btn btn-primary deck-link" href="${presentationPath(lang, p.slug)}">${ICON.doc}${t('Шифокорлар учун презентация', 'Презентация для врачей')}</a>` : ''}
-<div class="product-contact"><span>${t('Буюртма ва маълумот учун қўнғироқ қилинг', 'Звоните для заказа и консультации')}</span><div class="cta-phones">${PHONES.map(([tel, l], i) => `<a class="btn ${i ? 'btn-outline' : 'btn-primary'}" href="tel:${tel}">${i ? '' : ICON.phone}${l}</a>`).join('')}</div></div>
+<div class="product-contact"><span>${t('Буюртма ва маълумот учун қўнғироқ қилинг', 'Звоните для заказа и консультации')}</span><div class="cta-phones">${PHONES.filter(ph => !ph[2].label).map(([tel, l], i) => `<a class="btn ${i ? 'btn-outline' : 'btn-primary'}" href="tel:${tel}">${i ? '' : ICON.phone}${l}</a>`).join('')}</div></div>
 <div class="notice" style="margin-top:16px">${ICON.info}<p>${t('Биологик фаол қўшимча дори воситаси ҳисобланмайди. Қўллашдан олдин йўриқнома билан танишинг ва мутахассис билан маслаҳатлашинг.', 'БАД не является лекарственным средством. Перед применением ознакомьтесь с инструкцией и проконсультируйтесь со специалистом.')}</p></div>
 </div>
 </article>
