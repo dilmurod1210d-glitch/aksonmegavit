@@ -43,6 +43,7 @@ export const ICON = {
   send: svg('<path d="M21 3L10 14M21 3l-7 18-4-7-7-4z"/>'),
   mail: svg('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'),
   truck: svg('<path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>'),
+  chat: svg('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/>'),
   globe: svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>')
 };
 
@@ -75,9 +76,30 @@ function footer(lang, categories) {
 </div>
 <div class="footer-bottom"><span>© <span id="year">${new Date().getFullYear()}</span> Akson Megavit pharmaceutical</span><span>${t('Биологик фаол қўшимча дори воситаси ҳисобланмайди.', 'БАД не является лекарственным средством.')}</span></div>
 </div></footer>
+${chat(lang)}
 <div class="call-bar"><a class="btn btn-primary" href="tel:${PHONES[0][0]}">${ICON.phone}${t('Қўнғироқ қилиш', 'Позвонить')}</a>${CFG.telegram
     ? `<a class="btn btn-outline" href="${esc(CFG.telegram)}" target="_blank" rel="noopener">${ICON.send}Telegram</a>`
     : `<a class="btn btn-outline" href="${href(lang, '/catalog.html')}">${t('Каталог', 'Каталог')}</a>`}</div>`;
+}
+
+// Чат «Савол беринг»: сообщение уходит на почту из site.json через FormSubmit (chat.js).
+function chat(lang) {
+  if (!CFG.email) return '';
+  const t = L(lang);
+  const topics = [t('Маҳсулот ҳақида', 'О продукте'), t('Буюртма', 'Заказ'), t('Ҳамкорлик', 'Сотрудничество')];
+  return `<button type="button" class="chat-fab" data-chat-open aria-controls="chat" aria-expanded="false">${ICON.chat}<span>${t('Савол беринг', 'Задать вопрос')}</span></button>
+<section class="chat" id="chat" hidden aria-label="${t('Савол беринг', 'Задать вопрос')}" data-to="${esc(CFG.email)}" data-subject="${t('Сайтдан савол', 'Вопрос с сайта')} — aksonmegavit.uz" data-sent="${t('Раҳмат! Хабарингиз юборилди. Тез орада жавоб берамиз.', 'Спасибо! Сообщение отправлено. Мы скоро ответим.')}" data-fail="${t('Юборилмади. Илтимос, қўнғироқ қилинг:', 'Не удалось отправить. Пожалуйста, позвоните:')} ${PHONES[0][1]}">
+<header><div><strong>Akson Megavit</strong><small>${t('Одатда бир иш куни ичида жавоб берамиз', 'Обычно отвечаем в течение рабочего дня')}</small></div><button type="button" class="icon-btn" data-chat-close aria-label="${t('Ёпиш', 'Закрыть')}">${ICON.close}</button></header>
+<div class="chat-log" aria-live="polite"><p class="msg in">${t('Ассалому алайкум! Саволингизни ёзинг — жавобни телефон ёки почта орқали берамиз.', 'Здравствуйте! Напишите вопрос — ответим по телефону или почте.')}</p></div>
+<form class="chat-form" novalidate>
+<div class="chat-topics">${topics.map((x, i) => `<label><input type="radio" name="topic" value="${esc(x)}"${i ? '' : ' checked'}><span>${esc(x)}</span></label>`).join('')}</div>
+<input name="name" type="text" autocomplete="name" placeholder="${t('Исмингиз', 'Ваше имя')}" aria-label="${t('Исмингиз', 'Ваше имя')}">
+<input name="contact" type="text" autocomplete="tel" required placeholder="${t('Телефон ёки email', 'Телефон или email')} *" aria-label="${t('Телефон ёки email', 'Телефон или email')}">
+<textarea name="message" rows="3" required placeholder="${t('Саволингиз', 'Ваш вопрос')} *" aria-label="${t('Саволингиз', 'Ваш вопрос')}"></textarea>
+<input type="text" name="_honey" tabindex="-1" autocomplete="off" class="visually-hidden" aria-hidden="true">
+<p class="chat-error" hidden>${t('Телефон ёки email ва саволни ёзинг.', 'Укажите телефон или email и вопрос.')}</p>
+<button type="submit" class="btn btn-primary">${ICON.send}${t('Юбориш', 'Отправить')}</button>
+</form></section>`;
 }
 
 const orgLd = lang => ({
@@ -121,7 +143,7 @@ ${header(lang, active, alternates)}
 ${main}
 </main>
 ${footer(lang, categories)}
-<script src="/theme.js" defer></script>${scripts.map(s => `<script src="${s}" defer></script>`).join('')}
+<script src="/theme.js" defer></script><script src="/chat.js" defer></script>${scripts.map(s => `<script src="${s}" defer></script>`).join('')}
 </body></html>
 `;
 }

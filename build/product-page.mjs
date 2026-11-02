@@ -3,6 +3,7 @@
 import { page, esc, SITE, ICON, PHONES, catalogUrl, productCard } from './layout.mjs';
 import { L, href, dataText, productPath, LANG_ORDER, productName } from './i18n.mjs';
 import { crumbs } from './pages.mjs';
+import { presentationPath } from './presentation.mjs';
 
 // Текст из админки: пустая строка — новый абзац, перенос строки — <br>.
 const paragraphs = text => String(text).trim().split(/\n\s*\n/).map(p => `<p>${esc(p.trim()).replace(/\n/g, '<br>')}</p>`).join('');
@@ -15,7 +16,11 @@ export function productPage(lang, p, related, categories) {
   const catObj = categories.find(c => c.name === p.category);
   // Описание, состав и применение: узбекский (кириллица) — основной, латиница — транслитерация,
   // русский — отдельные поля *_ru из админки (пока их нет, показываем только буклет).
-  const text = key => lang === 'ru' ? (p[key + '_ru'] || '') : dataText(lang, p[key] || '');
+  // Текст из админки важнее; если его нет — берём из оригинального буклета (leaflet-text/<slug>.json).
+  const leaflet = p.info ? (lang === 'ru' ? p.info.ru : p.info.kr) || {} : {};
+  const fromLeaflet = key => { const v = leaflet[key]; if (!v) return ''; const s = Array.isArray(v) ? v.join('; ') : v; return lang === 'uz' ? dataText('uz', s) : s; };
+  const LEAFLET_KEY = { description: 'description', composition: 'composition', usage: 'dosage', indications: 'indications' };
+  const text = key => (lang === 'ru' ? (p[key + '_ru'] || '') : dataText(lang, p[key] || '')) || fromLeaflet(LEAFLET_KEY[key]);
   const description = text('description');
   const title = `${name} — ${category} | Akson Megavit`;
   const metaDescription = description ? description.replace(/\s+/g, ' ').trim().slice(0, 155)
@@ -37,7 +42,7 @@ export function productPage(lang, p, related, categories) {
   }];
 
   const facts = [[t('Бренд', 'Бренд'), p.brand], [t('Шакли ва ҳажми', 'Форма и объём'), form], [t('Тоифа', 'Категория'), category]].filter(f => f[1]);
-  const texts = [[t('Таркиби', 'Состав'), text('composition')], [t('Қўлланиши', 'Применение'), text('usage')]].filter(x => x[1]);
+  const texts = [[t('Таркиби', 'Состав'), text('composition')], [t('Қўлланилиши', 'Показания'), text('indications')], [t('Қўллаш усули ва дозалари', 'Способ применения и дозы'), text('usage')]].filter(x => x[1]);
   const ruPending = lang === 'ru' && !description && (p.description || p.composition || p.usage);
   const photo = p.image
     ? `<img src="/${esc(p.image)}"${p.srcset ? ` srcset="${esc(p.srcset.replace(/(^|, )assets\//g, '$1/assets/'))}" sizes="(max-width:900px) 90vw, 560px"` : ''} alt="${esc(name)}" width="800" height="800" fetchpriority="high">`
@@ -54,6 +59,7 @@ ${description ? `<div class="product-lead">${paragraphs(description)}</div>` : `
     ? 'Описание продукта на русском языке готовится. Состав и способ применения указаны в оригинальной инструкции ниже.'
     : t('Биологик фаол қўшимча. Таркиби ва қўлланиш тартиби қуйидаги асл буклетда келтирилган.', 'Биологически активная добавка. Состав и способ применения указаны в оригинальной инструкции ниже.')}</p>`}
 ${facts.length ? `<dl class="product-facts">${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
+${p.info ? `<a class="btn btn-primary deck-link" href="${presentationPath(lang, p.slug)}">${ICON.doc}${t('Шифокорлар учун презентация', 'Презентация для врачей')}</a>` : ''}
 <div class="product-contact"><span>${t('Буюртма ва маълумот учун қўнғироқ қилинг', 'Звоните для заказа и консультации')}</span><div class="cta-phones">${PHONES.map(([tel, l], i) => `<a class="btn ${i ? 'btn-outline' : 'btn-primary'}" href="tel:${tel}">${i ? '' : ICON.phone}${l}</a>`).join('')}</div></div>
 <div class="notice" style="margin-top:16px">${ICON.info}<p>${t('Биологик фаол қўшимча дори воситаси ҳисобланмайди. Қўллашдан олдин йўриқнома билан танишинг ва мутахассис билан маслаҳатлашинг.', 'БАД не является лекарственным средством. Перед применением ознакомьтесь с инструкцией и проконсультируйтесь со специалистом.')}</p></div>
 </div>

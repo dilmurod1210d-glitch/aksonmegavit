@@ -1,0 +1,67 @@
+/* Презентация препарата для врачей (build/presentation.mjs). Слайд 16:9 масштабируется
+   под экран: размеры шрифтов в единицах ширины слайда (cqw). */
+.deck-page{background:var(--surface-2);padding:0;min-height:100vh}
+.deck-bar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 16px;background:var(--card);box-shadow:var(--shadow-sm)}
+.deck-bar a,.deck-bar button{border:0;background:var(--surface);color:var(--ink);font-weight:800;font-size:14px;padding:9px 14px;border-radius:999px}
+.deck-bar button:hover,.deck-bar a:hover{background:var(--primary-soft);color:var(--primary)}
+.deck-back{margin-right:auto}
+.deck-langs{display:flex;gap:4px}
+.deck-langs a[aria-current]{background:var(--ink);color:var(--bg)}
+.deck-count{font-weight:800;color:var(--muted);padding:0 6px}
+#prev,#next{width:40px;font-size:20px;padding:4px 0}
+.deck{height:calc(100vh - 62px);overflow-y:auto;scroll-snap-type:y mandatory;padding:12px 16px 40px}
+.deck:fullscreen{height:100vh;background:#0f1024;padding:0}
+.slide{container-type:inline-size;scroll-snap-align:center;position:relative;width:min(100%,calc((100vh - 110px) * 16 / 9));aspect-ratio:16/9;margin:16px auto;background:var(--card);color:var(--ink);border-radius:clamp(12px,2vw,28px);padding:5.5cqw 6cqw;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.deck:fullscreen .slide{width:min(100vw,calc(100vh * 16 / 9));margin:0 auto;border-radius:0;box-shadow:none;height:100vh;aspect-ratio:auto;max-height:calc(100vw * 9 / 16)}
+.slide::after{content:"";position:absolute;right:-12cqw;bottom:-18cqw;width:36cqw;aspect-ratio:1;border-radius:50%;background:var(--tone);opacity:.12}
+.slide header{display:flex;flex-direction:column;gap:1.2cqw;margin-bottom:2.6cqw}
+.slide .tag{align-self:flex-start;font-size:1.5cqw;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--tone-ink);background:var(--tone-bg);padding:.6cqw 1.6cqw;border-radius:999px}
+.slide h2{font-size:4.2cqw;line-height:1.05}
+.slide .body{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;gap:1.8cqw;font-size:2.05cqw;line-height:1.5;color:var(--ink-2)}
+.slide .body p{margin:0 0 .8cqw}
+.slide.big .body{font-size:2.4cqw}
+.slide ul{margin:0;padding:0;list-style:none;display:grid;gap:1.1cqw 3cqw}
+.slide.cols ul{grid-template-columns:1fr 1fr}
+.slide li{position:relative;padding-left:3.2cqw;font-weight:700;color:var(--ink)}
+.slide li::before{content:"";position:absolute;left:0;top:.55cqw;width:1.7cqw;height:1.7cqw;border-radius:50%;background:var(--tone);box-shadow:0 0 0 .55cqw var(--tone-bg)}
+.box{background:var(--surface);border-radius:1.8cqw;padding:2cqw 2.4cqw}
+.box h3{font-size:2.1cqw;margin-bottom:.8cqw;color:var(--ink)}
+.box.accent{background:var(--tone-bg);color:var(--tone-ink)}
+.box.accent h3{color:var(--tone-ink)}
+.box.warn{background:#ffe3e5;color:#8c1220}
+.box.warn h3{color:#8c1220}
+.latin{font-style:italic;font-weight:700;color:var(--ink)}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:1.6cqw;margin:0}
+.facts div{background:var(--surface);border-radius:1.6cqw;padding:1.8cqw 2.2cqw}
+.facts dt{font-size:1.5cqw;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--tone-ink);margin-bottom:.6cqw}
+.facts dd{margin:0}
+/* Обложка */
+.slide.cover{flex-direction:row;align-items:center;gap:4cqw;background:linear-gradient(135deg,var(--tone-bg),var(--card) 70%)}
+.cover-text{flex:1.1;position:relative;z-index:1}
+.kicker{display:inline-block;font-size:1.6cqw;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--grad);padding:.7cqw 1.8cqw;border-radius:999px}
+.cover h1{font-size:8cqw;line-height:.95;margin:2.4cqw 0 1.6cqw;color:var(--ink)}
+.cover .sub{font-size:2.2cqw;font-weight:800;color:var(--tone-ink)}
+.cover .desc{font-size:1.9cqw;color:var(--ink-2);margin-top:1.4cqw}
+.note{font-size:1.5cqw;color:var(--muted);margin-top:2cqw;font-weight:700}
+.cover-photo{flex:1;position:relative;align-self:stretch;display:flex;align-items:center;justify-content:center}
+.cover-photo::before{content:"";position:absolute;width:85%;aspect-ratio:1;border-radius:50%;background:var(--tone);opacity:.2}
+.cover-photo img{position:relative;max-height:100%;width:auto;object-fit:contain;mix-blend-mode:multiply}
+.slide.end{align-items:center;justify-content:center;text-align:center;background:var(--grad);color:#fff}
+.slide.end h2{color:#fff;font-size:5cqw;margin:2.4cqw 0}
+.slide.end .kicker{background:rgba(255,255,255,.2)}
+.slide.end .phones{font-size:3cqw;font-weight:800}
+.slide.end .site{font-size:2.2cqw;font-weight:800;opacity:.9}
+.slide.end .note{color:rgba(255,255,255,.8)}
+.slide.end::after{background:#fff}
+@media (max-width:640px){
+  .deck-bar{font-size:13px}
+  #full{display:none}
+  .slide.cols ul{grid-template-columns:1fr}
+}
+@media print{
+  @page{size:A4 landscape;margin:0}
+  .deck-bar{display:none}
+  .deck-page{background:#fff}
+  .deck{height:auto;overflow:visible;padding:0}
+  .slide{width:100%;margin:0;border-radius:0;box-shadow:none;break-after:page;page-break-after:always;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}

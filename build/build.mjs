@@ -6,13 +6,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { productPage } from './product-page.mjs';
+import { presentationPage, presentationPath } from './presentation.mjs';
 import { home, catalog, about, plannedPage, contacts, partners, notFound } from './pages.mjs';
 import { SITE, useSettings } from './layout.mjs';
 import { LANGS, LANG_ORDER, href, productPath } from './i18n.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, '_site');
-const SKIP = new Set(['site.json', '.git', '.github', '.gitignore', 'node_modules', '_site', 'build', 'package.json', 'package-lock.json', 'README.md']);
+const SKIP = new Set(['site.json', 'leaflet-text', '.git', '.github', '.gitignore', 'node_modules', '_site', 'build', 'package.json', 'package-lock.json', 'README.md']);
 const THUMBS = [400, 800];
 
 // Та же транслитерация, что и в админке (admin/index.html → slug()).
@@ -71,6 +72,8 @@ async function main() {
     p.url = `mahsulot/${slug}/`;
     if (!Array.isArray(p.leaflets)) p.leaflets = [];
     if (p.image) Object.assign(p, await makeThumbs(p.image));
+    // Текст оригинального буклета для презентации врачам (если уже перенесён)
+    try { p.info = JSON.parse(await fs.readFile(path.join(ROOT, 'leaflet-text', slug + '.json'), 'utf8')); } catch { p.info = null; }
   }
 
   // Категория: name — как в products.json, key — латинский ключ для адреса ?category=
@@ -87,6 +90,8 @@ async function main() {
     for (const p of products) {
       const related = byCat[p.category].filter(x => x !== p).slice(0, 4);
       await write(productPath(lang, p.slug) + 'index.html', productPage(lang, p, related, categories));
+      const deck = p.info && presentationPage(lang, p);
+      if (deck) await write(presentationPath(lang, p.slug) + 'index.html', deck);
     }
     const pages = { '/index.html': home, '/catalog.html': catalog, '/about.html': about, '/planned.html': plannedPage, '/contacts.html': contacts, '/partners.html': partners };
     for (const [file, render] of Object.entries(pages)) await write(href(lang, file), render(lang, data));
