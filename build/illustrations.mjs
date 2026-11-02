@@ -4,53 +4,67 @@
 const svg = body => `<svg class="cat-illustration" viewBox="0 0 120 120" aria-hidden="true"><ellipse class="i-shade" cx="60" cy="110" rx="36" ry="6"/>${body}</svg>`;
 
 const ART = {
-  // Сироп: бутылка с крышкой, этикетка с каплей и мерная ложка
+  // Сироп: бутылка из тёмного стекла на фоне веточки трав, ложка с каплей сиропа
   siroplar: svg(`
-    <rect class="i-dark" x="45" y="8" width="30" height="14" rx="4"/>
-    <rect class="i-dark" x="49" y="22" width="22" height="6"/>
-    <path class="i-main" d="M47 28h26v8c11 4 17 12 17 24v38a9 9 0 0 1-9 9H39a9 9 0 0 1-9-9V60c0-12 6-20 17-24z"/>
-    <path class="i-hl" d="M37 76V60c0-7 3-12 9-15"/>
-    <rect class="i-soft" x="38" y="62" width="44" height="32" rx="7"/>
-    <path class="i-main" d="M60 67c5 7 8 10 8 15a8 8 0 0 1-16 0c0-5 3-8 8-15z"/>
-    <path class="i-dark" d="M88 96c6 0 10-3 10-7s-4-7-10-7-10 3-10 7l-8 12 4 2z" transform="rotate(-20 88 90)"/>`),
-  // Спрей: распылитель, облачко брызг, флакон с крестиком
+    <path class="i-stem" d="M86 104C84 80 88 52 98 26"/>
+    <g transform="translate(87 84) rotate(-58)"><path class="i-leaf" d="M0 0C-9.9 -5.3999999999999995 -9.9 -14.4 0 -18C9.9 -14.4 9.9 -5.3999999999999995 0 0z"/><path class="i-vein" d="M0 -2V-14.4"/></g><g transform="translate(89 66) rotate(52)"><path class="i-leaf-d" d="M0 0C-9.350000000000001 -5.1 -9.350000000000001 -13.600000000000001 0 -17C9.350000000000001 -13.600000000000001 9.350000000000001 -5.1 0 0z"/><path class="i-vein" d="M0 -2V-13.600000000000001"/></g><g transform="translate(92 48) rotate(-50)"><path class="i-leaf" d="M0 0C-8.25 -4.5 -8.25 -12 0 -15C8.25 -12 8.25 -4.5 0 0z"/><path class="i-vein" d="M0 -2V-12"/></g><g transform="translate(97 32) rotate(40)"><path class="i-leaf-d" d="M0 0C-6.6000000000000005 -3.5999999999999996 -6.6000000000000005 -9.600000000000001 0 -12C6.6000000000000005 -9.600000000000001 6.6000000000000005 -3.5999999999999996 0 0z"/><path class="i-vein" d="M0 -2V-9.600000000000001"/></g>
+    <rect class="i-dark" x="37" y="10" width="30" height="13" rx="4"/>
+    <rect class="i-dark" x="41" y="23" width="22" height="6"/>
+    <path class="i-main" d="M39 29h26v7c11 4 16 12 16 23v37a9 9 0 0 1-9 9H32a9 9 0 0 1-9-9V59c0-11 5-19 16-23z"/>
+    <path class="i-hl" d="M30 78V60c0-7 3-12 8-15"/>
+    <rect class="i-soft" x="31" y="58" width="42" height="34" rx="8"/>
+    <g transform="translate(52 86) rotate(-28)"><path class="i-leaf" d="M0 0C-9.350000000000001 -5.1 -9.350000000000001 -13.600000000000001 0 -17C9.350000000000001 -13.600000000000001 9.350000000000001 -5.1 0 0z"/><path class="i-vein" d="M0 -2V-13.600000000000001"/></g><g transform="translate(52 86) rotate(34)"><path class="i-leaf-d" d="M0 0C-7.15 -3.9 -7.15 -10.4 0 -13C7.15 -10.4 7.15 -3.9 0 0z"/><path class="i-vein" d="M0 -2V-10.4"/></g>
+    <path class="i-spoon" d="M70 103l26-12"/><ellipse class="i-spoon-bowl" cx="102" cy="88" rx="10" ry="6" transform="rotate(-24 102 88)"/>
+    <ellipse class="i-honey" cx="102" cy="88" rx="6.5" ry="3.4" transform="rotate(-24 102 88)"/>
+    <path class="i-spark" d="M20 18Q20 24 26 24Q20 24 20 30Q20 24 14 24Q20 24 20 18z"/><path class="i-spark" d="M30 8.5Q30 12 33.5 12Q30 12 30 15.5Q30 12 26.5 12Q30 12 30 8.5z"/>`),
+  // Спрей: флакон распыляет свежее облачко на листья мяты
   spreylar: svg(`
-    <circle class="i-main" cx="92" cy="18" r="3"/><circle class="i-main" cx="100" cy="26" r="2.5"/><circle class="i-main" cx="98" cy="12" r="2"/><circle class="i-main" cx="106" cy="18" r="2"/>
-    <rect class="i-dark" x="48" y="12" width="26" height="14" rx="4"/>
-    <rect class="i-dark" x="72" y="15" width="12" height="6" rx="2"/>
-    <rect class="i-dark" x="54" y="26" width="14" height="9"/>
-    <rect class="i-main" x="38" y="35" width="46" height="70" rx="11"/>
-    <path class="i-hl" d="M45 92V50"/>
-    <rect class="i-soft" x="46" y="55" width="30" height="34" rx="6"/>
-    <path class="i-main" d="M57 62h8v6h6v8h-6v6h-8v-6h-6v-8h6z"/>`),
+    <circle class="i-mist" cx="88" cy="22" r="10"/><circle class="i-mist" cx="100" cy="30" r="7"/><circle class="i-mist" cx="97" cy="14" r="6"/>
+    <circle class="i-main" cx="86" cy="20" r="2.4"/><circle class="i-main" cx="95" cy="26" r="2"/><circle class="i-main" cx="99" cy="15" r="1.8"/><circle class="i-main" cx="104" cy="32" r="1.6"/>
+    <g transform="translate(96 58) rotate(35)"><path class="i-leaf" d="M0 0C-11 -6 -11 -16 0 -20C11 -16 11 -6 0 0z"/><path class="i-vein" d="M0 -2V-16"/></g><g transform="translate(98 60) rotate(95)"><path class="i-leaf-d" d="M0 0C-9.350000000000001 -5.1 -9.350000000000001 -13.600000000000001 0 -17C9.350000000000001 -13.600000000000001 9.350000000000001 -5.1 0 0z"/><path class="i-vein" d="M0 -2V-13.600000000000001"/></g><g transform="translate(94 62) rotate(-20)"><path class="i-leaf" d="M0 0C-7.700000000000001 -4.2 -7.700000000000001 -11.200000000000001 0 -14C7.700000000000001 -11.200000000000001 7.700000000000001 -4.2 0 0z"/><path class="i-vein" d="M0 -2V-11.200000000000001"/></g>
+    <rect class="i-dark" x="36" y="14" width="26" height="13" rx="4"/>
+    <rect class="i-dark" x="60" y="16" width="14" height="6" rx="2"/>
+    <rect class="i-dark" x="42" y="27" width="14" height="9"/>
+    <rect class="i-main" x="26" y="36" width="46" height="70" rx="12"/>
+    <path class="i-hl" d="M33 94V52"/>
+    <rect class="i-soft" x="34" y="54" width="30" height="36" rx="7"/>
+    <g transform="translate(49 84) rotate(-22)"><path class="i-leaf" d="M0 0C-9.9 -5.3999999999999995 -9.9 -14.4 0 -18C9.9 -14.4 9.9 -5.3999999999999995 0 0z"/><path class="i-vein" d="M0 -2V-14.4"/></g><g transform="translate(49 84) rotate(40)"><path class="i-leaf-d" d="M0 0C-7.700000000000001 -4.2 -7.700000000000001 -11.200000000000001 0 -14C7.700000000000001 -11.200000000000001 7.700000000000001 -4.2 0 0z"/><path class="i-vein" d="M0 -2V-11.200000000000001"/></g>
+    <path class="i-spark" d="M14 25Q14 30 19 30Q14 30 14 35Q14 30 9 30Q14 30 14 25z"/><path class="i-spark" d="M104 88Q104 92 108 92Q104 92 104 96Q104 92 100 92Q104 92 104 88z"/>`),
   // Таблетки и капсулы
   'tabletka-va-kapsulalar': svg(`
     <g transform="rotate(-35 46 54)"><rect class="i-main" x="16" y="42" width="60" height="24" rx="12"/><path class="i-soft" d="M46 42h18a12 12 0 0 1 0 24H46z"/><path class="i-hl" d="M24 50h14"/></g>
     <g transform="rotate(28 82 74)"><rect class="i-dark" x="60" y="64" width="46" height="20" rx="10"/><path class="i-main" d="M83 64h13a10 10 0 0 1 0 20H83z"/></g>
     <circle class="i-soft i-ring" cx="40" cy="88" r="16"/><path class="i-line" d="M29 88h22"/>
     <circle class="i-main" cx="78" cy="30" r="9"/><path class="i-line-soft" d="M72 30h12"/>`),
-  // Капли: флакон с пипеткой и падающие капли
+  // Капли: пипетка роняет каплю с листочком в спокойную воду (круги на воде)
   tomchilar: svg(`
-    <path class="i-dark" d="M50 8h20a6 6 0 0 1 6 6v10H44V14a6 6 0 0 1 6-6z"/>
-    <rect class="i-dark" x="46" y="24" width="28" height="8" rx="2"/>
-    <path class="i-main" d="M40 34h40v62a10 10 0 0 1-10 10H50a10 10 0 0 1-10-10z"/>
-    <path class="i-hl" d="M47 92V46"/>
-    <rect class="i-soft" x="47" y="52" width="26" height="30" rx="6"/>
-    <path class="i-main" d="M60 57c4 6 6 8 6 12a6 6 0 0 1-12 0c0-4 2-6 6-12z"/>
-    <path class="i-main" d="M96 52c4 6 6 8 6 12a6 6 0 0 1-12 0c0-4 2-6 6-12z"/>
-    <path class="i-dark" d="M100 78c3 4 4 6 4 8a4 4 0 0 1-8 0c0-2 1-4 4-8z"/>
-    <path class="i-main" d="M20 64c3 5 5 7 5 10a5 5 0 0 1-10 0c0-3 2-5 5-10z"/>`),
-  // Саше и порошки: пакетик с зубчатым краем и горка порошка
+    <ellipse class="i-ripple" cx="60" cy="100" rx="38" ry="8"/><ellipse class="i-ripple" cx="60" cy="100" rx="22" ry="4.5"/>
+    <path class="i-dark" d="M54 4h12a5 5 0 0 1 5 5v14H49V9a5 5 0 0 1 5-5z"/>
+    <rect class="i-dark" x="46" y="22" width="28" height="6" rx="3"/>
+    <path class="i-glass" d="M53 28h14v14l-4 10h-6l-4-10z"/>
+    <path class="i-main" d="M55 38h10v4l-3 8h-4l-3-8z"/>
+    <path class="i-main" d="M60 56c10 13 16 20 16 28a16 16 0 0 1-32 0c0-8 6-15 16-28z"/>
+    <path class="i-hl" d="M52 84a8 8 0 0 0 5 8"/>
+    <g transform="translate(61 90) rotate(18)"><path class="i-leaf-w" d="M0 0C-8.25 -4.5 -8.25 -12 0 -15C8.25 -12 8.25 -4.5 0 0z"/><path class="i-vein" d="M0 -2V-12"/></g>
+    <path class="i-main" d="M24 50c3 5 5 7 5 10a5 5 0 0 1-10 0c0-3 2-5 5-10z" opacity=".55"/>
+    <g transform="translate(96 64) rotate(30)"><path class="i-leaf" d="M0 0C-8.25 -4.5 -8.25 -12 0 -15C8.25 -12 8.25 -4.5 0 0z"/><path class="i-vein" d="M0 -2V-12"/></g><g transform="translate(96 64) rotate(-40)"><path class="i-leaf-d" d="M0 0C-6.6000000000000005 -3.5999999999999996 -6.6000000000000005 -9.600000000000001 0 -12C6.6000000000000005 -9.600000000000001 6.6000000000000005 -3.5999999999999996 0 0z"/><path class="i-vein" d="M0 -2V-9.600000000000001"/></g>
+    <path class="i-spark" d="M94 24Q94 30 100 30Q94 30 94 36Q94 30 88 30Q94 30 94 24z"/><path class="i-spark" d="M22 78Q22 82 26 82Q22 82 22 86Q22 82 18 82Q22 82 22 78z"/>`),
+  // Саше: пакетик высыпается в стакан воды с пузырьками и долькой цитруса
   'sashe-va-poroshoklar': svg(`
-    <g transform="rotate(-8 50 56)">
-      <path class="i-main" d="M24 22l5-6 5 6 5-6 5 6 5-6 5 6 5-6 5 6 5-6 5 6v74H24z"/>
-      <rect class="i-dark" x="24" y="22" width="50" height="8"/>
-      <rect class="i-soft" x="31" y="42" width="36" height="34" rx="6"/>
-      <path class="i-main" d="M45 50h8v6h6v8h-6v6h-8v-6h-6v-8h6z"/>
-      <path class="i-hl" d="M30 88V40"/>
+    <g transform="rotate(-24 34 40)">
+      <path class="i-main" d="M14 20l4-5 4 5 4-5 4 5 4-5 4 5 4-5 4 5v44H14z"/>
+      <rect class="i-dark" x="14" y="20" width="36" height="6"/>
+      <rect class="i-soft" x="20" y="34" width="24" height="20" rx="5"/>
+      <g transform="translate(32 51) rotate(-25)"><path class="i-leaf" d="M0 0C-6.6000000000000005 -3.5999999999999996 -6.6000000000000005 -9.600000000000001 0 -12C6.6000000000000005 -9.600000000000001 6.6000000000000005 -3.5999999999999996 0 0z"/><path class="i-vein" d="M0 -2V-9.600000000000001"/></g><g transform="translate(32 51) rotate(35)"><path class="i-leaf-d" d="M0 0C-4.95 -2.6999999999999997 -4.95 -7.2 0 -9C4.95 -7.2 4.95 -2.6999999999999997 0 0z"/><path class="i-vein" d="M0 -2V-7.2"/></g>
     </g>
-    <path class="i-dark" d="M64 104c2-14 10-22 20-22s18 8 20 22z"/>
-    <circle class="i-main" cx="78" cy="78" r="2.5"/><circle class="i-main" cx="90" cy="74" r="2"/><circle class="i-main" cx="96" cy="80" r="1.8"/>`)
+    <circle class="i-main" cx="58" cy="44" r="2.2"/><circle class="i-main" cx="62" cy="52" r="1.8"/><circle class="i-main" cx="57" cy="58" r="1.5"/>
+    <path class="i-glass" d="M46 62h48l-6 42a6 6 0 0 1-6 5H58a6 6 0 0 1-6-5z"/>
+    <path class="i-water" d="M48.5 74h43l-4.3 30a4 4 0 0 1-4 3.5H56.8a4 4 0 0 1-4-3.5z"/>
+    <circle class="i-soft" cx="62" cy="96" r="2.6"/><circle class="i-soft" cx="74" cy="88" r="2"/><circle class="i-soft" cx="80" cy="99" r="2.8"/><circle class="i-soft" cx="68" cy="82" r="1.6"/>
+    <path class="i-hl" d="M54 70l4 32"/>
+    <path class="i-citrus" d="M80 62a14 14 0 0 1 28 0z"/><path class="i-citrus-in" d="M84 62a10 10 0 0 1 20 0z"/>
+    <path class="i-vein-c" d="M94 62V52M94 62l-7-6M94 62l7-6"/>
+    <path class="i-spark" d="M104 22Q104 28 110 28Q104 28 104 34Q104 28 98 28Q104 28 104 22z"/><path class="i-spark" d="M22 88Q22 92 26 92Q22 92 22 96Q22 92 18 92Q22 92 22 88z"/>`)
 };
 
 // Для новой категории без своей картинки — нейтральная коробочка.

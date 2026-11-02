@@ -32,6 +32,7 @@ export const ICON = {
   sun: svg('<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>'),
   moon: svg('<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'),
   menu: svg('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+  check: svg('<path d="M5 12.5l4.5 4.5L19 7"/>'),
   close: svg('<path d="M6 6l12 12M18 6L6 18"/>'),
   search: svg('<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>'),
   arrow: svg('<path d="M5 12h14M13 6l6 6-6 6"/>'),
@@ -83,23 +84,45 @@ ${chat(lang)}
 }
 
 // Чат «Савол беринг»: сообщение уходит на почту из site.json через FormSubmit (chat.js).
+// Тема «Буюртма» открывает поля аптеки (название, ИНН, адрес, лицензия, состав заказа).
+// После отправки форма сменяется экраном «Юборилди» с кратким итогом.
 function chat(lang) {
   if (!CFG.email) return '';
   const t = L(lang);
-  const topics = [t('Маҳсулот ҳақида', 'О продукте'), t('Буюртма', 'Заказ'), t('Ҳамкорлик', 'Сотрудничество')];
+  const topics = [['question', t('Маҳсулот ҳақида', 'О продукте')], ['order', t('Буюртма', 'Заказ')], ['partner', t('Ҳамкорлик', 'Сотрудничество')]];
+  const field = (name, label, attrs = '') => `<label class="chat-field"><span>${label}</span><input name="${name}" type="text" ${attrs}></label>`;
   return `<button type="button" class="chat-fab" data-chat-open aria-controls="chat" aria-expanded="false">${ICON.chat}<span>${t('Савол беринг', 'Задать вопрос')}</span></button>
-<section class="chat" id="chat" hidden aria-label="${t('Савол беринг', 'Задать вопрос')}" data-to="${esc(CFG.email)}" data-subject="${t('Сайтдан савол', 'Вопрос с сайта')} — aksonmegavit.uz" data-sent="${t('Раҳмат! Хабарингиз юборилди. Тез орада жавоб берамиз.', 'Спасибо! Сообщение отправлено. Мы скоро ответим.')}" data-fail="${t('Юборилмади. Илтимос, қўнғироқ қилинг:', 'Не удалось отправить. Пожалуйста, позвоните:')} ${PHONES[0][1]}">
+<section class="chat" id="chat" hidden aria-label="${t('Савол беринг', 'Задать вопрос')}" data-to="${esc(CFG.email)}" data-subject="${t('Сайтдан хабар', 'Сообщение с сайта')} — aksonmegavit.uz" data-sending="${t('Юборилмоқда…', 'Отправляем…')}" data-fail="${t('Юборилмади. Интернетни текширинг ёки қўнғироқ қилинг:', 'Не удалось отправить. Проверьте интернет или позвоните:')} ${PHONES[0][1]}">
 <header><div><strong>Akson Megavit</strong><small>${t('Одатда бир иш куни ичида жавоб берамиз', 'Обычно отвечаем в течение рабочего дня')}</small></div><button type="button" class="icon-btn" data-chat-close aria-label="${t('Ёпиш', 'Закрыть')}">${ICON.close}</button></header>
-<div class="chat-log" aria-live="polite"><p class="msg in">${t('Ассалому алайкум! Саволингизни ёзинг — жавобни телефон ёки почта орқали берамиз.', 'Здравствуйте! Напишите вопрос — ответим по телефону или почте.')}</p></div>
+<div class="chat-scroll">
+<div class="chat-log" aria-live="polite"><p class="msg in">${t('Ассалому алайкум! Саволингизни ёзинг ёки аптека учун буюртма қолдиринг — жавобни телефон ёки почта орқали берамиз.', 'Здравствуйте! Напишите вопрос или оставьте заказ для аптеки — ответим по телефону или почте.')}</p></div>
 <form class="chat-form" novalidate>
-<div class="chat-topics">${topics.map((x, i) => `<label><input type="radio" name="topic" value="${esc(x)}"${i ? '' : ' checked'}><span>${esc(x)}</span></label>`).join('')}</div>
-<input name="name" type="text" autocomplete="name" placeholder="${t('Исмингиз', 'Ваше имя')}" aria-label="${t('Исмингиз', 'Ваше имя')}">
-<input name="contact" type="text" autocomplete="tel" required placeholder="${t('Телефон ёки email', 'Телефон или email')} *" aria-label="${t('Телефон ёки email', 'Телефон или email')}">
-<textarea name="message" rows="3" required placeholder="${t('Саволингиз', 'Ваш вопрос')} *" aria-label="${t('Саволингиз', 'Ваш вопрос')}"></textarea>
+<div class="chat-topics" role="radiogroup">${topics.map(([kind, label], i) => `<label><input type="radio" name="topic" value="${esc(label)}" data-kind="${kind}"${i ? '' : ' checked'}><span>${esc(label)}</span></label>`).join('')}</div>
+<fieldset class="order-fields" hidden disabled>
+<legend>${t('Аптека маълумотлари', 'Данные аптеки')}</legend>
+${field('pharmacy', t('Аптека ёки ташкилот номи', 'Название аптеки или организации') + ' *', 'autocomplete="organization" required')}
+${field('inn', t('СТИР (ИНН)', 'ИНН') + ' *', 'inputmode="numeric" maxlength="14" pattern="\\d{9}|\\d{14}" required placeholder="' + t('9 ёки 14 рақам', '9 или 14 цифр') + '"')}
+${field('region', t('Вилоят, шаҳар/туман', 'Область, город/район') + ' *', 'required')}
+${field('address', t('Етказиб бериш манзили', 'Адрес доставки'), 'autocomplete="street-address"')}
+${field('license', t('Фармацевтика лицензияси рақами', 'Номер фармацевтической лицензии'))}
+<label class="chat-field"><span>${t('Тўлов тури', 'Способ оплаты')}</span><select name="payment"><option>${t('Пул ўтказиш (банк орқали)', 'Перечисление (через банк)')}</option><option>${t('Нақд', 'Наличные')}</option><option>${t('Пластик карта', 'Банковская карта')}</option></select></label>
+</fieldset>
+<label class="chat-field"><span data-label-name>${t('Исмингиз', 'Ваше имя')}</span><input name="name" type="text" autocomplete="name" data-order-label="${t('Масъул шахс (Ф.И.Ш.)', 'Ответственное лицо (Ф.И.О.)')}"></label>
+<label class="chat-field"><span>${t('Телефон ёки email', 'Телефон или email')} *</span><input name="contact" type="text" autocomplete="tel" required placeholder="+998 __ ___ __ __"></label>
+<label class="chat-field"><span data-label-message>${t('Саволингиз', 'Ваш вопрос')} *</span><textarea name="message" rows="3" required data-order-label="${t('Буюртма: маҳсулот номи ва миқдори', 'Заказ: название товара и количество')} *" data-order-placeholder="${t('Масалан: Гемовит — 20 дона, Лораген — 10 дона', 'Например: Гемовит — 20 шт., Лораген — 10 шт.')}"></textarea></label>
 <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="visually-hidden" aria-hidden="true">
-<p class="chat-error" hidden>${t('Телефон ёки email ва саволни ёзинг.', 'Укажите телефон или email и вопрос.')}</p>
-<button type="submit" class="btn btn-primary">${ICON.send}${t('Юбориш', 'Отправить')}</button>
-</form></section>`;
+<p class="chat-error" hidden data-msg="${t('Юлдузча (*) билан белгиланган майдонларни тўлдиринг.', 'Заполните поля со звёздочкой (*).')}" data-msg-inn="${t('СТИР 9 ёки 14 рақамдан иборат бўлиши керак.', 'ИНН должен состоять из 9 или 14 цифр.')}"></p>
+<button type="submit" class="btn btn-primary">${ICON.send}<span>${t('Юбориш', 'Отправить')}</span></button>
+</form>
+<div class="chat-done" hidden tabindex="-1">
+<div class="chat-done-icon">${ICON.check}</div>
+<h3>${t('Хабарингиз юборилди!', 'Сообщение отправлено!')}</h3>
+<p data-done-text data-question="${t('Раҳмат! Мутахассисимиз бир иш куни ичида сиз билан боғланади.', 'Спасибо! Специалист свяжется с вами в течение рабочего дня.')}" data-order="${t('Раҳмат! Буюртмангиз қабул қилинди. Менежер нарх ва етказиб бериш муддатини тасдиқлаш учун сиз билан боғланади.', 'Спасибо! Заказ принят. Менеджер свяжется с вами, чтобы подтвердить цену и сроки доставки.')}"></p>
+<dl class="chat-summary"></dl>
+<button type="button" class="btn btn-outline" data-chat-again>${t('Яна хабар ёзиш', 'Написать ещё')}</button>
+</div>
+</div>
+</section>`;
 }
 
 const orgLd = lang => ({
