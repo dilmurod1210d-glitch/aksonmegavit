@@ -423,9 +423,11 @@ body.modal-open{overflow:hidden}
 .chat-form select,.chat-form input[type=text],.chat-form textarea{width:100%;border:2px solid var(--line);background:var(--bg);border-radius:14px;padding:10px 14px;font-size:15px;outline:0;resize:vertical}
 .chat-form select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px;background-repeat:no-repeat;padding-right:36px}
 .chat-form select:focus,.chat-form input:focus,.chat-form textarea:focus{border-color:var(--primary)}
-.chat-topics{display:flex;flex-wrap:wrap;gap:6px}
+.chat-topics{display:flex;gap:6px}
+.chat-topics label{flex:1 0 auto;display:flex}
 .chat-topics input{position:absolute;opacity:0;pointer-events:none}
-.chat-topics span{display:inline-block;padding:6px 12px;border-radius:999px;background:var(--surface);font-size:13px;font-weight:800;color:var(--ink-2);cursor:pointer}
+.chat-topics span{flex:1;display:block;padding:7px 8px;border-radius:999px;background:var(--surface);font-size:12.5px;font-weight:800;color:var(--ink-2);text-align:center;white-space:nowrap;cursor:pointer}
+@media (max-width:400px){.chat-topics{gap:4px}.chat-topics span{font-size:11.5px;padding:7px 6px}}
 .chat-topics input:checked+span{background:var(--ink);color:var(--bg)}
 .chat-topics input:focus-visible+span{outline:3px solid var(--primary)}
 .chat-error{margin:0;color:#c01f2c;font-size:13px;font-weight:700}
