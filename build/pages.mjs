@@ -13,7 +13,7 @@ function ruPlural(n, one, few, many) {
 // Один и тот же адрес на всех языках — для hreflang и переключателя языка.
 export const alternatesOf = path => Object.fromEntries(LANG_ORDER.map(l => [l, href(l, path)]));
 
-const phoneButtons = () => PHONES.map(([tel, l], i) => `<a class="btn ${i === 0 ? 'btn-primary' : 'btn-outline'}" href="tel:${tel}">${i === 0 ? ICON.phone : ''}${l}</a>`).join('')
+const phoneButtons = lang => PHONES.filter(ph => lang || !ph[2].label).map(([tel, l, p], i) => `<a class="btn ${i === 0 ? 'btn-primary' : 'btn-outline'}" href="tel:${tel}">${i === 0 ? ICON.phone : ''}${l}${lang && phoneNote(lang, p) ? ` · ${esc(phoneNote(lang, p))}` : ''}</a>`).join('')
   + (settings().telegram ? `<a class="btn btn-outline" href="${esc(settings().telegram)}" target="_blank" rel="noopener">${ICON.send}Telegram</a>` : '');
 const paragraphs = text => String(text).trim().split(/\n\s*\n/).map(p => `<p>${esc(p.trim()).replace(/\n/g, '<br>')}</p>`).join('');
 const ctaBand = (title, text) => `<section class="section"><div class="container"><div class="cta-band"><div><h2>${title}</h2><p>${text}</p></div><div class="cta-phones">${phoneButtons()}</div></div></div></section>`;

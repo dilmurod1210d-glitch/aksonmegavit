@@ -17,19 +17,21 @@ const ART = {
     <path class="i-spoon" d="M70 103l26-12"/><ellipse class="i-spoon-bowl" cx="102" cy="88" rx="10" ry="6" transform="rotate(-24 102 88)"/>
     <ellipse class="i-honey" cx="102" cy="88" rx="6.5" ry="3.4" transform="rotate(-24 102 88)"/>
     <path class="i-spark" d="M20 18Q20 24 26 24Q20 24 20 30Q20 24 14 24Q20 24 20 18z"/><path class="i-spark" d="M30 8.5Q30 12 33.5 12Q30 12 30 15.5Q30 12 26.5 12Q30 12 30 8.5z"/>`),
-  // Спрей: флакон распыляет свежее облачко на листья мяты
+  // Спрей для горла: флакон с помпой и длинной насадкой, из которой выходит облачко
   spreylar: svg(`
-    <circle class="i-mist" cx="88" cy="22" r="10"/><circle class="i-mist" cx="100" cy="30" r="7"/><circle class="i-mist" cx="97" cy="14" r="6"/>
-    <circle class="i-main" cx="86" cy="20" r="2.4"/><circle class="i-main" cx="95" cy="26" r="2"/><circle class="i-main" cx="99" cy="15" r="1.8"/><circle class="i-main" cx="104" cy="32" r="1.6"/>
-    <g transform="translate(96 58) rotate(35)"><path class="i-leaf" d="M0 0C-11 -6 -11 -16 0 -20C11 -16 11 -6 0 0z"/><path class="i-vein" d="M0 -2V-16"/></g><g transform="translate(98 60) rotate(95)"><path class="i-leaf-d" d="M0 0C-9.350000000000001 -5.1 -9.350000000000001 -13.600000000000001 0 -17C9.350000000000001 -13.600000000000001 9.350000000000001 -5.1 0 0z"/><path class="i-vein" d="M0 -2V-13.600000000000001"/></g><g transform="translate(94 62) rotate(-20)"><path class="i-leaf" d="M0 0C-7.700000000000001 -4.2 -7.700000000000001 -11.200000000000001 0 -14C7.700000000000001 -11.200000000000001 7.700000000000001 -4.2 0 0z"/><path class="i-vein" d="M0 -2V-11.200000000000001"/></g>
-    <rect class="i-dark" x="36" y="14" width="26" height="13" rx="4"/>
-    <rect class="i-dark" x="60" y="16" width="14" height="6" rx="2"/>
-    <rect class="i-dark" x="42" y="27" width="14" height="9"/>
-    <rect class="i-main" x="26" y="36" width="46" height="70" rx="12"/>
-    <path class="i-hl" d="M33 94V52"/>
-    <rect class="i-soft" x="34" y="54" width="30" height="36" rx="7"/>
-    <g transform="translate(49 84) rotate(-22)"><path class="i-leaf" d="M0 0C-9.9 -5.3999999999999995 -9.9 -14.4 0 -18C9.9 -14.4 9.9 -5.3999999999999995 0 0z"/><path class="i-vein" d="M0 -2V-14.4"/></g><g transform="translate(49 84) rotate(40)"><path class="i-leaf-d" d="M0 0C-7.700000000000001 -4.2 -7.700000000000001 -11.200000000000001 0 -14C7.700000000000001 -11.200000000000001 7.700000000000001 -4.2 0 0z"/><path class="i-vein" d="M0 -2V-11.200000000000001"/></g>
-    <path class="i-spark" d="M14 25Q14 30 19 30Q14 30 14 35Q14 30 9 30Q14 30 14 25z"/><path class="i-spark" d="M104 88Q104 92 108 92Q104 92 104 96Q104 92 100 92Q104 92 104 88z"/>`),
+    <path class="i-mist" d="M90 22l20-12v26z"/>
+    <circle class="i-main" cx="96" cy="21" r="2.2"/><circle class="i-main" cx="103" cy="15" r="1.8"/><circle class="i-main" cx="104" cy="27" r="1.8"/><circle class="i-main" cx="109" cy="21" r="1.5"/>
+    <path class="i-nozzle" d="M50 30V24a4 4 0 0 1 4-4h22l12 0"/>
+    <rect class="i-dark" x="84" y="17" width="8" height="8" rx="2.5"/>
+    <rect class="i-dark" x="40" y="22" width="20" height="16" rx="5"/>
+    <rect class="i-soft i-cap" x="44" y="38" width="12" height="8" rx="1.5"/>
+    <rect class="i-dark" x="38" y="46" width="24" height="9" rx="3"/>
+    <path class="i-main" d="M40 55h20v4c10 3 14 9 14 18v20a9 9 0 0 1-9 9H35a9 9 0 0 1-9-9V77c0-9 4-15 14-18z"/>
+    <path class="i-hl" d="M33 96V78c0-5 2-9 6-11"/>
+    <rect class="i-soft" x="33" y="74" width="34" height="24" rx="6"/>
+    <g transform="translate(50 95) rotate(-28)"><path class="i-leaf" d="M0 0C-7.700000000000001 -4.2 -7.700000000000001 -11.200000000000001 0 -14C7.700000000000001 -11.200000000000001 7.700000000000001 -4.2 0 0z"/><path class="i-vein" d="M0 -2V-11.200000000000001"/></g><g transform="translate(50 95) rotate(36)"><path class="i-leaf-d" d="M0 0C-6.050000000000001 -3.3 -6.050000000000001 -8.8 0 -11C6.050000000000001 -8.8 6.050000000000001 -3.3 0 0z"/><path class="i-vein" d="M0 -2V-8.8"/></g>
+    <g transform="translate(92 96) rotate(40)"><path class="i-leaf" d="M0 0C-8.8 -4.8 -8.8 -12.8 0 -16C8.8 -12.8 8.8 -4.8 0 0z"/><path class="i-vein" d="M0 -2V-12.8"/></g><g transform="translate(92 96) rotate(-30)"><path class="i-leaf-d" d="M0 0C-7.15 -3.9 -7.15 -10.4 0 -13C7.15 -10.4 7.15 -3.9 0 0z"/><path class="i-vein" d="M0 -2V-10.4"/></g>
+    <path class="i-spark" d="M18 35Q18 40 23 40Q18 40 18 45Q18 40 13 40Q18 40 18 35z"/><path class="i-spark" d="M100 58Q100 62 104 62Q100 62 100 66Q100 62 96 62Q100 62 100 58z"/>`),
   // Таблетки и капсулы
   'tabletka-va-kapsulalar': svg(`
     <g transform="rotate(-35 46 54)"><rect class="i-main" x="16" y="42" width="60" height="24" rx="12"/><path class="i-soft" d="M46 42h18a12 12 0 0 1 0 24H46z"/><path class="i-hl" d="M24 50h14"/></g>

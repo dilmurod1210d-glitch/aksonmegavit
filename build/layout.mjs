@@ -61,7 +61,6 @@ function header(lang, active, alternates) {
 <div class="header-tools">
 <nav class="lang-switch" aria-label="${t('Тил', 'Язык')}">${langs}</nav>
 <button type="button" class="icon-btn theme-toggle" data-theme-toggle aria-label="${t('Тунги / кундузги режим', 'Тёмная / светлая тема')}"><span class="sun">${ICON.sun}</span><span class="moon">${ICON.moon}</span></button>
-<a class="btn btn-primary btn-sm header-call" href="tel:${PHONES[0][0]}">${ICON.phone}${PHONES[0][1]}</a>
 <button type="button" class="icon-btn menu-toggle" data-menu-toggle aria-controls="site-nav" aria-expanded="false" aria-label="${t('Менюни очиш', 'Открыть меню')}" data-label-open="${t('Менюни очиш', 'Открыть меню')}" data-label-close="${t('Менюни ёпиш', 'Закрыть меню')}"><span class="open-icon">${ICON.menu}</span><span class="close-icon">${ICON.close}</span></button>
 </div>
 </div></header>`;
@@ -72,7 +71,7 @@ function footer(lang, categories) {
   return `<footer class="site-footer" id="contacts"><div class="container">
 <div class="footer-grid">
 <div class="footer-about"><a class="brand" href="${href(lang, '/')}" aria-label="Akson Megavit — ${t('бош саҳифа', 'главная')}">${logos}</a><p>${t('Akson ва Megavit — 2017 йилдан буён биологик фаол қўшимчалар ишлаб чиқаради.', 'Akson и Megavit с 2017 года производят биологически активные добавки.')}</p></div>
-<div><h2>${t('Боғланиш', 'Контакты')}</h2><ul class="footer-phones">${PHONES.map(([tel, l]) => `<li><a href="tel:${tel}">${l}</a></li>`).join('')}</ul><ul style="margin-top:12px">${CFG.telegram ? `<li><a href="${esc(CFG.telegram)}" target="_blank" rel="noopener">Telegram</a></li>` : ''}${CFG.email ? `<li><a href="mailto:${esc(CFG.email)}">${esc(CFG.email)}</a></li>` : ''}<li class="muted">${esc(address(lang))}</li>${cfgText(lang, 'hours') ? `<li class="muted">${esc(cfgText(lang, 'hours'))}</li>` : ''}<li><a href="${href(lang, '/contacts.html')}">${t('Барча алоқа маълумотлари', 'Все контакты')} →</a></li></ul></div>
+<div><h2>${t('Боғланиш', 'Контакты')}</h2><ul class="footer-phones">${PHONES.map(([tel, l, p]) => `<li><a href="tel:${tel}">${l}</a>${phoneNote(lang, p) ? ` <span class="muted">— ${esc(phoneNote(lang, p))}</span>` : ''}</li>`).join('')}</ul><ul style="margin-top:12px">${CFG.telegram ? `<li><a href="${esc(CFG.telegram)}" target="_blank" rel="noopener">Telegram</a></li>` : ''}${CFG.email ? `<li><a href="mailto:${esc(CFG.email)}">${esc(CFG.email)}</a></li>` : ''}<li class="muted">${esc(address(lang))}</li>${cfgText(lang, 'hours') ? `<li class="muted">${esc(cfgText(lang, 'hours'))}</li>` : ''}<li><a href="${href(lang, '/contacts.html')}">${t('Барча алоқа маълумотлари', 'Все контакты')} →</a></li></ul></div>
 <div><h2>${t('Каталог', 'Каталог')}</h2><ul>${categories.map(c => `<li><a href="${esc(catalogUrl(lang, c))}">${esc(dataText(lang, c.name, 'category'))}</a></li>`).join('')}<li><a href="${href(lang, '/planned.html')}">${t('Режадаги маҳсулотлар', 'Планируемые продукты')}</a></li><li><a href="${href(lang, '/partners.html')}">${t('Дорихоналар ва дистрибьюторлар учун', 'Аптекам и дистрибьюторам')}</a></li></ul></div>
 </div>
 <div class="footer-bottom"><span>© <span id="year">${new Date().getFullYear()}</span> Akson Megavit pharmaceutical</span><span>${t('Биологик фаол қўшимча дори воситаси ҳисобланмайди.', 'БАД не является лекарственным средством.')}</span></div>

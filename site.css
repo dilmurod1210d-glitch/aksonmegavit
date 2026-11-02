@@ -148,7 +148,6 @@ section{scroll-margin-top:calc(var(--header-h) + 16px)}
 .nav-theme{display:none}
 .menu-toggle .close-icon,.menu-toggle[aria-expanded="true"] .open-icon{display:none}
 .menu-toggle[aria-expanded="true"] .close-icon{display:block}
-.header-call{display:inline-flex}
 
 /* ---------- Подвал ---------- */
 .site-footer{position:relative;background:#16173a;color:#d8d7f5;padding:72px 0 32px;margin-top:56px;border-radius:var(--radius-l) var(--radius-l) 0 0;overflow:hidden}
@@ -254,6 +253,8 @@ section{scroll-margin-top:calc(var(--header-h) + 16px)}
 .cat-illustration .i-honey{fill:#f59f2b}
 .cat-illustration .i-spark{fill:#ffc94a}
 .cat-illustration .i-mist{fill:#fff;opacity:.75}
+.cat-illustration .i-nozzle{fill:none;stroke:var(--tone-ink);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.cat-illustration .i-cap{stroke:var(--tone-ink);stroke-width:2}
 .cat-illustration .i-ripple{fill:none;stroke:var(--tone);stroke-width:2.5;opacity:.35}
 .cat-illustration .i-glass{fill:rgba(255,255,255,.75);stroke:var(--tone-ink);stroke-width:2.5;stroke-linejoin:round}
 .cat-illustration .i-water{fill:var(--tone);opacity:.55}
@@ -455,7 +456,6 @@ body.modal-open{overflow:hidden}
   .category-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .product-grid,.planned-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
-@media (max-width:1240px){.header-call{display:none}}
 /* Меню прячется в «бургер», когда пункты перестают помещаться в строку */
 @media (max-width:1080px){
   .menu-toggle{display:inline-grid}
@@ -471,7 +471,6 @@ body.modal-open{overflow:hidden}
   .brand{padding:6px 10px}
   .brand .logo-akson{height:24px}
   .brand .logo-megavit{height:30px}
-  .header-call{display:none}
   .hero-grid,.split,.product,.contact-grid{grid-template-columns:1fr}
   .hero-art{max-width:460px}
   .product-photo{position:relative;top:0;aspect-ratio:auto;height:min(82vw,440px)}

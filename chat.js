@@ -45,17 +45,17 @@
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
-    const missing = [...form.querySelectorAll('[required]')].filter(el => !el.disabled && !el.value.trim());
+    const missing = [...form.querySelectorAll('[required]')].filter(el => !el.matches(':disabled') && !el.value.trim());
     if (missing.length) { fail(err.dataset.msg); missing[0].focus(); return; }
     const inn = form.querySelector('[name=inn]');
-    if (!inn.disabled && !/^(\d{9}|\d{14})$/.test(inn.value.replace(/\s/g, ''))) { fail(err.dataset.msgInn); inn.focus(); return; }
+    if (!inn.matches(':disabled') && !/^(\d{9}|\d{14})$/.test(inn.value.replace(/\s/g, ''))) { fail(err.dataset.msgInn); inn.focus(); return; }
     err.hidden = true;
     if (form.querySelector('[name=_honey]').value) return;   // бот заполнил скрытое поле
 
     // Поля для письма и для итога: подпись → значение (только заполненные и включённые)
     const topic = form.querySelector('[name=topic]:checked').value;
     const rows = [['Мавзу / Тема', topic]].concat([...form.querySelectorAll('input[type=text]:not([name=_honey]), select, textarea')]
-      .filter(el => !el.disabled && el.value.trim()).map(el => [label(el), el.value.trim()]));
+      .filter(el => !el.matches(':disabled') && el.value.trim()).map(el => [label(el), el.value.trim()]));
 
     button.disabled = true;
     form.classList.add('sending');

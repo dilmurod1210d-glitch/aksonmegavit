@@ -1,7 +1,7 @@
 // Презентация препарата для врачей: /mahsulot/<slug>/taqdimot/ (и /uz/…, /ru/product/<slug>/presentation/).
 // Слайды собираются из текста оригинального буклета (leaflet-text/<slug>.json).
 // Листание: стрелки, пробел, свайп; «Печать» сохраняет в PDF — по слайду на страницу.
-import { esc, PHONES, settings } from './layout.mjs';
+import { esc, PHONES, settings, phoneNote } from './layout.mjs';
 import { L, LANGS, LANG_ORDER, dataText, productName, productPath, toLatin } from './i18n.mjs';
 
 export const presentationPath = (lang, slug) => productPath(lang, slug) + (lang === 'ru' ? 'presentation/' : 'taqdimot/');
@@ -75,7 +75,7 @@ export function presentationPage(lang, p) {
     `<section class="slide end"><div>
       <span class="kicker">Akson Megavit pharmaceutical</span>
       <h2>${t('Саволлар бўлса, боғланинг', 'Остались вопросы? Свяжитесь с нами')}</h2>
-      <p class="phones">${PHONES.map(ph => esc(ph[1])).join(' · ')}</p>
+      <p class="phones">${PHONES.map(ph => esc(ph[1]) + (phoneNote(lang, ph[2]) ? ` (${esc(phoneNote(lang, ph[2]))})` : '')).join(' · ')}</p>
       ${settings().email ? `<p>${esc(settings().email)}</p>` : ''}
       <p class="site">aksonmegavit.uz</p>
       ${i.manufacturer ? `<p class="maker">${t('Ишлаб чиқарувчи', 'Производитель')}: ${esc(i.manufacturer)}</p>` : ''}
