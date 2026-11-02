@@ -105,7 +105,31 @@ async function main() {
   // Админка сверяет этот файл, чтобы понять, что её коммит уже на сайте.
   await fs.writeFile(path.join(OUT, 'version.json'), JSON.stringify({ commit: process.env.GITHUB_SHA || 'local', built: new Date().toISOString() }) + '\n');
 
+  await bustCache();
+
   console.log(`Готово: ${products.length} товаров × ${LANG_ORDER.length} языка → ${path.relative(ROOT, OUT)}/`);
+}
+
+// Ссылки на стили и скрипты получают ?v=<хэш содержимого>: после публикации браузер
+// сразу берёт новый файл, а не старый из кэша (GitHub Pages кэширует на 10 минут).
+async function bustCache() {
+  const { createHash } = await import('node:crypto');
+  const assets = (await fs.readdir(ROOT)).filter(n => /.(css|js)$/.test(n));
+  const ver = {};
+  for (const n of assets) ver[n] = createHash('sha1').update(await fs.readFile(path.join(ROOT, n))).digest('hex').slice(0, 8);
+  const re = new RegExp(`((?:href|src)="/)(${assets.map(n => n.replace('.', '\.')).join('|')})"`, 'g');
+  const walk = async dir => {
+    for (const e of await fs.readdir(dir, { withFileTypes: true })) {
+      const p = path.join(dir, e.name);
+      if (e.isDirectory()) await walk(p);
+      else if (e.name.endsWith('.html')) {
+        const html = await fs.readFile(p, 'utf8');
+        const out = html.replace(re, (m, pre, n) => `${pre}${n}?v=${ver[n]}"`);
+        if (out !== html) await fs.writeFile(p, out);
+      }
+    }
+  };
+  await walk(OUT);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
