@@ -7,11 +7,13 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-// Координаты панелей на развёртке: [x, y, ширина, высота]
+// Координаты панелей на развёртке: [x, y, ширина, высота].
+// side: 'edge' — боковина из правой кромки лицевой стороны: на развёртках Виродола и Лакторича
+// боковые панели содержат текст от ОС-Д3, его на фото быть не должно.
 export const DIELINES = {
-  virodol: { src: 'assets/planned/virodol.webp', front: [667, 390, 185, 500], side: [852, 390, 183, 500] },
+  virodol: { src: 'assets/planned/virodol.webp', front: [667, 390, 185, 500], side: 'edge' },
   'os-d3': { src: 'assets/planned/os-d3.webp', front: [589, 474, 200, 525], side: [789, 474, 198, 525] },
-  laktorich: { src: 'assets/planned/laktorich.webp', front: [589, 474, 200, 525], side: [789, 474, 198, 525] },
+  laktorich: { src: 'assets/planned/laktorich.webp', front: [589, 474, 200, 525], side: 'edge' },
   tinodol: { src: 'assets/planned/tinodol.webp', front: [607, 428, 200, 530], side: [807, 428, 198, 530] },
   'parazol-nol': { src: 'assets/planned/parazol-nol.webp', front: [603, 430, 200, 532], side: [803, 430, 199, 532] }
 };
@@ -25,7 +27,10 @@ const dataUri = buf => 'data:image/png;base64,' + buf.toString('base64');
 export async function packshot(slug) {
   const d = DIELINES[slug];
   const src = path.join(ROOT, d.src);
-  const [front, side] = await Promise.all([crop(src, d.front), crop(src, d.side)]);
+  const front = await crop(src, d.front);
+  const side = d.side === 'edge'
+    ? await sharp(front).extract({ left: d.front[2] - 6 - 8, top: 0, width: 8, height: d.front[3] - 6 }).resize({ width: 160, height: d.front[3] - 6, fit: 'fill' }).png().toBuffer()
+    : await crop(src, d.side);
   // Цвет крышки — средний цвет верхней кромки лицевой стороны
   const top = await sharp(front).extract({ left: 0, top: 2, width: d.front[2] - 6, height: 6 }).stats();
   const [r, g, b] = top.channels.map(c => Math.round(c.mean * 0.92 + 255 * 0.08));
