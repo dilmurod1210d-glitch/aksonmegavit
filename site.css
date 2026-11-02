@@ -437,6 +437,18 @@ body.modal-open{overflow:hidden}
 .chat-done[hidden]{display:none}
 .chat-done-icon{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:var(--t2-bg,#dcf7ec);color:var(--t2-ink,#0c6b4a);box-shadow:0 0 0 8px color-mix(in srgb,var(--t2,#16b981) 14%,transparent)}
 .chat-done-icon svg{width:34px;height:34px;stroke-width:2.6}
+.chat-done-icon svg+svg,.chat-done[data-state=err] .chat-done-icon svg:first-child{display:none}
+.chat-done[data-state=err] .chat-done-icon svg+svg{display:block}
+.chat-done[data-state=err] .chat-done-icon{background:#ffe3e5;color:#c01f2c;box-shadow:0 0 0 8px rgba(192,31,44,.12)}
+.chat-done[data-state=wait] .chat-done-icon{animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 14px color-mix(in srgb,var(--t2,#16b981) 8%,transparent)}}
+.chat-status{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:800;padding:6px 12px;border-radius:999px;background:var(--surface);color:var(--muted)}
+.chat-status::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.chat-done[data-state=wait] .chat-status::before{animation:blink 1s ease-in-out infinite}
+.chat-done[data-state=ok] .chat-status{background:var(--t2-bg);color:var(--t2-ink)}
+.chat-done[data-state=err] .chat-status{background:#ffe3e5;color:#8c1220;border-radius:14px}
+@keyframes blink{50%{opacity:.25}}
+.chat-done[data-state=err] [data-done-text]{display:none}
 .chat-done h3{margin:4px 0 0;font-size:20px}
 .chat-done p{margin:0;color:var(--ink-2);font-size:15px;line-height:1.5}
 .chat-summary{width:100%;margin:6px 0 4px;display:grid;gap:2px;padding:12px 14px;border-radius:14px;background:var(--surface);text-align:left;font-size:14px}

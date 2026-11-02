@@ -303,6 +303,8 @@ function renderSettings(draft) {
           <div><label class="f" for="s-email">Эл. почта</label><input type="text" id="s-email" value="${v('email')}" placeholder="info@aksonmegavit.uz" inputmode="email"></div>
         </div>
         <div class="hint">Пока поле пустое, кнопка Telegram и почта на сайте не показываются.</div>
+        <label class="f" for="s-chat-phone">Номер для чата «Савол беринг»</label><input type="text" id="s-chat-phone" value="${v('chat_phone')}" placeholder="+998 97 584 00 00" inputmode="tel">
+        <div class="hint">Показывается посетителю, если сообщение из чата не удалось отправить. Пусто — первый номер из списка.</div>
       </section>
       <section class="set-card"><h2>Адрес и время работы</h2>
         <div class="two">
@@ -340,7 +342,7 @@ const readPhones = () => [...document.querySelectorAll('.phone-row')].map(r => (
 // Всё, что сейчас введено в форме, без проверки — чтобы не потерять при перерисовке.
 function settingsDraft() {
   const val = id => $('#' + id).value;
-  return { phones: readPhones(), telegram: val('s-telegram'), email: val('s-email'), address: val('s-address'), address_ru: val('s-address-ru'),
+  return { phones: readPhones(), telegram: val('s-telegram'), email: val('s-email'), chat_phone: val('s-chat-phone'), address: val('s-address'), address_ru: val('s-address-ru'),
     hours: val('s-hours'), hours_ru: val('s-hours-ru'), map: { lat: val('s-lat'), lng: val('s-lng') },
     partners: val('s-partners'), partners_ru: val('s-partners-ru'), analytics: { ga4: val('s-ga4'), yandex: val('s-ym') } };
 }
@@ -365,10 +367,13 @@ function readSettings() {
   const clean = phones.filter(p => p.number);
   for (const p of clean) if (String(p.number).replace(/\D/g, '').length < 9) return { error: 'Телефон «' + p.number + '»: слишком короткий номер.', phones };
   if (!clean.length) return { error: 'Нужен хотя бы один телефон.', phones };
+  const chatDigits = val('s-chat-phone').replace(/\D/g, '');
+  if (chatDigits && chatDigits.length < 9) return { error: 'Номер для чата: слишком короткий номер.', phones };
   // Порядок ключей фиксированный, пустые поля не храним.
   const out = { phones: clean.map(p => { const d = p.number.replace(/\D/g, ''); const o = { number: '+' + (d.length === 9 ? '998' + d : d) }; if (p.label) o.label = p.label; if (p.label_ru) o.label_ru = p.label_ru; return o; }) };
   const put = (k, x) => { if (x) out[k] = x; };
   put('telegram', telegram); put('email', email);
+  if (chatDigits) out.chat_phone = '+' + (chatDigits.length === 9 ? '998' + chatDigits : chatDigits);
   put('address', val('s-address')); put('address_ru', val('s-address-ru'));
   put('hours', val('s-hours')); put('hours_ru', val('s-hours-ru'));
   if (lat && lng) out.map = { lat: +lat, lng: +lng };

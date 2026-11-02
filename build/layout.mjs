@@ -91,7 +91,7 @@ function chat(lang) {
   const topics = [['question', t('Маҳсулот ҳақида', 'О продукте')], ['order', t('Буюртма', 'Заказ')], ['partner', t('Ҳамкорлик', 'Сотрудничество')]];
   const field = (name, label, attrs = '') => `<label class="chat-field"><span>${label}</span><input name="${name}" type="text" ${attrs}></label>`;
   return `<button type="button" class="chat-fab" data-chat-open aria-controls="chat" aria-expanded="false">${ICON.chat}<span>${t('Савол беринг', 'Задать вопрос')}</span></button>
-<section class="chat" id="chat" hidden aria-label="${t('Савол беринг', 'Задать вопрос')}" data-to="${esc(CFG.email)}" data-subject="${t('Сайтдан хабар', 'Сообщение с сайта')} — aksonmegavit.uz" data-sending="${t('Юборилмоқда…', 'Отправляем…')}" data-fail="${t('Юборилмади. Интернетни текширинг ёки қўнғироқ қилинг:', 'Не удалось отправить. Проверьте интернет или позвоните:')} ${PHONES[0][1]}">
+<section class="chat" id="chat" hidden aria-label="${t('Савол беринг', 'Задать вопрос')}" data-to="${esc(CFG.email)}" data-subject="${t('Сайтдан хабар', 'Сообщение с сайта')} — aksonmegavit.uz" data-sending="${t('Юборилмоқда…', 'Отправляем…')}" data-fail="${t('Юборилмади. Интернетни текширинг ёки қўнғироқ қилинг:', 'Не удалось отправить. Проверьте интернет или позвоните:')} ${phoneLabel(CFG.chat_phone || PHONES[0][0])}">
 <header><div><strong>Akson Megavit</strong><small>${t('Одатда бир иш куни ичида жавоб берамиз', 'Обычно отвечаем в течение рабочего дня')}</small></div><button type="button" class="icon-btn" data-chat-close aria-label="${t('Ёпиш', 'Закрыть')}">${ICON.close}</button></header>
 <div class="chat-scroll">
 <div class="chat-log" aria-live="polite"><p class="msg in">${t('Ассалому алайкум! Саволингизни ёзинг ёки аптека учун буюртма қолдиринг — жавобни телефон ёки почта орқали берамиз.', 'Здравствуйте! Напишите вопрос или оставьте заказ для аптеки — ответим по телефону или почте.')}</p></div>
@@ -113,12 +113,13 @@ ${field('license', t('Фармацевтика лицензияси рақами
 <p class="chat-error" hidden data-msg="${t('Юлдузча (*) билан белгиланган майдонларни тўлдиринг.', 'Заполните поля со звёздочкой (*).')}" data-msg-inn="${t('СТИР 9 ёки 14 рақамдан иборат бўлиши керак.', 'ИНН должен состоять из 9 или 14 цифр.')}"></p>
 <button type="submit" class="btn btn-primary">${ICON.send}<span>${t('Юбориш', 'Отправить')}</span></button>
 </form>
-<div class="chat-done" hidden tabindex="-1">
-<div class="chat-done-icon">${ICON.check}</div>
-<h3>${t('Хабарингиз юборилди!', 'Сообщение отправлено!')}</h3>
+<div class="chat-done" hidden tabindex="-1" data-state="wait">
+<div class="chat-done-icon">${ICON.check}${ICON.close}</div>
+<h3 data-wait="${t('Хабарингиз қабул қилинди', 'Сообщение принято')}" data-ok="${t('Хабарингиз юборилди!', 'Сообщение отправлено!')}" data-err="${t('Хабар юборилмади', 'Сообщение не отправлено')}"></h3>
+<p class="chat-status" aria-live="polite" data-wait="${t('Почтага юборилмоқда…', 'Отправляем на почту…')}" data-ok="${t('Компания почтасига етказилди', 'Доставлено на почту компании')}"></p>
 <p data-done-text data-question="${t('Раҳмат! Мутахассисимиз бир иш куни ичида сиз билан боғланади.', 'Спасибо! Специалист свяжется с вами в течение рабочего дня.')}" data-order="${t('Раҳмат! Буюртмангиз қабул қилинди. Менежер нарх ва етказиб бериш муддатини тасдиқлаш учун сиз билан боғланади.', 'Спасибо! Заказ принят. Менеджер свяжется с вами, чтобы подтвердить цену и сроки доставки.')}"></p>
 <dl class="chat-summary"></dl>
-<button type="button" class="btn btn-outline" data-chat-again>${t('Яна хабар ёзиш', 'Написать ещё')}</button>
+<button type="button" class="btn btn-outline" data-chat-again data-again="${t('Яна хабар ёзиш', 'Написать ещё')}" data-retry="${t('Қайта уриниш', 'Попробовать снова')}">${t('Яна хабар ёзиш', 'Написать ещё')}</button>
 </div>
 </div>
 </section>`;

@@ -57,12 +57,26 @@
     const rows = [['Мавзу / Тема', topic]].concat([...form.querySelectorAll('input[type=text]:not([name=_honey]), select, textarea')]
       .filter(el => !el.matches(':disabled') && el.value.trim()).map(el => [label(el), el.value.trim()]));
 
-    button.disabled = true;
-    form.classList.add('sending');
-    buttonText.textContent = box.dataset.sending;
+    // FormSubmit отвечает долго (около 10 секунд), поэтому итог показывается сразу,
+    // а строка статуса меняется, когда почта подтвердит доставку (или сообщит об ошибке).
+    bubble(message.value.trim(), 'out');
+    const text = done.querySelector('[data-done-text]');
+    text.textContent = kind() === 'order' ? text.dataset.order : text.dataset.question;
+    done.querySelector('.chat-summary').replaceChildren(...rows.flatMap(([k, v]) => {
+      const dt = document.createElement('dt'), dd = document.createElement('dd');
+      dt.textContent = k; dd.textContent = v;
+      return [dt, dd];
+    }));
+    setState('wait');
+    form.hidden = true;
+    done.hidden = false;
+    done.focus();
+    const sentKind = kind();
     try {
       const res = await fetch('https://formsubmit.co/ajax/' + encodeURIComponent(box.dataset.to), {
         method: 'POST',
+        keepalive: true,   // письмо уйдёт, даже если посетитель закроет страницу
+        signal: AbortSignal.timeout ? AbortSignal.timeout(45000) : undefined,
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify(Object.assign({
           _subject: box.dataset.subject + ' (' + topic + ')',
@@ -73,31 +87,27 @@
       if (!res.ok) throw new Error(res.status);
       const answer = await res.json().catch(() => ({}));
       if (answer.success === 'false' || answer.success === false) throw new Error(answer.message);
-
-      bubble(message.value.trim(), 'out');
-      const text = done.querySelector('[data-done-text]');
-      text.textContent = kind() === 'order' ? text.dataset.order : text.dataset.question;
-      done.querySelector('.chat-summary').replaceChildren(...rows.flatMap(([k, v]) => {
-        const dt = document.createElement('dt'), dd = document.createElement('dd');
-        dt.textContent = k; dd.textContent = v;
-        return [dt, dd];
-      }));
-      form.hidden = true;
-      done.hidden = false;
-      done.focus();
-      if (window.gtag) gtag('event', 'chat_message', { topic: kind() });
-      if (window.ym && window.YM_ID) ym(window.YM_ID, 'reachGoal', kind() === 'order' ? 'chat_order' : 'chat_message');
+      setState('ok');
+      message.value = '';
+      if (window.gtag) gtag('event', 'chat_message', { topic: sentKind });
+      if (window.ym && window.YM_ID) ym(window.YM_ID, 'reachGoal', sentKind === 'order' ? 'chat_order' : 'chat_message');
     } catch (x) {
-      fail(box.dataset.fail);
-    } finally {
-      button.disabled = false;
-      form.classList.remove('sending');
-      buttonText.textContent = initial.send;
+      setState('err');
     }
   });
 
-  box.querySelector('[data-chat-again]').addEventListener('click', () => {
-    message.value = '';
+  // Состояние экрана после отправки: wait — отправляется, ok — доставлено, err — ошибка
+  const heading = done.querySelector('h3'), status = done.querySelector('.chat-status'), again = box.querySelector('[data-chat-again]');
+  function setState(state) {
+    done.dataset.state = state;
+    heading.textContent = heading.dataset[state];
+    status.textContent = state === 'err' ? box.dataset.fail : status.dataset[state];
+    again.textContent = state === 'err' ? again.dataset.retry : again.dataset.again;
+    again.hidden = state === 'wait';
+  }
+
+  // «Яна хабар ёзиш» — пустая форма; «Қайта уриниш» — та же форма с введёнными данными
+  again.addEventListener('click', () => {
     done.hidden = true;
     form.hidden = false;
     message.focus();
