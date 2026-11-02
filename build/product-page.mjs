@@ -6,6 +6,11 @@ import { crumbs } from './pages.mjs';
 import { presentationPath } from './presentation.mjs';
 
 // Текст из админки: пустая строка — новый абзац, перенос строки — <br>.
+// Вид продукта для заголовка страницы: [узбекский, русский]
+const KIND = {
+  'Сироплар': ['сироп', 'сироп'], 'Спрейлар': ['спрей', 'спрей'], 'Томчилар': ['томчи', 'капли'],
+  'Таблетка ва капсулалар': ['таблетка', 'таблетки'], 'Саше ва порошоклар': ['саше', 'саше']
+};
 const paragraphs = text => String(text).trim().split(/\n\s*\n/).map(p => `<p>${esc(p.trim()).replace(/\n/g, '<br>')}</p>`).join('');
 
 export function productPage(lang, p, related, categories) {
@@ -22,15 +27,24 @@ export function productPage(lang, p, related, categories) {
   const LEAFLET_KEY = { description: 'description', composition: 'composition', usage: 'dosage', indications: 'indications' };
   const text = key => (lang === 'ru' ? (p[key + '_ru'] || '') : dataText(lang, p[key] || '')) || fromLeaflet(LEAFLET_KEY[key]);
   const description = text('description');
-  const title = `${name} — ${category} | Akson Megavit`;
-  const metaDescription = description ? description.replace(/\s+/g, ' ').trim().slice(0, 155)
+  // Для поиска: имя во второй письменности (Гемовит ↔ Gemovit), вид продукта и что есть на странице.
+  const altName = productName(lang === 'uz' ? 'kr' : 'uz', p);
+  const kind = dataText(lang, KIND[p.category] ? KIND[p.category][lang === 'ru' ? 1 : 0] : '');
+  const title = `${name}${altName !== name ? ` (${altName})` : ''}${kind ? ' ' + kind : ''} — ${t('таркиби, қўлланилиши, дозаси', 'состав, применение, дозировка')} | Akson Megavit`;
+  const clip = s => s.replace(/\s+/g, ' ').trim().replace(/^(.{0,150})(\s.*)?$/, (m, a, b) => b ? a + '…' : a);
+  const tagline = fromLeaflet('tagline'), indications = fromLeaflet('indications');
+  const metaDescription = tagline
+    ? clip(`${name} — ${tagline.replace(/^(\p{Lu})(?!\p{Lu})/u, c => c.toLowerCase())}. ${indications}`)
+    : description ? clip(description)
     : t(`${name}${form ? ' (' + form + ')' : ''} — ${p.category.toLowerCase()} тоифасидаги биологик фаол қўшимча. Маҳсулот сурати ва асл қўлланиш буклети.`,
         `${name}${form ? ' (' + form + ')' : ''} — биологически активная добавка, категория «${category}». Фото продукта и оригинальная инструкция.`);
+  const maker = /megavit/i.test(leaflet.manufacturer || (p.info && p.info.ru && p.info.ru.manufacturer) || '') ? 'Megavit' : 'Akson';
 
   const ld = [{
     '@context': 'https://schema.org', '@type': 'Product', name, url,
+    ...(altName !== name ? { alternateName: altName } : {}),
+    brand: { '@type': 'Brand', name: p.brand || maker },
     image: [p.image, ...p.leaflets].filter(Boolean).map(abs), description: metaDescription, category,
-    ...(p.brand ? { brand: { '@type': 'Brand', name: p.brand } } : {}),
     manufacturer: { '@type': 'Organization', name: 'Akson Megavit', url: SITE + '/' }
   }, {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
