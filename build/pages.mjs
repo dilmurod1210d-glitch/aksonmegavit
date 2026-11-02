@@ -3,6 +3,7 @@
 // Каждая функция получает язык (kr / uz / ru, см. build/i18n.mjs) и данные.
 import { page, esc, ICON, PHONES, address, catalogUrl, productCard, settings, cfgText, phoneNote } from './layout.mjs';
 import { L, href, dataText, productPath, LANG_ORDER, productName } from './i18n.mjs';
+import { categoryArt } from './illustrations.mjs';
 
 const count = (lang, n) => L(lang)(`${n} та маҳсулот`, `${n} ${ruPlural(n, 'товар', 'товара', 'товаров')}`);
 function ruPlural(n, one, few, many) {
@@ -23,7 +24,11 @@ const cat = (lang, c) => esc(dataText(lang, c.name, 'category'));
 export function home(lang, d) {
   const t = L(lang);
   const { products, categories, byCat, planned } = d;
-  const show = [products[1], products[0], products[2]].filter(Boolean);
+  // Витрина на главной: по очереди товары из разных категорий (до 2 из каждой).
+  const show = [];
+  for (let round = 0; round < 2; round++) for (const c of categories) { const p = byCat[c.name].filter(x => x.image)[round]; if (p) show.push(p); }
+  const pos = i => i === 0 ? 'pos-0' : i === 1 ? 'pos-1' : i === show.length - 1 ? 'pos--1' : 'pos-out';
+  const srcset = p => esc(p.srcset.replace(/(^|, )assets\//g, '$1/assets/'));
   const main = `
 <section class="hero"><div class="container hero-grid">
 <div>
@@ -33,12 +38,12 @@ export function home(lang, d) {
 <div class="hero-actions"><a class="btn btn-primary" href="${href(lang, '/catalog.html')}">${t('Каталогни очиш', 'Открыть каталог')} ${ICON.arrow}</a><a class="btn btn-outline" href="tel:${PHONES[0][0]}">${ICON.phone}${t('Қўнғироқ қилиш', 'Позвонить')}</a></div>
 <div class="stats"><div><strong>${products.length}</strong><span>${t('маҳсулот', 'продуктов')}</span></div><div><strong>${categories.length}</strong><span>${t('тоифа', 'категорий')}</span></div><div><strong>2017</strong><span>${t('йилдан буён', 'год основания')}</span></div></div>
 </div>
-<div class="hero-visual" aria-hidden="true">${show.map((p, i) => `<img src="${img800(p)}" alt="" width="800" height="800"${i === 1 ? ' fetchpriority="high"' : ''}>`).join('')}</div>
+<div class="hero-art" data-rotator><div class="hero-stage" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>${show.map((p, i) => `<div class="pack ${pos(i)}" data-tone="${p.tone}" data-name="${esc(productName(lang, p))}" data-cat="${esc(dataText(lang, p.category, 'category'))}" data-href="${productPath(lang, p.slug)}"><img src="/${esc(p.thumb || p.image)}"${p.srcset ? ` srcset="${srcset(p)}" sizes="(max-width:900px) 50vw, 320px"` : ''} alt="" width="400" height="400"${i === 0 ? ' fetchpriority="high"' : i > 2 ? ' loading="lazy"' : ''}></div>`).join('')}</div><a class="hero-now" data-tone="${show[0].tone}" href="${productPath(lang, show[0].slug)}" aria-live="polite"><i></i><strong>${esc(productName(lang, show[0]))}</strong><small>${esc(dataText(lang, show[0].category, 'category'))}</small></a><span class="sticker s1"><i></i>${products.length} ${t('маҳсулот', 'продуктов')}</span><span class="sticker s2"><i></i>${t('2017 йилдан', 'с 2017 года')}</span></div>
 </div></section>
 
 <section class="section" style="padding-top:0"><div class="container">
 <div class="section-head"><div><h2>${t('Маҳсулот тоифалари', 'Категории продуктов')}</h2><p>${t('Керакли тоифани танланг', 'Выберите нужную категорию')}</p></div><a class="link-arrow" href="${href(lang, '/catalog.html')}">${t('Барча маҳсулотлар', 'Все продукты')} ${ICON.arrow}</a></div>
-<div class="category-grid">${categories.map(c => { const first = byCat[c.name].find(p => p.image); return `<a class="category-tile" href="${esc(catalogUrl(lang, c))}">${first ? `<img src="/${esc(first.thumb || first.image)}" alt="" width="400" height="400" loading="lazy">` : ''}<strong>${cat(lang, c)}</strong><span>${count(lang, byCat[c.name].length)}</span></a>`; }).join('')}</div>
+<div class="category-grid">${categories.map(c => { return `<a class="category-tile" data-tone="${c.tone}" href="${esc(catalogUrl(lang, c))}">${categoryArt(c.key)}<strong>${cat(lang, c)}</strong><span>${count(lang, byCat[c.name].length)}</span></a>`; }).join('')}</div>
 </div></section>
 
 <section class="section" style="padding-top:0"><div class="container">
@@ -58,7 +63,7 @@ ${planned.length ? `<section class="section" style="padding-top:0"><div class="c
 
 ${ctaBand(t('Маҳсулотлар бўйича савол борми?', 'Есть вопросы о продуктах?'), t('Қўнғироқ қилинг — маҳсулот, буюртма ва ҳамкорлик бўйича маслаҳат берамиз.', 'Позвоните — проконсультируем по продуктам, заказу и сотрудничеству.'))}`;
   return page({
-    lang, main, categories, alternates: alternatesOf('/'),
+    lang, main, categories, alternates: alternatesOf('/'), scripts: ['/home.js'],
     title: t('Akson Megavit pharmaceutical — биологик фаол қўшимчалар каталоги', 'Akson Megavit pharmaceutical — каталог биологически активных добавок'),
     description: t(`Akson ва Megavit: ${products.length} та маҳсулот, суратлар ва асл буклетлар. Сироплар, спрейлар, таблетка ва капсулалар. Андижон шаҳри.`, `Akson и Megavit: ${products.length} ${ruPlural(products.length, 'продукт', 'продукта', 'продуктов')}, фото и оригинальные инструкции. Сиропы, спреи, таблетки и капсулы. г. Андижан.`),
     extraHead: '<meta name="google-site-verification" content="rc_0PQZARM8L6S0S4vxCwKoDF6_xHoZhAECoESH31I8">\n',
@@ -76,10 +81,10 @@ ${crumbs(lang, [[href(lang, '/'), t('Бош саҳифа', 'Главная')], [
 <div class="catalog-head"><div><h1>${t('Маҳсулотлар каталоги', 'Каталог продуктов')}</h1></div><span class="count">${count(lang, products.length)} · ${t(`${categories.length} тоифа`, `${categories.length} ${ruPlural(categories.length, 'категория', 'категории', 'категорий')}`)}</span></div>
 <div class="catalog-tools">
 <label class="search">${ICON.search}<span class="visually-hidden">${t('Маҳсулот номи бўйича қидириш', 'Поиск по названию')}</span><input id="search" type="search" placeholder="${t('Маҳсулот номини киритинг…', 'Введите название продукта…')}" autocomplete="off"></label>
-<div class="chips" role="group" aria-label="${t('Тоифалар', 'Категории')}"><button type="button" data-filter="" aria-pressed="true">${t('Барчаси', 'Все')}<span>${products.length}</span></button>${categories.map(c => `<button type="button" data-filter="${c.key}" data-name="${esc(c.name)}" aria-pressed="false">${cat(lang, c)}<span>${byCat[c.name].length}</span></button>`).join('')}<a href="${href(lang, '/planned.html')}">${t('Режадаги маҳсулотлар', 'Планируемые продукты')}</a></div>
+<div class="chips" role="group" aria-label="${t('Тоифалар', 'Категории')}"><button type="button" data-filter="" aria-pressed="true">${t('Барчаси', 'Все')}<span>${products.length}</span></button>${categories.map(c => `<button type="button" data-tone="${c.tone}" data-filter="${c.key}" data-name="${esc(c.name)}" aria-pressed="false">${cat(lang, c)}<span>${byCat[c.name].length}</span></button>`).join('')}<a href="${href(lang, '/planned.html')}">${t('Режадаги маҳсулотлар', 'Планируемые продукты')}</a></div>
 </div>
 <div class="results"><span id="result-count" role="status" data-template="${esc(lang === 'ru' ? 'Найдено: {n}' : t('{n} та маҳсулот', ''))}">${count(lang, products.length)}</span><button type="button" id="reset" hidden>${t('Филтрни тозалаш', 'Сбросить фильтр')} ×</button></div>
-<div id="grid">${categories.map(c => `<section class="product-category" data-category="${c.key}" aria-label="${cat(lang, c)}"><div class="category-heading"><h2>${cat(lang, c)}</h2><span class="category-count">${count(lang, byCat[c.name].length)}</span></div><div class="product-grid">${byCat[c.name].map(p => productCard(lang, p, { attrs: ` data-search="${search(p)}"` })).join('')}</div></section>`).join('')}</div>
+<div id="grid">${categories.map(c => `<section class="product-category" data-tone="${c.tone}" data-category="${c.key}" aria-label="${cat(lang, c)}"><div class="category-heading"><h2>${cat(lang, c)}</h2><span class="category-count">${count(lang, byCat[c.name].length)}</span></div><div class="product-grid">${byCat[c.name].map(p => productCard(lang, p, { attrs: ` data-search="${search(p)}"` })).join('')}</div></section>`).join('')}</div>
 <div class="empty" id="empty" hidden>${t('Маҳсулот топилмади. Бошқа ном билан қидириб кўринг.', 'Ничего не найдено. Попробуйте другое название.')}</div>
 <div class="notice" style="margin:32px 0 16px">${ICON.info}<p>${t('Ҳар бир маҳсулотнинг асл йўриқномаси унинг саҳифасида. Қўллашдан олдин йўриқнома билан танишинг ва мутахассис билан маслаҳатлашинг.', 'Оригинальная инструкция каждого продукта — на его странице. Перед применением ознакомьтесь с инструкцией и проконсультируйтесь со специалистом.')}</p></div>
 </div>`;

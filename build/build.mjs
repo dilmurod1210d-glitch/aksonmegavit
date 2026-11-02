@@ -74,7 +74,9 @@ async function main() {
   }
 
   // Категория: name — как в products.json, key — латинский ключ для адреса ?category=
-  const categories = [...new Set(products.map(p => p.category))].map(name => ({ name, key: slugify(name) }));
+  // tone — цвет категории в дизайне (1…5 по порядку, см. site.css)
+  const categories = [...new Set(products.map(p => p.category))].map((name, i) => ({ name, key: slugify(name), tone: i % 5 + 1 }));
+  for (const p of products) p.tone = categories.find(c => c.name === p.category).tone;
   const byCat = Object.fromEntries(categories.map(c => [c.name, products.filter(p => p.category === c.name)]));
   let planned = [];
   try { planned = await readJson('planned.json'); } catch { console.warn('Нет planned.json'); }

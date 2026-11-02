@@ -45,7 +45,7 @@ export function productPage(lang, p, related, categories) {
 
   const main = `<div class="container">
 ${crumbs(lang, [[href(lang, '/'), t('Бош саҳифа', 'Главная')], [href(lang, '/catalog.html'), t('Каталог', 'Каталог')], [esc(catalogUrl(lang, catObj)), category], ['', name]])}
-<article class="product">
+<article class="product" data-tone="${p.tone || 1}">
 <div class="product-photo">${photo}</div>
 <div class="product-info">
 <span class="eyebrow">${esc(category)}</span>

@@ -132,5 +132,5 @@ export function productCard(lang, p, { attrs = '' } = {}) {
   const img = p.image
     ? `<img loading="lazy" src="/${esc(p.thumb || p.image)}"${p.srcset ? ` srcset="${esc(p.srcset.replace(/(^|, )assets\//g, '$1/assets/'))}" sizes="(max-width:640px) 45vw, 280px"` : ''} alt="${esc(name)}" width="400" height="400">`
     : `<span class="placeholder">${L(lang)('Сурат тайёрланмоқда', 'Фото готовится')}</span>`;
-  return `<a class="card" href="${productPath(lang, p.slug)}"${attrs}><div class="photo">${img}</div><div class="card-text"><h3>${esc(name)}</h3><span>${esc(dataText(lang, p.form, 'form') || dataText(lang, p.category, 'category'))}</span></div></a>`;
+  return `<a class="card" data-tone="${p.tone || 1}" href="${productPath(lang, p.slug)}"${attrs}><div class="photo">${img}</div><div class="card-text"><h3>${esc(name)}</h3><span>${esc(dataText(lang, p.form, 'form') || dataText(lang, p.category, 'category'))}</span></div></a>`;
 }

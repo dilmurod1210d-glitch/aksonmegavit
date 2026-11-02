@@ -11,6 +11,20 @@
     });
   });
 
+  // Плавное появление карточек при прокрутке (без JS всё видно сразу).
+  if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const items = document.querySelectorAll('.category-tile, .card, .feature, .planned-card, .panel, .cta-band');
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }), { rootMargin: '0px 0px -40px 0px' });
+    items.forEach((el, i) => {
+      if (el.getBoundingClientRect().top < innerHeight) return;   // то, что уже на экране, не прячем
+      el.classList.add('reveal');
+      el.style.transitionDelay = (i % 4) * 60 + 'ms';
+      io.observe(el);
+    });
+  }
+
   // Цели аналитики: звонок и Telegram (если счётчики подключены в настройках сайта).
   document.addEventListener('click', e => {
     const a = e.target.closest('a[href^="tel:"], a[href^="https://t.me/"]');
