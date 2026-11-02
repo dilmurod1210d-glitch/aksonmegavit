@@ -10,6 +10,24 @@
     slides[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
 
+  // Если текст не помещается в слайд, он плавно уменьшается (не меньше 60%), а не обрезается.
+  const shrink = (el, room) => {
+    el.style.zoom = 1;
+    for (let k = 1; k > 0.6 && el.getBoundingClientRect().height > room(); k -= 0.04) el.style.zoom = k.toFixed(2);
+  };
+  const fit = () => slides.forEach(s => {
+    const body = s.querySelector('.body'), fitEl = s.querySelector('.fit'), cover = s.querySelector('.cover-text');
+    if (body && fitEl) shrink(fitEl, () => body.getBoundingClientRect().height);
+    if (cover) {
+      const cs = getComputedStyle(s);
+      shrink(cover, () => s.getBoundingClientRect().height - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom));
+    }
+  });
+  fit();
+  document.fonts && document.fonts.ready.then(fit);
+  addEventListener('resize', fit);
+  addEventListener('beforeprint', fit);
+
   const io = new IntersectionObserver(entries => entries.forEach(e => {
     if (e.isIntersecting) { i = slides.indexOf(e.target); cur.textContent = i + 1; }
   }), { root: deck, threshold: 0.6 });

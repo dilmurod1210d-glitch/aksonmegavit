@@ -17,7 +17,9 @@
 .slide header{display:flex;flex-direction:column;gap:1.2cqw;margin-bottom:2.6cqw}
 .slide .tag{align-self:flex-start;font-size:1.5cqw;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--tone-ink);background:var(--tone-bg);padding:.6cqw 1.6cqw;border-radius:999px}
 .slide h2{font-size:4.2cqw;line-height:1.05}
-.slide .body{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;gap:1.8cqw;font-size:2.05cqw;line-height:1.5;color:var(--ink-2)}
+.slide .body{position:relative;z-index:1;flex:1;min-height:0;overflow:hidden;font-size:2.05cqw;line-height:1.5;color:var(--ink-2)}
+.slide .fit{display:flex;flex-direction:column;gap:1.8cqw}
+.slide h2 small{font-size:.5em;font-weight:800;color:var(--muted);vertical-align:middle;margin-left:.4em}
 .slide .body p{margin:0 0 .8cqw}
 .slide.big .body{font-size:2.4cqw}
 .slide ul{margin:0;padding:0;list-style:none;display:grid;gap:1.1cqw 3cqw}

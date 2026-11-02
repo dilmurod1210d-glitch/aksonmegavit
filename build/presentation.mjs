@@ -20,6 +20,14 @@ const pick = (info, lang) => {
 };
 const paras = t => String(t).split('\n').map(s => `<p>${esc(s)}</p>`).join('');
 const list = a => `<ul>${a.map(s => `<li>${esc(s)}</li>`).join('')}</ul>`;
+// Длинный раздел делится на несколько слайдов: строки/пункты набираются, пока не превышен
+// объём одного слайда (в символах); остаток мелкого переполнения подгоняет presentation.js.
+const chunk = (items, max, maxN = 8) => items.reduce((out, it) => {
+  const last = out[out.length - 1];
+  if (last && last.length < maxN && last.join('').length + it.length <= max) last.push(it); else out.push([it]);
+  return out;
+}, []);
+const lines = t => String(t).split('\n').filter(Boolean);
 
 export function presentationPage(lang, p) {
   const t = L(lang), i = pick(p.info, lang);
@@ -28,9 +36,14 @@ export function presentationPage(lang, p) {
   const form = dataText(lang, p.form, 'form');
   const brand = p.brand || '';   // бренд — только если указан в админке
   const tone = p.tone || 1;
+  // «Не является лекарственным средством» — только если это написано в самом буклете
+  const notDrug = /не является лекарствен|ҳисобланмайди|биологически активн|биологик фаол|дори воситаси эмас/i.test(JSON.stringify(p.info));
 
   const orig = i._original ? `<span class="orig">${t('Матн асл йўриқномадан (рус тилида)', '')}</span>` : '';
-  const slide = (title, body, extra = '') => `<section class="slide ${extra}"><header><span class="tag">${esc(name)}</span><h2>${title}</h2>${orig}</header><div class="body">${body}</div></section>`;
+  const slide = (title, body, extra = '') => `<section class="slide ${extra}"><header><span class="tag">${esc(name)}</span><h2>${title}</h2>${orig}</header><div class="body"><div class="fit">${body}</div></div></section>`;
+  // Раздел на нескольких слайдах: «Показания (1/2)», «Показания (2/2)»
+  const series = (title, parts, render, extra) => parts.map((part, k) => slide(parts.length > 1 ? `${title} <small>${k + 1}/${parts.length}</small>` : title, render(part), extra));
+  const box = (h, text, cls = '') => text ? `<div class="box ${cls}">${h ? `<h3>${h}</h3>` : ''}<p>${esc(text)}</p></div>` : '';
   const leaflets = (p.leaflets || []).slice(0, 3);
   const slides = [
     `<section class="slide cover"><div class="cover-text">
@@ -40,18 +53,22 @@ export function presentationPage(lang, p) {
       ${i.tagline ? `<p class="tagline">${esc(i.tagline)}</p>` : ''}
       ${i.badges ? `<p class="badges">${i.badges.map(b => `<span>${esc(b)}</span>`).join('')}</p>` : ''}
       ${i.description ? `<p class="desc">${esc(i.description)}</p>` : ''}
-      <p class="note">${t('Биологик фаол қўшимча. Дори воситаси эмас.', 'Биологически активная добавка. Не является лекарственным средством.')}</p>
+      ${notDrug ? `<p class="note">${t('Биологик фаол қўшимча. Дори воситаси эмас.', 'Биологически активная добавка. Не является лекарственным средством.')}</p>` : ''}
     </div><div class="cover-photo">${p.image ? `<img src="/${esc(p.image)}" alt="${esc(name)}">` : ''}</div></section>`,
-    (i.composition || i.chemistry) && slide(t('Таркиби', 'Состав'),
-      `${i.composition ? `<div class="box"><h3>${t('Ўсимлик таркиби', 'Растительный состав')}</h3><p class="latin">${esc(i.composition)}</p></div>` : ''}
-       ${i.chemistry ? `<div class="box"><h3>${t('Кимёвий таркиби', 'Химический состав')}</h3><p>${esc(i.chemistry)}</p></div>` : ''}`),
-    i.action && slide(t('Таъсири', 'Действие'), Array.isArray(i.action) ? list(i.action) : paras(i.action), 'cols'),
-    i.indications && slide(t('Қўлланилиши', 'Показания'), paras(i.indications), 'big'),
-    (i.dosage || i.course) && slide(t('Қўллаш усули ва дозалари', 'Способ применения и дозы'),
-      `${i.dosage ? `<div class="box">${paras(i.dosage)}</div>` : ''}${i.course ? `<div class="box accent"><h3>${t('Даволаниш муддати', 'Курс лечения')}</h3><p>${esc(i.course)}</p></div>` : ''}`),
-    (i.contraindications || i.side_effects) && slide(t('Хавфсизлик', 'Безопасность'),
-      `${i.contraindications ? `<div class="box warn"><h3>${t('Қарши кўрсатмалар', 'Противопоказания')}</h3><p>${esc(i.contraindications)}</p></div>` : ''}
-       ${i.side_effects ? `<div class="box"><h3>${t('Ножўя таъсирлари', 'Побочные действия')}</h3><p>${esc(i.side_effects)}</p></div>` : ''}`),
+    ...((i.composition || i.chemistry) ? series(t('Таркиби', 'Состав'),
+      (i.composition || '').length + (i.chemistry || '').length > 550 && i.composition && i.chemistry ? [['c'], ['h']] : [['c', 'h']],
+      part => `${part.includes('c') && i.composition ? `<div class="box latin">${paras(i.composition)}</div>` : ''}${part.includes('h') ? box(t('Кимёвий таркиби', 'Химический состав'), i.chemistry) : ''}`) : []),
+    ...(i.action ? series(t('Таъсири', 'Действие'), chunk(Array.isArray(i.action) ? i.action : lines(i.action), 600), part => list(part), 'cols') : []),
+    ...(i.indications ? series(t('Қўлланилиши', 'Показания'), chunk(lines(i.indications), 540, 7), part => paras(part.join('\n')), 'big') : []),
+    ...((i.dosage || i.course) ? (() => {
+      const parts = chunk(lines(i.dosage || ''), 560);
+      if (!parts.length) parts.push([]);
+      return series(t('Қўллаш усули ва дозалари', 'Способ применения и дозы'), parts,
+        part => `${part.length ? `<div class="box">${paras(part.join('\n'))}</div>` : ''}${part === parts[parts.length - 1] ? box(t('Даволаниш муддати', 'Курс лечения'), i.course, 'accent') : ''}`);
+    })() : []),
+    ...((i.contraindications || i.side_effects) ? series(t('Хавфсизлик', 'Безопасность'),
+      (i.contraindications || '').length + (i.side_effects || '').length > 560 && i.contraindications && i.side_effects ? [['c'], ['s']] : [['c', 's']],
+      part => `${part.includes('c') && i.contraindications ? `<div class="box warn"><h3>${t('Қарши кўрсатмалар', 'Противопоказания')}</h3>${paras(i.contraindications)}</div>` : ''}${part.includes('s') && i.side_effects ? `<div class="box"><h3>${t('Ножўя таъсирлари', 'Побочные действия')}</h3>${paras(i.side_effects)}</div>` : ''}`) : []),
     (i.release_form || i.storage || i.shelf_life || i.dispensing) && slide(t('Чиқарилиш шакли ва сақлаш', 'Форма выпуска и хранение'),
       `<dl class="facts">${[[t('Чиқарилиш шакли', 'Форма выпуска'), i.release_form], [t('Сақлаш шароити', 'Условия хранения'), i.storage], [t('Яроқлилик муддати', 'Срок годности'), i.shelf_life], [t('Дорихоналардан бериш тартиби', 'Условия отпуска из аптек'), i.dispensing]].filter(x => x[1]).map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`),
     leaflets.length && `<section class="slide leaflet-slide"><header><span class="tag">${esc(name)}</span><h2>${t('Асл буклет ва қадоқ', 'Оригинальный буклет и упаковка')}</h2></header><div class="leaflet-row">${p.image ? `<figure class="pack-fig"><img src="/${esc(p.image)}" alt="${esc(name)}"></figure>` : ''}${leaflets.map((l, k) => `<figure><img src="/${esc(l)}" alt="${esc(name)} — ${t('буклет', 'буклет')} ${k + 1}" loading="lazy"></figure>`).join('')}</div></section>`,
