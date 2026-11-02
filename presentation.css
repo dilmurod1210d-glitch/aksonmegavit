@@ -78,3 +78,15 @@
   .deck{height:auto;overflow:visible;padding:0}
   .slide{width:100%;margin:0;border-radius:0;box-shadow:none;break-after:page;page-break-after:always;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+
+/* Слайд с плакатом и карточками компонентов */
+.slide.poster-slide{flex-direction:row;gap:4cqw;padding:3.5cqw 5cqw;background:linear-gradient(120deg,var(--tone-bg),var(--card) 60%)}
+.poster-fig{margin:0;flex:0 0 auto;height:100%;position:relative;z-index:1}
+.poster-fig img{height:100%;width:auto;border-radius:1.6cqw;box-shadow:0 2cqw 4cqw -1.5cqw rgba(15,16,36,.35)}
+.poster-text{position:relative;z-index:1;flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:1.4cqw}
+.poster-text h2{font-size:4cqw;line-height:1.05}
+.dose-grid{list-style:none;margin:.6cqw 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(15cqw,1fr));gap:1cqw}
+.dose-grid li{padding:1cqw 1.3cqw;border-radius:1.3cqw;background:var(--card);box-shadow:0 .4cqw 1.2cqw -.6cqw rgba(15,16,36,.25);display:flex;flex-direction:column;gap:.2cqw}
+.dose-grid li::before{display:none}
+.dose-grid b{font-size:2.3cqw;color:var(--tone-ink);line-height:1.1}
+.dose-grid span{font-size:1.55cqw;font-weight:700;color:var(--ink-2);line-height:1.25}

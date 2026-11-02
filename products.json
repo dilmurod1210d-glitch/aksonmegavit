@@ -338,6 +338,61 @@
     ]
   },
   {
+    "name": "Виродол",
+    "slug": "virodol",
+    "category": "Сироплар",
+    "image": "assets/products/virodol.webp",
+    "leaflets": [
+      "assets/booklets/virodol-1.webp",
+      "assets/booklets/virodol-2.webp"
+    ],
+    "poster": "assets/booklets/virodol-1.webp"
+  },
+  {
+    "name": "ОС-Д3",
+    "slug": "os-d3",
+    "category": "Сироплар",
+    "image": "assets/products/os-d3.webp",
+    "leaflets": [
+      "assets/booklets/os-d3-1.webp",
+      "assets/booklets/os-d3-2.webp"
+    ],
+    "poster": "assets/booklets/os-d3-1.webp"
+  },
+  {
+    "name": "Лакторич",
+    "slug": "laktorich",
+    "category": "Сироплар",
+    "image": "assets/products/laktorich.webp",
+    "leaflets": [
+      "assets/booklets/laktorich-1.webp",
+      "assets/booklets/laktorich-2.webp"
+    ],
+    "poster": "assets/booklets/laktorich-1.webp"
+  },
+  {
+    "name": "Тинодол",
+    "slug": "tinodol",
+    "category": "Сироплар",
+    "image": "assets/products/tinodol.webp",
+    "leaflets": [
+      "assets/booklets/tinodol-1.webp",
+      "assets/booklets/tinodol-2.webp"
+    ],
+    "poster": "assets/booklets/tinodol-1.webp"
+  },
+  {
+    "name": "Паразол-Ноль",
+    "slug": "parazol-nol",
+    "category": "Сироплар",
+    "image": "assets/products/parazol-nol.webp",
+    "leaflets": [
+      "assets/booklets/parazol-nol-1.webp",
+      "assets/booklets/parazol-nol-2.webp"
+    ],
+    "poster": "assets/booklets/parazol-nol-1.webp"
+  },
+  {
     "name": "Лораген",
     "slug": "loragen",
     "category": "Спрейлар",

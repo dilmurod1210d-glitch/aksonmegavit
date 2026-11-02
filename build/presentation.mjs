@@ -45,6 +45,13 @@ export function presentationPage(lang, p) {
   const series = (title, parts, render, extra) => parts.map((part, k) => slide(parts.length > 1 ? `${title} <small>${k + 1}/${parts.length}</small>` : title, render(part), extra));
   const box = (h, text, cls = '') => text ? `<div class="box ${cls}">${h ? `<h3>${h}</h3>` : ''}<p>${esc(text)}</p></div>` : '';
   const leaflets = (p.leaflets || []).slice(0, 3);
+  // Слайд с рекламным плакатом: слева плакат, справа компоненты из первой строки состава
+  // («Эхинацея — 40 мг, …») карточками. Только для товаров с полем poster в products.json.
+  const posterSlide = () => {
+    const first = lines(i.composition || '').find(l => / — /.test(l)) || '';
+    const parts = first.split(/,(?!\d)\s*(?![^()]*\))/).map(x => x.split(' — ')).filter(x => x.length === 2);
+    return `<section class="slide poster-slide"><figure class="poster-fig"><img src="/${esc(p.poster)}" alt="${esc(name)}"></figure><div class="poster-text"><span class="tag">${esc(name)}</span><h2>${t('Таркибида', 'В 10 мл сиропа')}</h2>${orig}<ul class="dose-grid">${parts.map(([k, v]) => `<li><b>${esc(v.replace(/\.$/, '').replace(/^.*\(([^)]+)\)$/, '$1'))}</b><span>${esc(k)}</span></li>`).join('')}</ul>${i.badges ? `<p class="badges">${i.badges.map(b => `<span>${esc(b)}</span>`).join('')}</p>` : ''}</div></section>`;
+  };
   const slides = [
     `<section class="slide cover"><div class="cover-text">
       <span class="kicker">${t('Шифокорлар учун маълумот', 'Информация для врачей')}</span>
@@ -55,6 +62,7 @@ export function presentationPage(lang, p) {
       ${i.description ? `<p class="desc">${esc(i.description)}</p>` : ''}
       ${notDrug ? `<p class="note">${t('Биологик фаол қўшимча. Дори воситаси эмас.', 'Биологически активная добавка. Не является лекарственным средством.')}</p>` : ''}
     </div><div class="cover-photo">${p.image ? `<img src="/${esc(p.image)}" alt="${esc(name)}">` : ''}</div></section>`,
+    p.poster && posterSlide(),
     ...((i.composition || i.chemistry) ? series(t('Таркиби', 'Состав'),
       (i.composition || '').length + (i.chemistry || '').length > 550 && i.composition && i.chemistry ? [['c'], ['h']] : [['c', 'h']],
       part => `${part.includes('c') && i.composition ? `<div class="box latin">${paras(i.composition)}</div>` : ''}${part.includes('h') ? box(t('Кимёвий таркиби', 'Химический состав'), i.chemistry) : ''}`) : []),
