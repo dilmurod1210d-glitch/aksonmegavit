@@ -1,6 +1,6 @@
 /* Дизайн-система aksonmegavit.uz — «Рангли ва жонли».
    Один файл стилей для всех страниц. У каждой категории свой цвет (data-tone="1…5"):
-   1 — солнечный (сиропы), 2 — мята, 3 — коралл, 4 — небо, 5 — лаванда.
+   1 — красный Akson (сиропы), 2 — мята, 3 — фуксия, 4 — небо, 5 — лаванда.
    Тёмная тема — :root[data-theme="dark"]. */
 
 /* ---------- Шрифт: Manrope (OFL), хранится на сайте ---------- */
@@ -29,9 +29,9 @@
   --accent:#ff5c8a;
   --photo:#ffffff;
   /* Цвета категорий: --tN — насыщенный, --tN-bg — светлый фон, --tN-ink — текст на фоне */
-  --t1:#ff9f1c;--t1-bg:#fff0d4;--t1-ink:#7a4300;
+  --t1:#ef3e4a;--t1-bg:#ffe3e5;--t1-ink:#8c1220;
   --t2:#0fb385;--t2-bg:#d9f7ec;--t2-ink:#05583f;
-  --t3:#ff5c8a;--t3-bg:#ffe2eb;--t3-ink:#8a1438;
+  --t3:#d946ef;--t3-bg:#fae6fd;--t3-ink:#7e1d8f;
   --t4:#2f8cff;--t4-bg:#dcedff;--t4-ink:#0b4486;
   --t5:#8b5cf6;--t5-bg:#ece4ff;--t5-ink:#4a1fb0;
   --radius-s:14px;--radius:22px;--radius-l:32px;
@@ -60,9 +60,9 @@
   --primary-soft:#24275e;
   --grad:linear-gradient(135deg,#6577ff 0%,#a77bff 55%,#ff7aa1 100%);
   --photo:#f7f6ff;            /* упаковки остаются на светлом */
-  --t1-bg:#3a2a12;--t1-ink:#ffd08a;
+  --t1-bg:#3f1418;--t1-ink:#ffb4ba;
   --t2-bg:#0f3a30;--t2-ink:#7ff0c9;
-  --t3-bg:#43192a;--t3-ink:#ffb3c8;
+  --t3-bg:#3b1442;--t3-ink:#f5b8ff;
   --t4-bg:#13305a;--t4-ink:#a9d1ff;
   --t5-bg:#2e2160;--t5-ink:#d4c2ff;
   --shadow:0 18px 40px -16px rgba(0,0,0,.6);
@@ -108,8 +108,8 @@ section{scroll-margin-top:calc(var(--header-h) + 16px)}
 .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:14px 26px;border-radius:999px;border:2px solid transparent;font-weight:800;font-size:15px;line-height:1.2;white-space:nowrap;transition:transform .25s var(--ease),box-shadow .2s,background .2s,border-color .2s,color .2s}
 .btn:hover{transform:translateY(-2px)}
 .btn:active{transform:translateY(0) scale(.98)}
-.btn-primary{background:var(--grad);color:#fff;box-shadow:0 10px 24px -10px rgba(59,78,240,.7)}
-.btn-primary:hover{color:#fff;box-shadow:0 16px 30px -10px rgba(139,92,246,.75)}
+.btn-primary{background:var(--grad) border-box;border-color:transparent;color:#fff;box-shadow:0 10px 22px -12px rgba(139,92,246,.55)}
+.btn-primary:hover{color:#fff;box-shadow:0 16px 28px -12px rgba(139,92,246,.6)}
 .btn-outline{border-color:var(--line);color:var(--ink);background:var(--card)}
 .btn-outline:hover{border-color:var(--primary);color:var(--primary)}
 .btn-sm{min-height:42px;padding:9px 18px;font-size:14px}
@@ -157,7 +157,7 @@ section{scroll-margin-top:calc(var(--header-h) + 16px)}
 .footer-grid h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:#9b9ad0;margin-bottom:16px}
 .footer-grid ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .footer-grid a{color:#fff}
-.footer-grid a:hover{color:#ffd08a}
+.footer-grid a:hover{color:#ffb4ba}
 .footer-grid .muted{color:#a9a8d6}
 .footer-about p{color:#b9b8e2;max-width:360px;margin-top:18px}
 .footer-phones a{font-size:20px;font-weight:800}
@@ -189,8 +189,8 @@ section{scroll-margin-top:calc(var(--header-h) + 16px)}
 /* Иллюстрация: цветные круги и упаковки поверх них */
 .hero-art{position:relative;aspect-ratio:1/1;max-width:600px;justify-self:center;width:100%}
 .hero-art .blob{position:absolute;border-radius:50%;filter:saturate(1.1)}
-.hero-art .b1{inset:6% 14% 18% 6%;background:radial-gradient(circle at 30% 30%,#ffe7b3,var(--t1));opacity:.9;animation:float 9s ease-in-out infinite}
-.hero-art .b2{width:46%;height:46%;right:2%;top:4%;background:radial-gradient(circle at 30% 30%,#ffd0de,var(--t3));animation:float 7s ease-in-out -2s infinite}
+.hero-art .b1{inset:6% 14% 18% 6%;background:radial-gradient(circle at 30% 30%,#c9d0ff,var(--primary));opacity:.9;animation:float 9s ease-in-out infinite}
+.hero-art .b2{width:46%;height:46%;right:2%;top:4%;background:radial-gradient(circle at 30% 30%,#ffc9ce,var(--t1));animation:float 7s ease-in-out -2s infinite}
 .hero-art .b3{width:40%;height:40%;right:6%;bottom:4%;background:radial-gradient(circle at 30% 30%,#d6c6ff,var(--t5));animation:float 8s ease-in-out -4s infinite}
 /* Витрина: товары по очереди выходят в центр (home.js меняет классы pos-*).
    Белый фон фото «растворяется» на цветных кругах благодаря mix-blend-mode у обёртки. */
