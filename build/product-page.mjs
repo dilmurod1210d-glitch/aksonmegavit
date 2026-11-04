@@ -42,14 +42,17 @@ export function productPage(lang, p, related, categories) {
     : description ? clip(description)
     : t(`${name}${form ? ' (' + form + ')' : ''} — ${p.category.toLowerCase()} тоифасидаги биологик фаол қўшимча. Маҳсулот сурати ва асл қўлланиш буклети.`,
         `${name}${form ? ' (' + form + ')' : ''} — биологически активная добавка, категория «${category}». Фото продукта и оригинальная инструкция.`);
-  const maker = /megavit/i.test(leaflet.manufacturer || (p.info && p.info.ru && p.info.ru.manufacturer) || '') ? 'Megavit' : 'Akson';
 
+  // Не Product: Google требует для него цену, отзывы или рейтинг, а цен на сайте нет.
   const ld = [{
-    '@context': 'https://schema.org', '@type': 'Product', name, url,
-    ...(altName !== name ? { alternateName: altName } : {}),
-    brand: { '@type': 'Brand', name: p.brand || maker },
-    image: [p.image, ...p.leaflets].filter(Boolean).map(abs), description: metaDescription, category,
-    manufacturer: { '@type': 'Organization', name: 'Akson Megavit', url: SITE + '/' }
+    '@context': 'https://schema.org', '@type': 'WebPage', name: title, url, description: metaDescription,
+    primaryImageOfPage: abs(p.image),
+    about: {
+      '@type': 'Thing', name, description: metaDescription,
+      ...(altName !== name ? { alternateName: altName } : {}),
+      image: [p.image, ...p.leaflets].filter(Boolean).map(abs)
+    },
+    publisher: { '@type': 'Organization', name: 'Akson Megavit', url: SITE + '/' }
   }, {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
       { '@type': 'ListItem', position: 1, name: t('Бош саҳифа', 'Главная'), item: SITE + href(lang, '/') },
