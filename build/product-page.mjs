@@ -29,7 +29,11 @@ export function productPage(lang, p, related, categories) {
   const description = text('description');
   // Для поиска: имя во второй письменности (Гемовит ↔ Gemovit), вид продукта и что есть на странице.
   const altName = productName(lang === 'uz' ? 'kr' : 'uz', p);
-  const kind = dataText(lang, KIND[p.category] ? KIND[p.category][lang === 'ru' ? 1 : 0] : '');
+  // Вид продукта: капсулы определяем по буклету, а если вид уже есть в названии — не повторяем.
+  const packForm = (p.info && ((p.info.ru && p.info.ru.release_form) || (p.info.kr && p.info.kr.release_form))) || '';
+  const kindPair = /капсул/i.test(packForm) ? ['капсула', 'капсулы'] : KIND[p.category];
+  const kindWord = kindPair ? kindPair[lang === 'ru' ? 1 : 0] : '';
+  const kind = kindWord && !p.name.toLowerCase().includes(kindWord) ? dataText(lang, kindWord) : '';
   const title = `${name}${altName !== name ? ` (${altName})` : ''}${kind ? ' ' + kind : ''} — ${t('таркиби, қўлланилиши, дозаси', 'состав, применение, дозировка')} | Akson Megavit`;
   const clip = s => s.replace(/\s+/g, ' ').trim().replace(/^(.{0,150})(\s.*)?$/, (m, a, b) => b ? a + '…' : a);
   const tagline = fromLeaflet('tagline'), indications = fromLeaflet('indications');
