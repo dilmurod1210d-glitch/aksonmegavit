@@ -684,5 +684,38 @@
     "leaflets": [
       "assets/leaflets/leaflet-52.webp"
     ]
+  },
+  {
+    "name": "Остевикс",
+    "name_lat": "Ostevix",
+    "slug": "ostevix",
+    "category": "Таблетка ва капсулалар",
+    "image": "assets/products/ostevix.webp",
+    "leaflets": [
+      "assets/booklets/ostevix-1.webp",
+      "assets/booklets/ostevix-2.webp"
+    ]
+  },
+  {
+    "name": "Витанова",
+    "name_lat": "Vitanova",
+    "slug": "vitanova",
+    "category": "Таблетка ва капсулалар",
+    "image": "assets/products/vitanova.webp",
+    "leaflets": [
+      "assets/booklets/vitanova-1.webp",
+      "assets/booklets/vitanova-2.webp"
+    ]
+  },
+  {
+    "name": "Инулин Форте",
+    "name_lat": "Inulin Forte",
+    "slug": "inulin-forte",
+    "category": "Таблетка ва капсулалар",
+    "image": "assets/products/inulin-forte.webp",
+    "leaflets": [
+      "assets/booklets/inulin-forte-1.webp",
+      "assets/booklets/inulin-forte-2.webp"
+    ]
   }
 ]

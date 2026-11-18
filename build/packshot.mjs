@@ -15,10 +15,14 @@ export const DIELINES = {
   'os-d3': { src: 'assets/planned/os-d3.webp', front: [589, 474, 200, 525], side: [789, 474, 198, 525] },
   laktorich: { src: 'assets/planned/laktorich.webp', front: [589, 474, 200, 525], side: 'edge' },
   tinodol: { src: 'assets/planned/tinodol.webp', front: [607, 428, 200, 530], side: [807, 428, 198, 530] },
-  'parazol-nol': { src: 'assets/planned/parazol-nol.webp', front: [603, 430, 200, 532], side: [803, 430, 199, 532] }
+  'parazol-nol': { src: 'assets/planned/parazol-nol.webp', front: [603, 430, 200, 532], side: [803, 430, 199, 532] },
+  // Капсулы в лежачей (альбомной) коробке: depth — ширина боковины относительно лицевой стороны.
+  ostevix: { src: 'assets/planned/ostevix.webp', front: [371, 662, 537, 337], side: [908, 662, 154, 337], depth: 0.26 },
+  vitanova: { src: 'assets/planned/vitanova.webp', front: [371, 662, 537, 337], side: [908, 662, 154, 337], depth: 0.26 },
+  'inulin-forte': { src: 'assets/planned/inulin-forte.webp', front: [371, 662, 537, 337], side: [908, 662, 154, 337], depth: 0.26 }
 };
 
-const SIZE = 1254, H = 900, SKEW = 22;   // холст, высота коробки, наклон боковины (°)
+const SIZE = 1254, MAX_H = 900, MAX_W = 1080, SKEW = 22;   // холст, предельные высота/ширина коробки, наклон боковины (°)
 
 // Отступ 3 px внутрь — чтобы не попали линии реза развёртки
 const crop = (src, [left, top, width, height]) => sharp(src).extract({ left: left + 3, top: top + 3, width: width - 6, height: height - 6 }).png().toBuffer();
@@ -35,7 +39,10 @@ export async function packshot(slug) {
   const top = await sharp(front).extract({ left: 0, top: 2, width: d.front[2] - 6, height: 6 }).stats();
   const [r, g, b] = top.channels.map(c => Math.round(c.mean * 0.92 + 255 * 0.08));
 
-  const wf = Math.round(H * d.front[2] / d.front[3]), ws = Math.round(wf * 0.42);
+  // Высокая коробка — высотой H; лежачая уменьшается, чтобы вместе с боковиной влезть в холст.
+  const aspect = d.front[2] / d.front[3], depth = d.depth || 0.42;
+  const H = Math.round(Math.min(MAX_H, MAX_W / (aspect * (1 + depth))));
+  const wf = Math.round(H * aspect), ws = Math.round(wf * depth);
   const rise = Math.round(ws * Math.tan(SKEW * Math.PI / 180));
   const x0 = Math.round((SIZE - wf - ws) / 2), y0 = Math.round((SIZE - H + rise) / 2) - 20;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${SIZE}" height="${SIZE}">
