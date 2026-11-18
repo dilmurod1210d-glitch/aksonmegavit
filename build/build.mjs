@@ -46,7 +46,18 @@ async function makeThumbs(image) {
     sizes.push({ w, rel });
   }
   sizes.push({ w: width, rel: image });
-  return { thumb: sizes[0].rel, srcset: sizes.map(s => `${s.rel} ${s.w}w`).join(', ') };
+  return { thumb: sizes[0].rel, srcset: sizes.map(s => `${s.rel} ${s.w}w`).join(', '), share: await makeShareImage(src, base) };
+}
+
+// Превью ссылки в Telegram/WhatsApp/Facebook: JPG 1200×630 (WebP показывают не все), упаковка по центру на белом.
+const SHARE = { w: 1200, h: 630, pad: 40 };
+async function makeShareImage(src, base) {
+  const rel = `${base}-share.jpg`;
+  const pack = await sharp(src).resize({ width: SHARE.w - SHARE.pad * 2, height: SHARE.h - SHARE.pad * 2, fit: 'inside' })
+    .flatten({ background: '#ffffff' }).toBuffer();
+  await sharp({ create: { width: SHARE.w, height: SHARE.h, channels: 3, background: '#ffffff' } })
+    .composite([{ input: pack, gravity: 'center' }]).jpeg({ quality: 82, mozjpeg: true }).toFile(path.join(OUT, rel));
+  return rel;
 }
 
 // Каждый адрес на трёх языках, с перекрёстными ссылками hreflang.
@@ -94,7 +105,7 @@ async function main() {
       if (deck) await write(presentationPath(lang, p.slug) + 'index.html', deck);
     }
     const pages = { '/index.html': home, '/catalog.html': catalog, '/about.html': about, '/planned.html': plannedPage, '/contacts.html': contacts, '/partners.html': partners };
-    for (const [file, render] of Object.entries(pages)) await write(href(lang, file), render(lang, data));
+    for (const [file, render] of Object.entries(pages)) await write(LANGS[lang].prefix + file, render(lang, data));
   }
   await write('404.html', notFound('kr', data));
 
@@ -124,12 +135,34 @@ async function bustCache() {
       if (e.isDirectory()) await walk(p);
       else if (e.name.endsWith('.html')) {
         const html = await fs.readFile(p, 'utf8');
-        const out = html.replace(re, (m, pre, n) => `${pre}${n}?v=${ver[n]}"`);
+        // Слайды презентаций масштабируют картинки через max-width/max-height — размеры им не нужны.
+        const isDeck = /[\\/](taqdimot|presentation)[\\/]/.test(p);
+        const out = (isDeck ? html : await addImageSizes(html)).replace(re, (m, pre, n) => `${pre}${n}?v=${ver[n]}"`);
         if (out !== html) await fs.writeFile(p, out);
       }
     }
   };
   await walk(OUT);
+}
+
+// <img> без width/height: браузер не знает пропорций заранее, и текст «прыгает» при загрузке.
+// Берём настоящие размеры файла; CSS по-прежнему задаёт отображаемый размер.
+const imageSizeCache = new Map();
+async function imageSize(src) {
+  if (!imageSizeCache.has(src)) {
+    const file = path.join(OUT, decodeURI(src.split('?')[0]));
+    imageSizeCache.set(src, sharp(file).metadata().then(m => m.width && m.height ? [m.width, m.height] : null).catch(() => null));
+  }
+  return imageSizeCache.get(src);
+}
+async function addImageSizes(html) {
+  const tags = [...new Set(html.match(/<img\b[^>]*>/g) || [])].filter(tag => !/\b(width|height)=/.test(tag) && /\bsrc="\/[^"]+"/.test(tag));
+  let out = html;
+  for (const tag of tags) {
+    const size = await imageSize(tag.match(/\bsrc="(\/[^"]+)"/)[1]);
+    if (size) out = out.split(tag).join(tag.replace(/^<img\b/, `<img width="${size[0]}" height="${size[1]}"`));
+  }
+  return out;
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

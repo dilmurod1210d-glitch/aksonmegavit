@@ -7,6 +7,8 @@ import { presentationPath } from './presentation.mjs';
 
 // Текст из админки: пустая строка — новый абзац, перенос строки — <br>.
 // Вид продукта для заголовка страницы: [узбекский, русский]
+const TITLE_MAX = 70; // длиннее Google обрезает в выдаче
+const DESC_MIN = 70;  // короче — сниппет почти пустой
 const KIND = {
   'Сироплар': ['сироп', 'сироп'], 'Спрейлар': ['спрей', 'спрей'], 'Томчилар': ['томчи', 'капли'],
   'Таблетка ва капсулалар': ['таблетка', 'таблетки'], 'Саше ва порошоклар': ['саше', 'саше']
@@ -34,14 +36,22 @@ export function productPage(lang, p, related, categories) {
   const kindPair = /капсул/i.test(packForm) ? ['капсула', 'капсулы'] : KIND[p.category];
   const kindWord = kindPair ? kindPair[lang === 'ru' ? 1 : 0] : '';
   const kind = kindWord && !p.name.toLowerCase().includes(kindWord) ? dataText(lang, kindWord) : '';
-  const title = `${name}${altName !== name ? ` (${altName})` : ''}${kind ? ' ' + kind : ''} — ${t('таркиби, қўлланилиши, дозаси', 'состав, применение, дозировка')} | Akson Megavit`;
+  // Google обрезает заголовки длиннее ~70 знаков — для длинных названий берём короткий хвост.
+  const head = `${name}${altName !== name ? ` (${altName})` : ''}${kind ? ' ' + kind : ''}`;
+  const titleOf = tail => `${head} — ${tail} | Akson Megavit`;
+  const fullTitle = titleOf(t('таркиби, қўлланилиши, дозаси', 'состав, применение, дозировка'));
+  const title = fullTitle.length <= TITLE_MAX ? fullTitle : titleOf(t('таркиби ва дозаси', 'состав и дозировка'));
   const clip = s => s.replace(/\s+/g, ' ').trim().replace(/^(.{0,150})(\s.*)?$/, (m, a, b) => b ? a + '…' : a);
   const tagline = fromLeaflet('tagline'), indications = fromLeaflet('indications');
-  const metaDescription = tagline
+  const generic = t(`${name}${form ? ' (' + form + ')' : ''} — ${p.category.toLowerCase()} тоифасидаги биологик фаол қўшимча. Маҳсулот сурати ва асл қўлланиш буклети.`,
+    `${name}${form ? ' (' + form + ')' : ''} — биологически активная добавка, категория «${category}». Фото продукта и оригинальная инструкция.`);
+  // Слишком короткое описание из админки дополняем общим текстом, чтобы сниппет в поиске не был пустым.
+  const own = tagline
     ? clip(`${name} — ${tagline.replace(/^(\p{Lu})(?!\p{Lu})/u, c => c.toLowerCase())}. ${indications}`)
-    : description ? clip(description)
-    : t(`${name}${form ? ' (' + form + ')' : ''} — ${p.category.toLowerCase()} тоифасидаги биологик фаол қўшимча. Маҳсулот сурати ва асл қўлланиш буклети.`,
-        `${name}${form ? ' (' + form + ')' : ''} — биологически активная добавка, категория «${category}». Фото продукта и оригинальная инструкция.`);
+    : description ? clip(description) : '';
+  const metaDescription = own.length >= DESC_MIN ? own
+    : own ? clip(`${own.replace(/[.\s]+$/, '')}. ${generic}`)
+    : generic;
 
   // Не Product: Google требует для него цену, отзывы или рейтинг, а цен на сайте нет.
   const ld = [{
@@ -93,5 +103,5 @@ ${related.length ? `<section class="product-related"><div class="section-head"><
 </div>`;
 
   const alternates = Object.fromEntries(LANG_ORDER.map(l => [l, productPath(l, p.slug)]));
-  return page({ lang, title, description: metaDescription, alternates, active: 'catalog', main, categories, ld, ogType: 'product', ogImage: abs(p.image) });
+  return page({ lang, title, description: metaDescription, alternates, active: 'catalog', main, categories, ld, ogType: 'product', ogImage: abs(p.share || p.image) });
 }

@@ -172,7 +172,7 @@ section{scroll-margin-top:calc(var(--header-h) + 16px)}
 .breadcrumb span[aria-hidden]{opacity:.5}
 
 /* ---------- Главная: hero ---------- */
-.hero{position:relative;padding:clamp(36px,6vw,80px) 0 clamp(36px,5vw,72px)}
+.hero{position:relative;padding:clamp(36px,6vw,80px) 0 clamp(36px,5vw,72px);overflow-x:clip} /* вращающиеся орбиты не должны раздвигать страницу на узких экранах */
 .hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(32px,5vw,72px);align-items:center}
 .hero h1{margin:22px 0 22px}
 /* Слово-акцент с «маркером» */
@@ -342,7 +342,9 @@ section{scroll-margin-top:calc(var(--header-h) + 16px)}
 .contact-grid h2{font-size:22px;margin-bottom:16px}
 .contact-list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .contact-list li{display:flex;flex-direction:column;gap:2px}
-.contact-phone{display:inline-flex;align-items:center;gap:12px;font-size:21px;font-weight:800;color:inherit}
+.contact-phone{display:inline-flex;align-items:center;gap:12px;font-size:21px;font-weight:800;color:inherit;max-width:100%;min-width:0;overflow-wrap:anywhere}
+.contact-phone svg{flex:none}
+@media (max-width:420px){.contact-phone{font-size:clamp(16px,4.8vw,21px)}}
 .contact-phone svg{width:38px;height:38px;padding:9px;border-radius:50%;background:var(--card);color:var(--primary)}
 .map{margin-top:16px}
 .map iframe{width:100%;height:320px;border:0;border-radius:var(--radius);background:var(--surface-2)}

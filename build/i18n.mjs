@@ -62,6 +62,8 @@ export const productName = (lang, p) => lang === 'uz' && p.name_lat ? p.name_lat
 // L(lang)('текст на кириллице', 'русский текст') — строка интерфейса.
 export const L = lang => (kr, ru) => lang === 'ru' ? ru : lang === 'uz' ? toLatin(kr) : kr;
 
-// Ссылки внутри сайта для языка: href('ru', '/catalog.html') → '/ru/catalog.html'
-export const href = (lang, path) => LANGS[lang].prefix + path;
+// Ссылки внутри сайта для языка: href('ru', '/catalog.html') → '/ru/catalog'.
+// Ссылаемся на чистый адрес (как в canonical и sitemap), иначе Google видит две копии страницы.
+// Для путей файлов при сборке href не используется — там нужен настоящий .html.
+export const href = (lang, path) => LANGS[lang].prefix + path.replace(/\.html(?=$|[?#])/, '');
 export const productPath = (lang, slug) => `${LANGS[lang].prefix}/${LANGS[lang].product}/${slug}/`;
