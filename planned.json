@@ -1,5 +1,41 @@
 [
   {
+    "name": "Виферакс",
+    "name_lat": "Viferax",
+    "subtitle": "Ректал суппозиторий · 12 дона",
+    "image": "assets/planned/viferax.webp"
+  },
+  {
+    "name": "СанаФорте",
+    "name_lat": "SanaForte",
+    "subtitle": "Ректал суппозиторий · 12 дона",
+    "image": "assets/planned/sanaforte.webp"
+  },
+  {
+    "name": "Ректол",
+    "name_lat": "Rectol",
+    "subtitle": "Ректал суппозиторий · 12 дона",
+    "image": "assets/planned/rectol.webp"
+  },
+  {
+    "name": "Релидекс",
+    "name_lat": "Relidex",
+    "subtitle": "Ректал суппозиторий · 6 дона",
+    "image": "assets/planned/relidex.webp"
+  },
+  {
+    "name": "Флорагин",
+    "name_lat": "Floragyn",
+    "subtitle": "Вагинал суппозиторий · 6 дона",
+    "image": "assets/planned/floragyn.webp"
+  },
+  {
+    "name": "Фловитал",
+    "name_lat": "Flovital",
+    "subtitle": "Вагинал суппозиторий · 6 дона",
+    "image": "assets/planned/flovital.webp"
+  },
+  {
     "name": "Алфера",
     "subtitle": "Таблетка · 24 дона",
     "image": "assets/planned/alfera.webp"
