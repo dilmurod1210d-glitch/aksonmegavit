@@ -72,21 +72,27 @@
     done.hidden = false;
     done.focus();
     const sentKind = kind();
-    try {
-      const res = await fetch('https://formsubmit.co/ajax/' + encodeURIComponent(box.dataset.to), {
+    const subject = box.dataset.subject + ' (' + topic + ')';
+    const fields = Object.assign(Object.fromEntries(rows), { 'Саҳифа / Страница': location.href });
+    // Почта (FormSubmit) и Telegram уходят параллельно; «доставлено» — если дошло хотя бы одно
+    const post = async (url, body) => {
+      const res = await fetch(url, {
         method: 'POST',
-        keepalive: true,   // письмо уйдёт, даже если посетитель закроет страницу
+        keepalive: true,   // уйдёт, даже если посетитель закроет страницу
         signal: AbortSignal.timeout ? AbortSignal.timeout(45000) : undefined,
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(Object.assign({
-          _subject: box.dataset.subject + ' (' + topic + ')',
-          _template: 'table',
-          _captcha: 'false'
-        }, Object.fromEntries(rows), { 'Саҳифа / Страница': location.href }))
+        body: JSON.stringify(body)
       });
       if (!res.ok) throw new Error(res.status);
       const answer = await res.json().catch(() => ({}));
       if (answer.success === 'false' || answer.success === false) throw new Error(answer.message);
+    };
+    const sends = [post('https://formsubmit.co/ajax/' + encodeURIComponent(box.dataset.to),
+      Object.assign({ _subject: subject, _template: 'table', _captcha: 'false' }, fields))];
+    if (box.dataset.telegram) sends.push(post(box.dataset.telegram, { subject, fields }));
+    try {
+      const results = await Promise.allSettled(sends);
+      if (!results.some(r => r.status === 'fulfilled')) throw new Error('not delivered');
       setState('ok');
       message.value = '';
       if (window.gtag) gtag('event', 'chat_message', { topic: sentKind });

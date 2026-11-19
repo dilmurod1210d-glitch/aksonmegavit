@@ -22,5 +22,6 @@
   "analytics": {
     "ga4": "G-8D0XXRDEPB",
     "yandex": "114340994"
-  }
+  },
+  "telegram_relay": "https://aksonmegavit-uz.netlify.app/.netlify/functions/telegram"
 }

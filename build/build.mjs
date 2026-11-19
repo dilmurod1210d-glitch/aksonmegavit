@@ -13,7 +13,7 @@ import { LANGS, LANG_ORDER, href, productPath } from './i18n.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, '_site');
-const SKIP = new Set(['site.json', 'leaflet-text', '.git', '.github', '.gitignore', 'node_modules', '_site', 'build', 'package.json', 'package-lock.json', 'README.md']);
+const SKIP = new Set(['site.json', 'leaflet-text', '.git', '.github', '.gitignore', 'node_modules', '_site', 'build', 'package.json', 'package-lock.json', 'README.md', 'netlify', '.netlify']);
 const THUMBS = [400, 800];
 
 // Та же транслитерация, что и в админке (admin/index.html → slug()).
